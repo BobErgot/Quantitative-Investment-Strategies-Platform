@@ -2,6 +2,7 @@ package model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class ModelImplementation implements ModelInterface {
   List<Share> shares;
@@ -23,7 +24,7 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public double getValuationGivenDate(String id, Date date) {
+  public <T> double getValuation(String id, Predicate<T> filter) {
     return 0;
   }
 

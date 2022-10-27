@@ -2,6 +2,7 @@ package model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 
 public interface ModelInterface {
 
@@ -25,10 +26,10 @@ public interface ModelInterface {
   /**
    * Given the data get valuation of entire portfolio.
    * @param id ID of portfolio to get valuation of.
-   * @param date Date to check valuation of portfolio.
-   * @return Valuation of protfolio.
+   * @param filter Filter to sort through stocks in portfolio.
+   * @return Valuation of portfolio.
    */
-  double getValuationGivenDate(String id, Date date);
+  <T> double getValuation(String id, Predicate<T> filter);
 
   /**
    * Adds share to local list of shares given company name, using WebAPI.
