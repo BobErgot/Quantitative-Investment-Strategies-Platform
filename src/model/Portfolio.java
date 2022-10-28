@@ -12,6 +12,9 @@ class Portfolio {
   final Date creationDate;
 
   public Portfolio(List<Share> shares, Date creationDate) {
+    if (shares.size() == 0) {
+      throw new IllegalArgumentException("The size of list of shares must be greater than zero!");
+    }
     this.shares = shares;
     this.creationDate = creationDate;
   }
@@ -25,9 +28,9 @@ class Portfolio {
   }
 
   // filter-map-fold operation
-  public double getValuation(Predicate<Share> predicate, Function<Share, Double> converter) {
+  public double getValuation(Predicate<Share> predicate) {
     List<Share> eligibleShares = this.filter(shares, predicate);
-    List<Double> mappedShares = this.map(eligibleShares, converter);
+    List<Double> mappedShares = this.map(eligibleShares, Share::getShareValue);
     return mappedShares.stream().reduce(0.0, Double::sum);
   }
 
