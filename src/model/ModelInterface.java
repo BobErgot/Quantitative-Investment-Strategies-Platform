@@ -29,7 +29,7 @@ public interface ModelInterface {
    * @param filter Filter to sort through stocks in portfolio.
    * @return Valuation of portfolio.
    */
-  <T> double getValuation(String id, Predicate<T> filter);
+  double getValuation(String id, Predicate<Share> filter);
 
   /**
    * Adds share to local list of shares given company name, using WebAPI.
