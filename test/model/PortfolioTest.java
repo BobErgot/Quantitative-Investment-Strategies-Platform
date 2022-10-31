@@ -28,7 +28,7 @@ public class PortfolioTest {
   @Test
   public void validConstructorTest() {
     try {
-      Portfolio p = new Portfolio(shareList, new Date());
+      Portfolio p = new Portfolio(0,shareList, new Date());
     } catch (Exception e) {
       fail("Throws error even though portfolio was created correctly.");
     }
@@ -38,7 +38,7 @@ public class PortfolioTest {
   @Test
   public void invalidListConstructorTest() {
     try {
-      Portfolio p = new Portfolio(new ArrayList<>(), new Date());
+      Portfolio p = new Portfolio(0,new ArrayList<>(), new Date());
       fail("Does not throw error even though portfolio was created incorrectly.");
     } catch (IllegalArgumentException e) {
       //
@@ -48,7 +48,7 @@ public class PortfolioTest {
   // getValuation tests
   @Test
   public void getValuation() {
-    Portfolio p = new Portfolio(shareList, new Date());
+    Portfolio p = new Portfolio(0,shareList, new Date());
     // all elements in portfolio
     assertEquals(60.0, p.getValuation((share) -> true), 0);
     // only companies that start with m
@@ -58,7 +58,7 @@ public class PortfolioTest {
 
   @Test
   public void getListOfShares() {
-    Portfolio p = new Portfolio(shareList, new Date());
+    Portfolio p = new Portfolio(0,shareList, new Date());
     assertEquals(shareList,p.getListOfShares());
   }
 }

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 public class ModelImplementation implements ModelInterface {
-
+  int id=0;
   List<Share> shares;
   // maintains last portfolio used for faster inference
   Portfolio portfolioCache;
@@ -15,7 +15,7 @@ public class ModelImplementation implements ModelInterface {
   @Override
   public void createPortfolio() {
     // remember to delete share list after creating portfolio
-    Portfolio portfolioObject = new Portfolio(shares, new Date());
+    Portfolio portfolioObject = new Portfolio(id++,shares, new Date());
     FileDatabase fileDatabase = new FileDatabase();
     fileDatabase.persistPortfolio(portfolioObject);
     shares = new ArrayList<>();

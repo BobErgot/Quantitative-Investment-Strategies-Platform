@@ -8,13 +8,15 @@ import java.util.stream.Collectors;
 
 class Portfolio {
 
+  final int id;
   final List<Share> shares;
   final Date creationDate;
 
-  public Portfolio(List<Share> shares, Date creationDate) {
+  public Portfolio(int id, List<Share> shares, Date creationDate) {
     if (shares.size() == 0) {
       throw new IllegalArgumentException("The size of list of shares must be greater than zero!");
     }
+    this.id = id;
     this.shares = shares;
     this.creationDate = creationDate;
   }
@@ -39,11 +41,12 @@ class Portfolio {
   }
 
   public String toString() {
-    String toString = "Portfolio created on " + creationDate + " has shares:\n";
+    StringBuilder toString = new StringBuilder(
+        "Portfolio id:\t" + this.id + "\tcreated on " + creationDate + " has shares:\n");
     for (int i = 0; i < shares.size(); i++) {
-      toString += (i + 1) + ". " + shares.get(i);
+      toString.append(i + 1).append(". ").append(shares.get(i));
     }
-    return toString;
+    return toString.toString();
   }
 
 
