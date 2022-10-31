@@ -7,7 +7,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,7 +20,7 @@ import static utility.Constants.FILE_SEPARATOR;
 import static utility.Constants.HOME;
 
 abstract class FileAbstract implements FileInterface {
-  private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
+  protected final Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
   @Override
   public Path createFile(String folderName, String filePrefix, String extension) {
@@ -37,7 +37,7 @@ abstract class FileAbstract implements FileInterface {
       LOGGER.log(Level.SEVERE, "Error occurred in file lookup: ", ioException);
       return null;
     }
-    String fileName = filePrefix + new Date().getTime() + UUID.randomUUID();
+    String fileName = filePrefix + LocalDate.now() + UUID.randomUUID();
     Path filePath = createFilePath(folderName, fileName, extension);
     try {
       return Files.createFile(filePath);
@@ -94,7 +94,7 @@ abstract class FileAbstract implements FileInterface {
     return false;
   }
 
-  public double getShareValueByGivenDate(String stockSymbol, Date date) {
+  public double getShareValueByGivenDate(String stockSymbol, LocalDate date) {
     return 0;
   }
 

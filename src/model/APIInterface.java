@@ -1,10 +1,9 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-// Not useful at the moment
 public interface APIInterface {
 
-  double getShareValueByGivenDate(String stockSymbol, Date date);
+  double getShareValueByGivenDate(String stockSymbol, LocalDate date);
 
 }

@@ -1,6 +1,7 @@
 package utility;
 
 import java.nio.file.FileSystems;
+import java.time.LocalDate;
 
 public final class Constants {
 
@@ -10,6 +11,9 @@ public final class Constants {
   public static final String PORTFOLIO_DIRECTORY = "portfolio";
   public static final String STOCK_ENDPOINT = "https://www.alphavantage.co/query";
   public static final String STOCK_API_KEY = "T5770I9RBI1FTSXJ";
+
+  public static final String DATE_FORMAT = "YYYY-MM-DD";
+
   private Constants() {
     // Restrict constructor access
   }

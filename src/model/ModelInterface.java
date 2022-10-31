@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -46,5 +46,5 @@ public interface ModelInterface {
    * @param numShares Number of shares purchased.
    * @return If successfully  added or not.
    */
-  boolean addShareToModel(String companyName, Date date, double price,int numShares);
+  boolean addShareToModel(String companyName, LocalDate date, double price, int numShares);
 }

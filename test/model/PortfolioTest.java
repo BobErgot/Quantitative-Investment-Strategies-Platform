@@ -3,8 +3,8 @@ package model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,8 @@ public class PortfolioTest {
     String[] companies = {"Apple", "Microsoft", "Google", "Amazon", "Netflix", "Meta", "Cognizant",
         "Salesforce", "Tesla", "Mathworks"};
     for (int i = 0; i < 10; i++) {
-      Share s = new Share(companies[i], new Date(), 2, 3);
+      Share s = new Share(companies[i], LocalDate.now()
+              , 2, 3);
       shareList.add(s);
     }
   }
@@ -28,7 +29,8 @@ public class PortfolioTest {
   @Test
   public void validConstructorTest() {
     try {
-      Portfolio p = new Portfolio(0,shareList, new Date());
+      Portfolio p = new Portfolio(0,shareList, LocalDate.now());
+      System.out.println(p.toString());
     } catch (Exception e) {
       fail("Throws error even though portfolio was created correctly.");
     }
@@ -38,7 +40,7 @@ public class PortfolioTest {
   @Test
   public void invalidListConstructorTest() {
     try {
-      Portfolio p = new Portfolio(0,new ArrayList<>(), new Date());
+      Portfolio p = new Portfolio(0,new ArrayList<>(), LocalDate.now());
       fail("Does not throw error even though portfolio was created incorrectly.");
     } catch (IllegalArgumentException e) {
       //
@@ -48,7 +50,7 @@ public class PortfolioTest {
   // getValuation tests
   @Test
   public void getValuation() {
-    Portfolio p = new Portfolio(0,shareList, new Date());
+    Portfolio p = new Portfolio(0,shareList, LocalDate.now());
     // all elements in portfolio
     assertEquals(60.0, p.getValuation((share) -> true), 0);
     // only companies that start with m
@@ -58,7 +60,7 @@ public class PortfolioTest {
 
   @Test
   public void getListOfShares() {
-    Portfolio p = new Portfolio(0,shareList, new Date());
+    Portfolio p = new Portfolio(0,shareList, LocalDate.now());
     assertEquals(shareList,p.getListOfShares());
   }
 }

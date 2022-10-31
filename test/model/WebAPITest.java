@@ -4,16 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.Date;
-
-import static org.junit.Assert.*;
+import java.time.LocalDate;
 
 public class WebAPITest {
   @Before
@@ -27,7 +19,7 @@ public class WebAPITest {
   @Test
   public void getShareValueByGivenDate() throws IOException {
     WebAPI webAPI = new WebAPI();
-    webAPI.getShareValueByGivenDate("IBM", new Date());
+    webAPI.getShareValueByGivenDate("IBM", LocalDate.now());
 //    URL url = new URL("");
 //    HttpURLConnection con = (HttpURLConnection) url.openConnection();
 //    con.setRequestMethod("GET");

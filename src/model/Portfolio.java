@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -10,9 +10,9 @@ class Portfolio {
 
   final int id;
   final List<Share> shares;
-  final Date creationDate;
+  final LocalDate creationDate;
 
-  public Portfolio(int id, List<Share> shares, Date creationDate) {
+  public Portfolio(int id, List<Share> shares, LocalDate creationDate) {
     if (shares.size() == 0) {
       throw new IllegalArgumentException("The size of list of shares must be greater than zero!");
     }
@@ -41,10 +41,10 @@ class Portfolio {
   }
 
   public String toString() {
-    StringBuilder toString = new StringBuilder(
-        "Portfolio id:\t" + this.id + "\tcreated on " + creationDate + " has shares:\n");
+    StringBuilder toString = new StringBuilder("ID:" + this.id + "\nCREATION_DATE:"
+            + creationDate + "\nShares:");
     for (int i = 0; i < shares.size(); i++) {
-      toString.append(i + 1).append(". ").append(shares.get(i));
+      toString.append(shares.get(i)).append("|");
     }
     return toString.toString();
   }

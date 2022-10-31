@@ -1,6 +1,7 @@
 package model;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public interface FileInterface {
   /**
@@ -51,6 +52,16 @@ public interface FileInterface {
    * @return true if write is successful, else returns false
    */
   boolean writeToFile(String folderName, String filePrefix, byte[] dataBytes);
+
+  /**
+   * Read data from file in format that is depended on the concrete implementation of this
+   * interface.
+   *
+   * @param folderName directory where the file needs to be read from
+   * @param filePrefix the symbol of the stock whose data needs to be retrieved
+   * @return individual records that are retrieved from file
+   */
+  List<String> readFromFile(String folderName, String filePrefix);
 
   /**
    * Returns the file extension

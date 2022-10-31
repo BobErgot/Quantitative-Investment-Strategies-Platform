@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.concurrent.TimeoutException;
 
 import static utility.Constants.STOCK_API_KEY;
@@ -17,7 +17,7 @@ import static utility.Constants.STOCK_ENDPOINT;
 public class WebAPI implements APIInterface {
 
   @Override
-  public double getShareValueByGivenDate(String stockSymbol, Date date) {
+  public double getShareValueByGivenDate(String stockSymbol, LocalDate date) {
     String url = STOCK_ENDPOINT;
     String charset = "UTF-8";
 

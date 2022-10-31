@@ -1,7 +1,7 @@
 package model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
@@ -17,9 +17,9 @@ public class ModelImplementation implements ModelInterface {
   @Override
   public void createPortfolio() {
     // remember to delete share list after creating portfolio
-    Portfolio portfolioObject = new Portfolio(id++,shares, new Date());
+    Portfolio portfolioObject = new Portfolio(id++,shares, LocalDate.now());
     FileAbstract fileDatabase = new CSVFile();
-    fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, String.valueOf(id), portfolioObject.toString().getBytes());
+    fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY, portfolioObject.toString().getBytes());
     shares = new ArrayList<>();
     portfolioCache = portfolioObject;
   }
@@ -56,7 +56,7 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public boolean addShareToModel(String companyName, Date date, double price, int numShares)
+  public boolean addShareToModel(String companyName, LocalDate date, double price, int numShares)
       throws IllegalArgumentException {
     Share shareObject = new Share(companyName, date, price, numShares);
     this.shares.add(shareObject);

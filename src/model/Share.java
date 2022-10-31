@@ -1,16 +1,16 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 class Share implements Comparable {
 
   private final int numShares;
   private final String companyName;
-  private final Date purchaseDate;
+  private final LocalDate purchaseDate;
   private final double price;
 
-  public Share(String companyName, Date purchaseDate, double price, int numShares)
-      throws IllegalArgumentException {
+  public Share(String companyName, LocalDate purchaseDate, double price, int numShares)
+          throws IllegalArgumentException {
     if (companyName.length() == 0) {
       throw new IllegalArgumentException("Company name cannot be blank!");
     }
@@ -30,7 +30,7 @@ class Share implements Comparable {
     return this.companyName;
   }
 
-  public double getSharePrice(Date date) {
+  public double getSharePrice(LocalDate date) {
     FileAbstract fileAPIObject = new CSVFile();
     return fileAPIObject.getShareValueByGivenDate(companyName, date);
   }
@@ -56,7 +56,7 @@ class Share implements Comparable {
     }
     Share other = (Share) object;
     return this.companyName.equals(other.companyName) && this.purchaseDate == other.purchaseDate
-        && this.price == other.price && this.numShares == other.numShares;
+            && this.price == other.price && this.numShares == other.numShares;
   }
 
   public int getNumShares() {
