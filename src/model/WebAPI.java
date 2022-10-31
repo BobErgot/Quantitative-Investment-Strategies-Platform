@@ -8,9 +8,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.concurrent.TimeoutException;
 
-public class WebAPI implements APIInterface{
-  private static String STOCK_ENDPOINT ="https://www.alphavantage.co/query";
+import static utility.Constants.STOCK_API_KEY;
+import static utility.Constants.STOCK_DIRECTORY;
+import static utility.Constants.STOCK_ENDPOINT;
+
+public class WebAPI implements APIInterface {
 
   @Override
   public double getShareValueByGivenDate(String stockSymbol, Date date) {
@@ -24,7 +28,7 @@ public class WebAPI implements APIInterface{
       query = query + "&" + String.format("symbol=%s",
               URLEncoder.encode(stockSymbol, charset));
       query = query + "&" + String.format("apikey=%s",
-              URLEncoder.encode("T5770I9RBI1FTSXJ", charset));
+              URLEncoder.encode(STOCK_API_KEY, charset));
       query = query + "&" + String.format("datatype=%s",
               URLEncoder.encode("csv", charset));
       query = query + "&" + String.format("outputsize=%s",
@@ -42,8 +46,7 @@ public class WebAPI implements APIInterface{
     connection.setRequestProperty("Accept-Charset", charset);
     int responseCode = 0;
     String responseMessage;
-    if ( connection instanceof HttpURLConnection)
-    {
+    if (connection instanceof HttpURLConnection) {
       HttpURLConnection httpConnection = (HttpURLConnection) connection;
       try {
         responseCode = httpConnection.getResponseCode();
@@ -57,10 +60,8 @@ public class WebAPI implements APIInterface{
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-    }
-    else
-    {
-      System.err.println ("error!");
+    } else {
+      System.err.println("error!");
     }
     if (responseCode == HttpURLConnection.HTTP_OK) { // success
       HttpURLConnection httpConnection = (HttpURLConnection) connection;
@@ -75,15 +76,15 @@ public class WebAPI implements APIInterface{
 
       while (true) {
         try {
-          if (!((inputLine = in.readLine()) != null)) break;
+          if ((inputLine = in.readLine()) == null) break;
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
         System.out.println(date.toString());
-        if(inputLine.substring(0,10).equals(date.toString())){
+        if (inputLine.substring(0, 10).equals(date.toString())) {
           System.out.println(inputLine);
         }
-        response.append(inputLine);
+        response.append(inputLine).append(System.getProperty("line.separator"));
       }
       try {
         in.close();
@@ -91,11 +92,15 @@ public class WebAPI implements APIInterface{
         throw new RuntimeException(e);
       }
 
-      FileDatabase fileDatabase = new FileDatabase();
-      fileDatabase.writeToFile(stockSymbol, "stocks", response.toString());
+      CSVFile fileDatabase = new CSVFile();
+      fileDatabase.writeToFile(STOCK_DIRECTORY, stockSymbol, response.toString().getBytes());
     } else {
       System.out.println("Failure: GET request did not work.");
     }
     return 0;
+  }
+
+  public Share getShare (String id) throws TimeoutException {
+    return  null;
   }
 }

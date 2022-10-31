@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
+import static utility.Constants.PORTFOLIO_DIRECTORY;
+
 public class ModelImplementation implements ModelInterface {
   int id=0;
   List<Share> shares;
@@ -16,27 +18,27 @@ public class ModelImplementation implements ModelInterface {
   public void createPortfolio() {
     // remember to delete share list after creating portfolio
     Portfolio portfolioObject = new Portfolio(id++,shares, new Date());
-    FileDatabase fileDatabase = new FileDatabase();
-    fileDatabase.persistPortfolio(portfolioObject);
+    FileAbstract fileDatabase = new CSVFile();
+    fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, String.valueOf(id), portfolioObject.toString().getBytes());
     shares = new ArrayList<>();
     portfolioCache = portfolioObject;
   }
 
   @Override
   public List<String> getPortfolio() {
-    FileDatabase fileDatabase = new FileDatabase();
+    FileAbstract fileDatabase = new CSVFile();
     return fileDatabase.getListOfPortfolios();
   }
 
   @Override
   public String getPortfolioById(String id) {
-    FileDatabase fileDatabase = new FileDatabase();
+    FileAbstract fileDatabase = new CSVFile();
     return fileDatabase.getListOfPortfoliosById(id).toString();
   }
 
   @Override
   public double getValuation(String id, Predicate<Share> filter) {
-    FileDatabase fileDatabase = new FileDatabase();
+    FileAbstract fileDatabase = new CSVFile();
     Portfolio portfolioObject = fileDatabase.getListOfPortfoliosById(id);
     return portfolioObject.getValuation(filter);
   }
