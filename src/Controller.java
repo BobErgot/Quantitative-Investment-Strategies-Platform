@@ -1,6 +1,6 @@
 import java.util.function.Predicate;
 
-public interface ControllerInterface {
+public interface Controller {
   void createPortfolio();
   void viewPortfolio();
   // Filter function

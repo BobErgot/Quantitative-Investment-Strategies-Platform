@@ -2,7 +2,7 @@ package view;
 
 import java.util.List;
 
-public interface ViewInterface {
+public interface View {
 
   /**
    * Shows Main menu.
