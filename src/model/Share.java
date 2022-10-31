@@ -31,7 +31,7 @@ class Share implements Comparable {
   }
 
   public double getSharePrice(Date date) {
-    CSVFile fileAPIObject = new CSVFile();
+    FileAbstract fileAPIObject = new CSVFile();
     return fileAPIObject.getShareValueByGivenDate(companyName, date);
   }
 

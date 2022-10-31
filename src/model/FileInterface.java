@@ -1,18 +1,17 @@
 package model;
 
 import java.nio.file.Path;
-import java.util.Date;
 
 public interface FileInterface {
   /**
    * Creates a new file at the specified path passed to it as parameter.
    *
    * @param folderName directory of file structure where the file needs to be stored
-   * @param fileName   name of the file to be searched
+   * @param filePrefix   Prefix name of the file to be searched
    * @param extension  extension of the file to be read
    * @return boolean value based on file creation success or failure
    */
-  boolean createFile(String folderName, String fileName, String extension);
+  Path createFile(String folderName, String filePrefix, String extension);
 
   /**
    * Checks whether the file exists or not.
@@ -55,6 +54,7 @@ public interface FileInterface {
 
   /**
    * Returns the file extension
+   *
    * @return file extension as string
    */
   String getFileExtension();

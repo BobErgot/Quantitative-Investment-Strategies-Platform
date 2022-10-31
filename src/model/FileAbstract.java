@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -22,20 +23,30 @@ abstract class FileAbstract implements FileInterface {
   private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
   @Override
-  public boolean createFile(String folderName, String fileName, String extension) {
+  public Path createFile(String folderName, String filePrefix, String extension) {
     String directory = HOME + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
     Path directoryPath = Paths.get(directory);
-    Path filePath = createFilePath(folderName, fileName, extension);
     try {
       Files.createDirectories(directoryPath);
-      Files.createFile(filePath);
-      return true;
+      Optional<Path> file = Files.list(directoryPath).filter(path->path.getFileName().toFile()
+                      .getName().startsWith(filePrefix)).findFirst();
+      if(file.isPresent()) {
+        return file.get();
+      }
+    } catch (IOException ioException) {
+      LOGGER.log(Level.SEVERE, "Error occurred in file lookup: ", ioException);
+      return null;
+    }
+    String fileName = filePrefix + new Date().getTime() + UUID.randomUUID();
+    Path filePath = createFilePath(folderName, fileName, extension);
+    try {
+      return Files.createFile(filePath);
     } catch (FileAlreadyExistsException fileAlreadyExistsException) {
       LOGGER.log(Level.INFO, "File already exists: ", fileAlreadyExistsException);
-      return true;
+      return filePath;
     } catch (IOException ioException) {
       LOGGER.log(Level.SEVERE, "Error occurred in file creation: ", ioException);
-      return false;
+      return null;
     }
   }
 
@@ -64,9 +75,8 @@ abstract class FileAbstract implements FileInterface {
 
   @Override
   public boolean writeToFile(String folderName, String filePrefix, byte[] dataBytes) {
-    String fileName = filePrefix + new Date().getTime() + UUID.randomUUID();
-    if (createFile(folderName, fileName, getFileExtension())) {
-      Path filePath = createFilePath(folderName, fileName, getFileExtension());
+    Path filePath = createFile(folderName, filePrefix, getFileExtension());
+    if (null != filePath && filePath.toFile().isFile()) {
       try {
         AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(filePath, WRITE);
 
