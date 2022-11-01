@@ -3,11 +3,10 @@ package model;
 import java.time.LocalDate;
 
 class Share implements Comparable {
-
-  private final int numShares;
-  private final String companyName;
   private final LocalDate purchaseDate;
+  private final String companyName;
   private final double price;
+  private final int numShares;
 
   public Share(String companyName, LocalDate purchaseDate, double price, int numShares)
           throws IllegalArgumentException {
@@ -64,6 +63,9 @@ class Share implements Comparable {
   }
 
   public String toString() {
-    return this.companyName + "\t" + this.purchaseDate + "\t" + this.price + "\t" + this.numShares;
+    return  "purchaseDate:" + this.purchaseDate + "\n"
+            + "companyName:" + this.companyName + "\n"
+            + "price:" + this.price + "\n"
+            + "numShares:" + this.numShares + "\n";
   }
 }

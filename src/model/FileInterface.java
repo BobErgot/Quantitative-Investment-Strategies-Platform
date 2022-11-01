@@ -69,4 +69,8 @@ public interface FileInterface {
    * @return file extension as string
    */
   String getFileExtension();
+
+  String convertObjectIntoString(String object, List<String> referenceFile);
+
+  <T> String convertObjectListIntoString(List<T> objectList);
 }

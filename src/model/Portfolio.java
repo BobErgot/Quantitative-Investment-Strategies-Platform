@@ -41,10 +41,12 @@ class Portfolio {
   }
 
   public String toString() {
-    StringBuilder toString = new StringBuilder("ID:" + this.id + "\nCREATION_DATE:"
-            + creationDate + "\nShares:");
+    StringBuilder toString = new StringBuilder("id:" + this.id + "\ncreationDate:"
+            + creationDate + "\n*shares:");
     for (int i = 0; i < shares.size(); i++) {
-      toString.append(shares.get(i)).append("|");
+      String record = shares.get(i).toString().replace("\n", ",");
+      record = record.substring(0, record.length()-2);
+      toString.append(record).append("|");
     }
     return toString.toString();
   }

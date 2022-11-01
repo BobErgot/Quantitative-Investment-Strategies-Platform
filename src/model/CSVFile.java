@@ -56,4 +56,32 @@ public class CSVFile extends FileAbstract {
     }
     return fileData;
   }
+
+  @Override
+  public String convertObjectIntoString(String object, List<String> referenceFile){
+    StringBuilder stringFormat = new StringBuilder();
+    String [] objectFields = object.split("\n");
+    int index = 0;
+    for(int i = 0; i<objectFields.length - 1; i++){
+      if (objectFields[i].charAt(0) == '*') {
+        stringFormat.append("-F:");
+        stringFormat.append(referenceFile.get(index));
+        index++;
+      }
+      stringFormat.append(objectFields[i].split(":", 2)[1]);
+      stringFormat.append(",");
+    }
+    stringFormat.append(objectFields[objectFields.length-1].split(":", 2)[1]);
+    return stringFormat.toString();
+  }
+
+  @Override
+  public <T> String convertObjectListIntoString(List<T> objectList){
+    StringBuilder stringFormat = new StringBuilder();
+    for(int i = 0; i<objectList.size(); i++){
+      stringFormat.append(convertObjectIntoString(objectList.get(i).toString().trim(), null));
+      stringFormat.append("\n");
+    }
+    return stringFormat.toString();
+  }
 }

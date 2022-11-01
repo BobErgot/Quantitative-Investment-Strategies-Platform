@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +20,7 @@ public class PortfolioTest {
     String[] companies = {"Apple", "Microsoft", "Google", "Amazon", "Netflix", "Meta", "Cognizant",
         "Salesforce", "Tesla", "Mathworks"};
     for (int i = 0; i < 10; i++) {
-      Share s = new Share(companies[i], LocalDate.now()
-              , 2, 3);
+      Share s = new Share(companies[i], LocalDate.now(), 2, 3);
       shareList.add(s);
     }
   }
@@ -30,6 +30,7 @@ public class PortfolioTest {
   public void validConstructorTest() {
     try {
       Portfolio p = new Portfolio(0,shareList, LocalDate.now());
+      FileAbstract fileDatabase = new CSVFile();
       System.out.println(p.toString());
     } catch (Exception e) {
       fail("Throws error even though portfolio was created correctly.");
