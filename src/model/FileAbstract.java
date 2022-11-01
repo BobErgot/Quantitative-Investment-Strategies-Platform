@@ -8,14 +8,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.WRITE;
 import static utility.Constants.FILE_SEPARATOR;
 import static utility.Constants.HOME;
@@ -29,9 +27,9 @@ abstract class FileAbstract implements FileInterface {
     Path directoryPath = Paths.get(directory);
     try {
       Files.createDirectories(directoryPath);
-      Optional<Path> file = Files.list(directoryPath).filter(path->path.getFileName().toFile()
-                      .getName().startsWith(filePrefix)).findFirst();
-      if(file.isPresent()) {
+      Optional<Path> file = Files.list(directoryPath).filter(path -> path.getFileName().toFile()
+              .getName().startsWith(filePrefix)).findFirst();
+      if (file.isPresent()) {
         return file.get();
       }
     } catch (IOException ioException) {
@@ -80,7 +78,7 @@ abstract class FileAbstract implements FileInterface {
     if (null != filePath && filePath.toFile().isFile()) {
       try {
         AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(filePath, WRITE);
-        byte [] newLine = getRecordDelimiter().getBytes();
+        byte[] newLine = getRecordDelimiter().getBytes();
         ByteBuffer buffer = ByteBuffer.allocate(dataBytes.length + newLine.length);
         buffer.put(dataBytes);
         if (dataBytes.length > 0) {
@@ -89,7 +87,7 @@ abstract class FileAbstract implements FileInterface {
         buffer.flip();
         if (fileChannel.size() > 0) {
           Future<Integer> operation = fileChannel.write(buffer, fileChannel.size());
-        } else{
+        } else {
           Future<Integer> operation = fileChannel.write(buffer, 0);
         }
         buffer.clear();

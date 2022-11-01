@@ -36,9 +36,9 @@ public class CSVFile extends FileAbstract {
     Path filePath = null;
     try {
       Files.createDirectories(directoryPath);
-      Optional<Path> file = Files.list(directoryPath).filter(path->path.getFileName().toFile()
+      Optional<Path> file = Files.list(directoryPath).filter(path -> path.getFileName().toFile()
               .getName().startsWith(filePrefix)).findFirst();
-      if(file.isPresent()) {
+      if (file.isPresent()) {
         filePath = file.get();
       }
     } catch (IOException ioException) {
@@ -46,27 +46,28 @@ public class CSVFile extends FileAbstract {
       return fileData;
     }
 
-    try {
-      AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(filePath,
-              StandardOpenOption.READ);
-      ByteBuffer buffer = ByteBuffer.allocate(1024);
-      Future<Integer> operation = fileChannel.read(buffer, 0);
-      operation.get();
-      String fileContent = new String(buffer.array()).trim();
-      fileData.add(fileContent);
-      buffer.clear();
-    } catch (IOException | ExecutionException | InterruptedException exception) {
-      LOGGER.log(Level.SEVERE, "Error occurred in reading file: ", exception);
+    if (filePath != null) {
+      try (AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(filePath,
+              StandardOpenOption.READ)) {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        Future<Integer> operation = fileChannel.read(buffer, 0);
+        operation.get();
+        String fileContent = new String(buffer.array()).trim();
+        fileData.add(fileContent);
+        buffer.clear();
+      } catch (IOException | ExecutionException | InterruptedException exception) {
+        LOGGER.log(Level.SEVERE, "Error occurred in reading file: ", exception);
+      }
     }
     return fileData;
   }
 
   @Override
-  public String convertObjectIntoString(String object, List<String> referenceFile){
+  public String convertObjectIntoString(String object, List<String> referenceFile) {
     StringBuilder stringFormat = new StringBuilder();
-    String [] objectFields = object.split("\n");
+    String[] objectFields = object.split("\n");
     int index = 0;
-    for(int i = 0; i<objectFields.length-1; i++){
+    for (int i = 0; i < objectFields.length - 1; i++) {
       if (objectFields[i].charAt(0) == '*') {
         stringFormat.append("-F:");
         stringFormat.append(referenceFile.get(index));
@@ -76,23 +77,28 @@ public class CSVFile extends FileAbstract {
       stringFormat.append(objectFields[i].split(":", 2)[1]);
       stringFormat.append(",");
     }
-    if (objectFields[objectFields.length-1].charAt(0) == '*') {
+    if (objectFields[objectFields.length - 1].charAt(0) == '*') {
       stringFormat.append("-F:");
       stringFormat.append(referenceFile.get(index));
       index++;
     } else {
-      stringFormat.append(objectFields[objectFields.length-1].split(":", 2)[1]);
+      stringFormat.append(objectFields[objectFields.length - 1].split(":", 2)[1]);
     }
     return stringFormat.toString();
   }
 
   @Override
-  public <T> String convertObjectListIntoString(List<T> objectList){
+  public <T> String convertObjectListIntoString(List<T> objectList) {
     StringBuilder stringFormat = new StringBuilder();
-    for(int i = 0; i<objectList.size(); i++){
-      stringFormat.append(convertObjectIntoString(objectList.get(i).toString().trim(), null));
+    for (T t : objectList) {
+      stringFormat.append(convertObjectIntoString(t.toString().trim(), null));
       stringFormat.append("\n");
     }
     return stringFormat.toString();
+  }
+
+  @Override
+  public long getIndex(String folderName, String filePrefix, String hashKey) {
+    return 0;
   }
 }
