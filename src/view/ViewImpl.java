@@ -19,6 +19,8 @@ public class ViewImpl implements View {
     this.out.println("1. Create Portfolio");
     this.out.println("2. Upload Portfolio from given path.");
     this.out.println("3. View Portfolio");
+    this.out.println("4. Exit");
+
   }
 
   @Override
@@ -26,15 +28,16 @@ public class ViewImpl implements View {
     this.out.println("Please select an option:");
     this.out.println("1. Add Shares");
     this.out.println("2. Create Portfolio (Finalize current Portfolio)");
+    this.out.println("3. Go back.");
   }
 
   @Override
   public void showAddShareWithApiInputMenu(int parameterNumber) throws IllegalArgumentException {
     switch (parameterNumber) {
-      case 1:
+      case 0:
         this.out.println("Enter Company Name:");
         break;
-      case 2:
+      case 1:
         this.out.println("Enter Number of shares:");
         break;
       default:
