@@ -53,4 +53,5 @@ public interface ModelInterface {
   boolean idIsPresent(String selectedId);
 
   void addPortfolioByUpload(String path);
+  boolean idIsPresent(String selectedId);
 }

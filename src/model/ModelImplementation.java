@@ -12,6 +12,9 @@ import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
+import static utility.Constants.PORTFOLIO_DIRECTORY;
+import static utility.Constants.STOCK_DIRECTORY;
+
 public class ModelImplementation implements ModelInterface {
 
   private Set<Share> shares;
@@ -69,15 +72,14 @@ public class ModelImplementation implements ModelInterface {
 
   @Override
   public boolean addShareToModel(String companyName, int numShares) {
-    WebAPI apiObject = new WebAPI();
+    FileAbstract fileDatabase = new CSVFile();
     try {
-      // TODO get share by company id and number of shares
-//      Share share = apiObject.getShare(companyName,numShares);
-      Share share = apiObject.getShare(companyName);
+      List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
 
-      shares.add(share);
+      // TODO get share by company id and number of shares
+
       return true;
-    } catch (TimeoutException timeoutException) {
+    } catch (Exception e) {
       return false;
     }
   }
