@@ -46,8 +46,7 @@ public class WebAPI implements APIInterface {
     connection.setRequestProperty("Accept-Charset", charset);
     int responseCode = 0;
     String responseMessage;
-    if (connection instanceof HttpURLConnection) {
-      HttpURLConnection httpConnection = (HttpURLConnection) connection;
+    if (connection instanceof HttpURLConnection httpConnection) {
       try {
         responseCode = httpConnection.getResponseCode();
         System.out.println(responseCode);

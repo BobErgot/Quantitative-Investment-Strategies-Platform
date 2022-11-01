@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 import static utility.Constants.PORTFOLIO_DIRECTORY;
@@ -75,8 +74,14 @@ public class ModelImplementation implements ModelInterface {
     FileAbstract fileDatabase = new CSVFile();
     try {
       List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
+      if (stockData.size() != 0)
+      {
 
-      // TODO get share by company id and number of shares
+      } else {
+        APIInterface webAPi = new WebAPI();
+        Double stockPrice = webAPi.getShareValueByGivenDate(companyName, LocalDate.now());
+
+      }
 
       return true;
     } catch (Exception e) {
@@ -87,7 +92,7 @@ public class ModelImplementation implements ModelInterface {
   @Override
   @Deprecated
   public boolean addShareToModel(String companyName, LocalDate date, double price, int numShares)
-      throws IllegalArgumentException {
+          throws IllegalArgumentException {
     Share shareObject = new Share(companyName, date, price, numShares);
     this.shares.add(shareObject);
     return true;
@@ -100,9 +105,7 @@ public class ModelImplementation implements ModelInterface {
 
   @Override
   public void addPortfolioByUpload(String path) {
-    FileInterface fileObject = new CSVFile();
-//    String portfolioString = fileObject.loadPortfolioByPath();
-    // return parsePortfolioString(portfolioString);
+    // TODO
   }
 
 }
