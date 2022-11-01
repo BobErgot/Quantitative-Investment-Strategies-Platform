@@ -36,9 +36,9 @@ public interface ModelInterface {
    * Adds share to local list of shares given company name, using WebAPI.
    * @param companyName Company  name to get share of.
    * @param numShares Number of shares purchased.
-   * @return If successfully  added or not.
+   * @return value of stock
    */
-  boolean addShareToModel(String companyName, int numShares);
+  double getStockPrice(String companyName, int numShares);
 
   /**
    * Adds share to local list of shares given details of the share (manual entry).
@@ -50,8 +50,7 @@ public interface ModelInterface {
    */
   boolean addShareToModel(String companyName, LocalDate date, double price, int numShares);
 
-  boolean idIsPresent(String selectedId);
-
   void addPortfolioByUpload(String path);
+
   boolean idIsPresent(String selectedId);
 }

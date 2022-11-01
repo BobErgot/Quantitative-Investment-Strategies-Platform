@@ -1,23 +1,22 @@
 package model;
 
-import static utility.Constants.PORTFOLIO_DIRECTORY;
-import static utility.Constants.PORTFOLIO_NOT_FOUND;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 
 import static utility.Constants.PORTFOLIO_DIRECTORY;
+import static utility.Constants.PORTFOLIO_NOT_FOUND;
 import static utility.Constants.STOCK_DIRECTORY;
 
 public class ModelImplementation implements ModelInterface {
 
-  private Set<Share> shares;
   private final Set<Portfolio> portfolios;
+  private Set<Share> shares;
 
   public ModelImplementation() {
     this.shares = new HashSet<>();
@@ -33,9 +32,7 @@ public class ModelImplementation implements ModelInterface {
     List<String> referenceList = new ArrayList<>();
     referenceList.add(shareFileName);
     if (fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, shareFileName, formattedString.getBytes())) {
-      fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
-          fileDatabase.convertObjectIntoString(portfolioObject.toString(), referenceList)
-              .getBytes());
+      fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY, fileDatabase.convertObjectIntoString(portfolioObject.toString(), referenceList).getBytes());
     }
     shares = new HashSet<>();
     portfolios.add(portfolioObject);
@@ -70,29 +67,29 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public boolean addShareToModel(String companyName, int numShares) {
+  public double getStockPrice(String companyName, int numShares) {
     FileAbstract fileDatabase = new CSVFile();
-    try {
-      List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
-      if (stockData.size() != 0)
-      {
-
-      } else {
-        APIInterface webAPi = new WebAPI();
-        Double stockPrice = webAPi.getShareValueByGivenDate(companyName, LocalDate.now());
-
+    double stockPrice = -1.00;
+    List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
+    if (stockData.size() != 0) {
+      for (String stockRecord : stockData) {
+        if (stockRecord.substring(0, 10).equals(LocalDate.now().toString())) {
+          String[] inputLineData = stockRecord.split(",");
+          double high = Double.parseDouble(inputLineData[2]);
+          double low = Double.parseDouble(inputLineData[3]);
+          stockPrice = new Random().nextDouble(low, high);
+        }
       }
-
-      return true;
-    } catch (Exception e) {
-      return false;
+    } else {
+      APIInterface webAPi = new WebAPI();
+      stockPrice = webAPi.getShareValueByGivenDate(companyName, LocalDate.now());
     }
+    return (stockPrice >= 0)? numShares*stockPrice : -1.00;
   }
 
   @Override
   @Deprecated
-  public boolean addShareToModel(String companyName, LocalDate date, double price, int numShares)
-          throws IllegalArgumentException {
+  public boolean addShareToModel(String companyName, LocalDate date, double price, int numShares) throws IllegalArgumentException {
     Share shareObject = new Share(companyName, date, price, numShares);
     this.shares.add(shareObject);
     return true;
