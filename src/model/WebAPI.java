@@ -8,14 +8,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDate;
-import java.util.concurrent.TimeoutException;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static utility.Constants.STOCK_API_KEY;
 import static utility.Constants.STOCK_DIRECTORY;
 import static utility.Constants.STOCK_ENDPOINT;
 
 public class WebAPI implements APIInterface {
-
+  protected final Logger LOGGER = Logger.getLogger(this.getClass().getName());
   @Override
   public double getShareValueByGivenDate(String stockSymbol, LocalDate date) {
     String url = STOCK_ENDPOINT;
@@ -33,35 +35,34 @@ public class WebAPI implements APIInterface {
               URLEncoder.encode("csv", charset));
       query = query + "&" + String.format("outputsize=%s",
               URLEncoder.encode("full", charset));
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
+    } catch (UnsupportedEncodingException exception) {
+      LOGGER.log(Level.SEVERE, "Error occurred while querying: ", exception);
+      return -1;
     }
     java.net.URLConnection connection = null;
     try {
-      System.out.println(url + "?" + query);
+      LOGGER.info(url + "?" + query);
       connection = new URL(url + "?" + query).openConnection();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+      connection.setRequestProperty("Accept-Charset", charset);
+    } catch (IOException ioException) {
+      LOGGER.log(Level.SEVERE, "Error occurred while querying: ", ioException);
+      return -1;
     }
-    connection.setRequestProperty("Accept-Charset", charset);
     int responseCode = 0;
     String responseMessage;
     if (connection instanceof HttpURLConnection) {
-      HttpURLConnection httpConnection = (HttpURLConnection) connection;
       try {
+        HttpURLConnection httpConnection = (HttpURLConnection) connection;
         responseCode = httpConnection.getResponseCode();
-        System.out.println(responseCode);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-      try {
         responseMessage = httpConnection.getResponseMessage();
-        System.out.println(responseMessage);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
+        LOGGER.info("API response: " + responseMessage);
+      } catch (IOException ioException) {
+        LOGGER.log(Level.SEVERE, "Error occurred during connection: ", ioException);
+        return -1;
       }
     } else {
-      System.err.println("error!");
+      LOGGER.log(Level.SEVERE, "Error occurred during connection");
+      return -1;
     }
     if (responseCode == HttpURLConnection.HTTP_OK) { // success
       HttpURLConnection httpConnection = (HttpURLConnection) connection;
@@ -69,20 +70,24 @@ public class WebAPI implements APIInterface {
       try {
         in = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
       } catch (IOException e) {
-        throw new RuntimeException(e);
+        LOGGER.log(Level.SEVERE, "Error occurred during getting result stream");
+        return -1;
       }
       String inputLine;
-      StringBuffer response = new StringBuffer();
+      StringBuilder response = new StringBuilder();
 
       while (true) {
         try {
           if ((inputLine = in.readLine()) == null) break;
         } catch (IOException e) {
-          throw new RuntimeException(e);
+          LOGGER.log(Level.SEVERE, "Error occurred during getting result stream");
+          return -1;
         }
-        System.out.println(date.toString());
         if (inputLine.substring(0, 10).equals(date.toString())) {
-          System.out.println(inputLine);
+          String [] inputLineData = inputLine.split(",");
+          double high = Double.parseDouble(inputLineData[2]);
+          double low = Double.parseDouble(inputLineData[3]);
+          return new Random().nextDouble(low, high);
         }
         response.append(inputLine).append(System.getProperty("line.separator"));
       }
@@ -91,16 +96,12 @@ public class WebAPI implements APIInterface {
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-
       CSVFile fileDatabase = new CSVFile();
       fileDatabase.writeToFile(STOCK_DIRECTORY, stockSymbol, response.toString().getBytes());
     } else {
-      System.out.println("Failure: GET request did not work.");
+      LOGGER.log(Level.SEVERE, "Failure: GET request did not work");
+      return -1;
     }
-    return 0;
-  }
-
-  public Share getShare (String id) throws TimeoutException {
-    return  null;
+    return -1;
   }
 }

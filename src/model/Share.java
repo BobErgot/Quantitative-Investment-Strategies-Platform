@@ -46,10 +46,9 @@ class Share implements Comparable {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof Share)) {
+    if (!(object instanceof Share other)) {
       return false;
     }
-    Share other = (Share) object;
     return this.companyName.equals(other.companyName) && this.purchaseDate == other.purchaseDate
             && this.price == other.price && this.numShares == other.numShares;
   }

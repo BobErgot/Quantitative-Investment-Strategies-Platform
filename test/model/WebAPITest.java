@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import static org.junit.Assert.assertTrue;
+
 public class WebAPITest {
   @Before
   public void setUp() throws Exception {
@@ -19,30 +21,8 @@ public class WebAPITest {
   @Test
   public void getShareValueByGivenDate() throws IOException {
     WebAPI webAPI = new WebAPI();
-    webAPI.getShareValueByGivenDate("IBM", LocalDate.now());
-//    URL url = new URL("");
-//    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//    con.setRequestMethod("GET");
-//    con.setRequestProperty("function", "TIME_SERIES_DAILY");
-//    con.setRequestProperty("symbol", "IBM");
-//    con.setRequestProperty("apikey", "T5770I9RBI1FTSXJ");
-//    con.setRequestProperty("datatype", "csv");
-//    con.setRequestProperty("outputsize", "full");
-//    int responseCode = con.getResponseCode();
-//    System.out.println("GET Response Code :: " + responseCode);
-//    if (responseCode == HttpURLConnection.HTTP_OK) { // success
-//      BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//      String inputLine;
-//      StringBuffer response = new StringBuffer();
-//
-//      while ((inputLine = in.readLine()) != null) {
-//        response.append(inputLine);
-//      }
-//      in.close();
-//
-//      System.out.println(response.toString());
-//    } else {
-//      System.out.println("Failure: GET request did not work.");
-//    }
+    Double value = webAPI.getShareValueByGivenDate("TSCO.LON",
+            LocalDate.parse("2022-10-28"));
+    assertTrue(value <= 216.6000 && value >= 212.900);
   }
 }

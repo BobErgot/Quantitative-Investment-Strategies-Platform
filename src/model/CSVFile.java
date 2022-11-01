@@ -21,6 +21,7 @@ import static utility.Constants.HOME;
 public class CSVFile extends FileAbstract {
   private final static String EXTENSION = "csv";
   private final static String RECORD_DELIMITER = "\n";
+
   public String getFileExtension() {
     return EXTENSION;
   }
@@ -37,8 +38,8 @@ public class CSVFile extends FileAbstract {
     Path filePath = null;
     try {
       Files.createDirectories(directoryPath);
-      Optional<Path> file = Files.list(directoryPath).filter(path -> path.getFileName().toFile()
-              .getName().startsWith(filePrefix)).findFirst();
+      Optional<Path> file = Files.list(directoryPath).filter(path -> path.getFileName()
+              .toFile().getName().startsWith(filePrefix)).findFirst();
       if (file.isPresent()) {
         filePath = file.get();
       }

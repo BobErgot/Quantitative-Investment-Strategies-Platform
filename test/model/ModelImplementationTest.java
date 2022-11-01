@@ -9,13 +9,13 @@ import org.junit.Test;
 
 public class ModelImplementationTest {
 
-
   // create Empty portfolio
   @Test
   public void testEmptyCreatePortfolio(){
     ModelInterface model = new ModelImplementation();
     model.createPortfolio("hello");
   }
+
   // invalid creation date (creation date earlier than any of the stock date purchases)
   @Test
   public void testInvalidCreationDate(){
@@ -23,6 +23,7 @@ public class ModelImplementationTest {
     model.addShareToModel("Abc", LocalDate.of(2023, 1, 8),22.0,22);
     model.createPortfolio("portfolio1");
   }
+
   // create valid portfolio
   @Test
   public void testCreateValidPortfolio() {
@@ -34,14 +35,15 @@ public class ModelImplementationTest {
     }
     model.createPortfolio("portfolio2");
   }
+
   // get correct list of portfolios
   @Test
   public void testGetPortfolio() {
     ModelInterface model = new ModelImplementation();
-    System.out.println(model.getPortfolio());
-//    model.addShareToModel("Abc");
-//    assertEquals("abc" ,model.getPortfolio());
+    model.addShareToModel("TSCO.LON", 8);
+    assertEquals("abc" ,model.getPortfolio());
   }
+
   // negative id or invalid string
   @Test
   public void testBlankIdPortfolioById() {
