@@ -19,9 +19,13 @@ import static utility.Constants.HOME;
 
 public class CSVFile extends FileAbstract {
   private final static String EXTENSION = "csv";
-
+  private final static String RECORD_DELIMITER = "\n";
   public String getFileExtension() {
     return EXTENSION;
+  }
+
+  public String getRecordDelimiter() {
+    return RECORD_DELIMITER;
   }
 
   @Override
@@ -62,16 +66,23 @@ public class CSVFile extends FileAbstract {
     StringBuilder stringFormat = new StringBuilder();
     String [] objectFields = object.split("\n");
     int index = 0;
-    for(int i = 0; i<objectFields.length - 1; i++){
+    for(int i = 0; i<objectFields.length-1; i++){
       if (objectFields[i].charAt(0) == '*') {
         stringFormat.append("-F:");
         stringFormat.append(referenceFile.get(index));
         index++;
+        continue;
       }
       stringFormat.append(objectFields[i].split(":", 2)[1]);
       stringFormat.append(",");
     }
-    stringFormat.append(objectFields[objectFields.length-1].split(":", 2)[1]);
+    if (objectFields[objectFields.length-1].charAt(0) == '*') {
+      stringFormat.append("-F:");
+      stringFormat.append(referenceFile.get(index));
+      index++;
+    } else {
+      stringFormat.append(objectFields[objectFields.length-1].split(":", 2)[1]);
+    }
     return stringFormat.toString();
   }
 

@@ -15,6 +15,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.WRITE;
 import static utility.Constants.FILE_SEPARATOR;
 import static utility.Constants.HOME;
@@ -79,11 +80,18 @@ abstract class FileAbstract implements FileInterface {
     if (null != filePath && filePath.toFile().isFile()) {
       try {
         AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(filePath, WRITE);
-
-        ByteBuffer buffer = ByteBuffer.allocate(dataBytes.length);
+        byte [] newLine = getRecordDelimiter().getBytes();
+        ByteBuffer buffer = ByteBuffer.allocate(dataBytes.length + newLine.length);
         buffer.put(dataBytes);
+        if (dataBytes.length > 0) {
+          buffer.put(newLine);
+        }
         buffer.flip();
-        Future<Integer> operation = fileChannel.write(buffer, 0);
+        if (fileChannel.size() > 0) {
+          Future<Integer> operation = fileChannel.write(buffer, fileChannel.size());
+        } else{
+          Future<Integer> operation = fileChannel.write(buffer, 0);
+        }
         buffer.clear();
       } catch (IOException ioException) {
         LOGGER.log(Level.SEVERE, "Error occurred in file write.", ioException);
@@ -96,10 +104,6 @@ abstract class FileAbstract implements FileInterface {
 
   public double getShareValueByGivenDate(String stockSymbol, LocalDate date) {
     return 0;
-  }
-
-  public List<String> getListOfPortfolios() {
-    return null;
   }
 
   public Portfolio getListOfPortfoliosById(String id) {

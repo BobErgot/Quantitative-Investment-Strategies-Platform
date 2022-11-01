@@ -31,7 +31,6 @@ public class PortfolioTest {
     try {
       Portfolio p = new Portfolio(0,shareList, LocalDate.now());
       FileAbstract fileDatabase = new CSVFile();
-      System.out.println(p.toString());
     } catch (Exception e) {
       fail("Throws error even though portfolio was created correctly.");
     }

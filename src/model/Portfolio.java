@@ -41,7 +41,7 @@ class Portfolio {
   }
 
   public String toString() {
-    StringBuilder toString = new StringBuilder("id:" + this.id + "\ncreationDate:"
+    StringBuilder toString = new StringBuilder("+id:" + this.id + "\ncreationDate:"
             + creationDate + "\n*shares:");
     for (int i = 0; i < shares.size(); i++) {
       String record = shares.get(i).toString().replace("\n", ",");

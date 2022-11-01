@@ -22,15 +22,17 @@ public class ModelImplementation implements ModelInterface {
   public void createPortfolio() {
     // remember to delete share list after creating portfolio
     Portfolio portfolioObject = new Portfolio(id++,shares, LocalDate.now());
+    //System.out.println(portfolioObject.toString());
     FileAbstract fileDatabase = new CSVFile();
     String formattedString = fileDatabase.convertObjectListIntoString(shares);
     String shareFileName = UUID.randomUUID().toString();
     List<String> referenceList = new ArrayList<>();
     referenceList.add(shareFileName);
-    fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, shareFileName ,formattedString.getBytes());
-    System.out.println(formattedString);
-    fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
-            fileDatabase.convertObjectIntoString(portfolioObject.toString(), referenceList).getBytes());
+    if (fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, shareFileName ,formattedString.getBytes())){
+      //System.out.println(formattedString);
+      fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
+              fileDatabase.convertObjectIntoString(portfolioObject.toString(), referenceList).getBytes());
+    }
     shares = new ArrayList<>();
     portfolioCache = portfolioObject;
   }
@@ -38,7 +40,7 @@ public class ModelImplementation implements ModelInterface {
   @Override
   public List<String> getPortfolio() {
     FileAbstract fileDatabase = new CSVFile();
-    return fileDatabase.getListOfPortfolios();
+    return fileDatabase.readFromFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY);
   }
 
   @Override

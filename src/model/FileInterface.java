@@ -25,6 +25,8 @@ public interface FileInterface {
   boolean exists(String folderName, String fileName, String extension);
 
   /**
+   * Return the path formed from the given folder name, file name and extension relative to Home
+   * path.
    * @param folderName directory of file structure where the file needs to be stored
    * @param fileName   name of the file to be searched
    * @param extension  extension of the file to be read
@@ -64,13 +66,33 @@ public interface FileInterface {
   List<String> readFromFile(String folderName, String filePrefix);
 
   /**
-   * Returns the file extension
+   * Returns the file extension.
    *
    * @return file extension as string
    */
   String getFileExtension();
 
+  /**
+   * Returns the record delimiter.
+   *
+   * @return record delimiter as string
+   */
+  String getRecordDelimiter();
+
+  /**
+   * Convert Object into record representation for this file implementation.
+   * @param object object in string format that needs to be mapped to this file format
+   * @param referenceFile if object is dependent on other object type, then it can be stored in
+   *                      another file, and a reference of that file is given
+   * @return string representation of that object in this file implementation
+   */
   String convertObjectIntoString(String object, List<String> referenceFile);
 
+  /**
+   * Convert Object List into records representation for this file implementation.
+   * @param objectList list of objects that is to be represented in this file implementation
+   * @return string representation of that object list in this file implementation
+   * @param <T> Custom object whose list is passed as parameter
+   */
   <T> String convertObjectListIntoString(List<T> objectList);
 }
