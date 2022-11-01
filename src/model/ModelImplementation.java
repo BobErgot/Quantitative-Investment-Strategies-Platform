@@ -10,11 +10,14 @@ import java.util.function.Predicate;
 import static utility.Constants.PORTFOLIO_DIRECTORY;
 
 public class ModelImplementation implements ModelInterface {
-  int id=0;
-  List<Share> shares;
+  private int id=0;
+  private List<Share> shares;
   // maintains last portfolio used for faster inference
-  Portfolio portfolioCache;
+  private Portfolio portfolioCache;
+  public ModelImplementation(){
+    this.shares = new ArrayList<>();
 
+  }
   @Override
   public void createPortfolio() {
     // remember to delete share list after creating portfolio
@@ -72,3 +75,4 @@ public class ModelImplementation implements ModelInterface {
   }
 
 }
+
