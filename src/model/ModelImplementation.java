@@ -97,5 +97,12 @@ public class ModelImplementation implements ModelInterface {
     return false;
   }
 
+  @Override
+  public void addPortfolioByUpload(String path) {
+    FileInterface fileObject = new CSVFile();
+//    String portfolioString = fileObject.loadPortfolioByPath();
+    // return parsePortfolioString(portfolioString);
+  }
+
 }
 

@@ -61,4 +61,58 @@ public class ControllerImpl implements Controller {
       while(!flag);
     }
   }
+  @Override
+  public void uploadPortfolio() {
+    boolean validPath = false;
+    do {
+      viewObject.showUploadPortfolioOptions();
+      String path = scanner.nextLine();
+      if (path.length() > 0)
+      {
+        validPath=true;
+        modelObject.addPortfolioByUpload(path);
+      }
+      if(!validPath)
+        viewObject.printInvalidInputMessage();
+    } while(!validPath);
+  }
+  @Override
+  public void singleRunThrough() {
+    boolean invalidInput;
+    do {
+      invalidInput = false;
+      viewObject.showMainMenu();
+      int choice = scanner.nextInt();
+      switch (choice) {
+        case 1:
+          this.createPortfolio();
+          break;
+        case 2:
+          this.uploadPortfolio();
+          break;
+        case 3:
+          this.viewPortfolio();
+          break;
+        default:
+          invalidInput = true;
+          break;
+      }
+      if(invalidInput)
+        viewObject.printInvalidInputMessage();
+    }while(!invalidInput);
+  }
+
+  @Override
+  public void go() {
+    boolean userContinue;
+    do{
+      userContinue=false;
+      this.singleRunThrough();
+      viewObject.askIfUserContinues();
+      int choice = scanner.nextInt();
+      if(choice==1)
+        userContinue=true;
+    }while (userContinue);
+  }
+
 }

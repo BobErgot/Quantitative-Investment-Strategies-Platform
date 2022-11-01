@@ -64,4 +64,19 @@ public class ViewImpl implements View {
   public void selectPortfolio() {
     this.out.println("Select an ID from above list");
   }
+
+  @Override
+  public void printInvalidInputMessage() {
+    this.out.println("Invalid Input!");
+  }
+
+  @Override
+  public void showUploadPortfolioOptions() {
+    this.out.println("Write path to portfolio:");
+  }
+
+  @Override
+  public void askIfUserContinues() {
+    this.out.println("Do you want to continue?");
+  }
 }

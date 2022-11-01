@@ -34,4 +34,10 @@ public interface View {
   void showValuation(double valuation);
 
   void selectPortfolio();
+
+  void printInvalidInputMessage();
+
+  void showUploadPortfolioOptions();
+
+  void askIfUserContinues();
 }
