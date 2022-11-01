@@ -85,10 +85,12 @@ abstract class FileAbstract implements FileInterface {
           buffer.put(newLine);
         }
         buffer.flip();
+
+        Future<Integer> operation;
         if (fileChannel.size() > 0) {
-          Future<Integer> operation = fileChannel.write(buffer, fileChannel.size());
+          operation = fileChannel.write(buffer, fileChannel.size());
         } else {
-          Future<Integer> operation = fileChannel.write(buffer, 0);
+          operation = fileChannel.write(buffer, 0);
         }
         buffer.clear();
       } catch (IOException ioException) {

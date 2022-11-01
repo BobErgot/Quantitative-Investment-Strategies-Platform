@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -49,11 +50,11 @@ public class CSVFile extends FileAbstract {
     if (filePath != null) {
       try (AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(filePath,
               StandardOpenOption.READ)) {
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        ByteBuffer buffer = ByteBuffer.allocate((int) fileChannel.size());
         Future<Integer> operation = fileChannel.read(buffer, 0);
         operation.get();
         String fileContent = new String(buffer.array()).trim();
-        fileData.add(fileContent);
+        fileData.addAll(Arrays.stream(fileContent.split("\n")).toList());
         buffer.clear();
       } catch (IOException | ExecutionException | InterruptedException exception) {
         LOGGER.log(Level.SEVERE, "Error occurred in reading file: ", exception);
