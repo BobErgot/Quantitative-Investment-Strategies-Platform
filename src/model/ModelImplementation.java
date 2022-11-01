@@ -1,5 +1,8 @@
 package model;
 
+import static utility.Constants.PORTFOLIO_DIRECTORY;
+import static utility.Constants.PORTFOLIO_NOT_FOUND;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,26 +12,28 @@ import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
-import static utility.Constants.PORTFOLIO_DIRECTORY;
-
 public class ModelImplementation implements ModelInterface {
+
   private Set<Share> shares;
-  private List<Portfolio> portfolios;
-  public ModelImplementation(){
+  private final Set<Portfolio> portfolios;
+
+  public ModelImplementation() {
     this.shares = new HashSet<>();
-    this.portfolios = new ArrayList<>();
+    this.portfolios = new HashSet<>();
   }
+
   @Override
   public void createPortfolio(String portfolioName) {
-    Portfolio portfolioObject = new Portfolio(portfolioName,new HashSet<>(shares), LocalDate.now());
+    Portfolio portfolioObject = new Portfolio(portfolioName, shares, LocalDate.now());
     FileInterface fileDatabase = new CSVFile();
     String formattedString = fileDatabase.convertObjectListIntoString(new ArrayList<>(shares));
     String shareFileName = UUID.randomUUID().toString();
     List<String> referenceList = new ArrayList<>();
     referenceList.add(shareFileName);
-    if (fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, shareFileName ,formattedString.getBytes())){
+    if (fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, shareFileName, formattedString.getBytes())) {
       fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
-              fileDatabase.convertObjectIntoString(portfolioObject.toString(), referenceList).getBytes());
+          fileDatabase.convertObjectIntoString(portfolioObject.toString(), referenceList)
+              .getBytes());
     }
     shares = new HashSet<>();
     portfolios.add(portfolioObject);
@@ -40,16 +45,25 @@ public class ModelImplementation implements ModelInterface {
     return fileDatabase.readFromFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY);
   }
 
+  private Portfolio getPortfolioObjectById(String id) {
+    for (Portfolio portfolio : portfolios) {
+      if (portfolio.getId().equals(id)) {
+        return portfolio;
+      }
+    }
+    return null;
+  }
+
   @Override
   public String getPortfolioById(String id) {
-    FileAbstract fileDatabase = new CSVFile();
-    return fileDatabase.getListOfPortfoliosById(id).toString();
+    Portfolio portfolio = this.getPortfolioObjectById(id);
+    return portfolio == null ? PORTFOLIO_NOT_FOUND : portfolio.toString();
   }
 
   @Override
   public <T> double getValuation(String id, Predicate<T> filter) {
     FileAbstract fileDatabase = new CSVFile();
-    Portfolio portfolioObject = fileDatabase.getListOfPortfoliosById(id);
+    Portfolio portfolioObject = this.getPortfolioObjectById(id);
     return portfolioObject.getValuation((Predicate<Share>) filter);
   }
 
@@ -78,12 +92,8 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public boolean idIsPresent(int selectedId) {
-    for(Portfolio portfolio: portfolios){
-      if(portfolio.getId()==selectedId)
-        return true;
-    }
-    return false;
+  public boolean idIsPresent(String selectedId) {
+    return !(this.getPortfolioById(selectedId).equals(PORTFOLIO_NOT_FOUND));
   }
 
   @Override

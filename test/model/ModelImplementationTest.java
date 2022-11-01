@@ -14,14 +14,14 @@ public class ModelImplementationTest {
   @Test
   public void testEmptyCreatePortfolio(){
     ModelInterface model = new ModelImplementation();
-    model.createPortfolio();
+    model.createPortfolio("joe1");
   }
   // invalid creation date (creation date earlier than any of the stock date purchases)
   @Test
   public void testInvalidCreationDate(){
     ModelInterface model = new ModelImplementation();
     model.addShareToModel("Abc", LocalDate.of(2023, 1, 8),22.0,22);
-    model.createPortfolio();
+    model.createPortfolio("joe2");
   }
   // create valid portfolio
   @Test
@@ -32,7 +32,7 @@ public class ModelImplementationTest {
     for (int i = 0; i < 10; i++) {
       model.addShareToModel(companies[i], LocalDate.now(), 2, 3);
     }
-    model.createPortfolio();
+    model.createPortfolio("joe3");
   }
   // get correct list of portfolios
   @Test

@@ -19,20 +19,41 @@ public class ControllerImpl implements Controller {
   }
 
   @Override
-  public boolean createPortfolio() {
-    viewObject.showCreatePortfolioMenu();
-    int choice = scanner.nextInt();
-    switch (choice) {
-      case 1:
-        this.addShareWithApiInput();
-        break;
-      case 2:
-        modelObject.createPortfolio();
-        break;
-      case 3:
-        return false;
-    }
-    return true;
+  public void createPortfolio() {
+    boolean invalidInput;
+    do {
+      invalidInput = false;
+      viewObject.showCreatePortfolioMenu();
+      int choice = scanner.nextInt();
+      switch (choice) {
+        case 1:
+          this.addShareWithApiInput();
+          break;
+        case 2:
+          boolean invalidPortfolioName = false;
+          do {
+            invalidPortfolioName = false;
+            viewObject.askForPortfolioName();
+            String portfolioName = scanner.nextLine();
+            if (portfolioName.length() > 0) {
+              modelObject.createPortfolio(portfolioName);
+            } else {
+              invalidPortfolioName = true;
+            }
+            if (invalidPortfolioName) {
+              viewObject.printInvalidInputMessage();
+            }
+          } while (invalidPortfolioName);
+          break;
+        case 3:
+          invalidInput = true;
+          break;
+      }
+      if (invalidInput) {
+        viewObject.printInvalidInputMessage();
+      }
+    } while (invalidInput);
+
   }
 
   @Override
@@ -53,29 +74,31 @@ public class ControllerImpl implements Controller {
       boolean flag = false;
       do {
         viewObject.selectPortfolio();
-        int selectedId = scanner.nextInt();
+        String selectedId = scanner.nextLine();
         flag = modelObject.idIsPresent(selectedId);
-        if (flag)
-          viewObject.showValuation(modelObject.getValuation(id, (a) -> true));
-      }
-      while(!flag);
+        if (flag) {
+          viewObject.showValuation(modelObject.getValuation(selectedId, (a) -> true));
+        }
+      } while (!flag);
     }
   }
+
   @Override
   public void uploadPortfolio() {
     boolean validPath = false;
     do {
       viewObject.showUploadPortfolioOptions();
       String path = scanner.nextLine();
-      if (path.length() > 0)
-      {
-        validPath=true;
+      if (path.length() > 0) {
+        validPath = true;
         modelObject.addPortfolioByUpload(path);
       }
-      if(!validPath)
+      if (!validPath) {
         viewObject.printInvalidInputMessage();
-    } while(!validPath);
+      }
+    } while (!validPath);
   }
+
   @Override
   public void singleRunThrough() {
     boolean invalidInput;
@@ -97,22 +120,24 @@ public class ControllerImpl implements Controller {
           invalidInput = true;
           break;
       }
-      if(invalidInput)
+      if (invalidInput) {
         viewObject.printInvalidInputMessage();
-    }while(!invalidInput);
+      }
+    } while (!invalidInput);
   }
 
   @Override
   public void go() {
     boolean userContinue;
-    do{
-      userContinue=false;
+    do {
+      userContinue = false;
       this.singleRunThrough();
       viewObject.askIfUserContinues();
       int choice = scanner.nextInt();
-      if(choice==1)
-        userContinue=true;
-    }while (userContinue);
+      if (choice == 1) {
+        userContinue = true;
+      }
+    } while (userContinue);
   }
 
 }

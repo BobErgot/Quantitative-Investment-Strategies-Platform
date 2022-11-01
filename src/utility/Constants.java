@@ -14,6 +14,7 @@ public final class Constants {
 
   public static final String DATE_FORMAT = "YYYY-MM-DD";
 
+  public static final String PORTFOLIO_NOT_FOUND = "Portfolio was not found!";
   private Constants() {
     // Restrict constructor access
   }

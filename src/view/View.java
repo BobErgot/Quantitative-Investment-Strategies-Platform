@@ -40,4 +40,6 @@ public interface View {
   void showUploadPortfolioOptions();
 
   void askIfUserContinues();
+
+  void askForPortfolioName();
 }

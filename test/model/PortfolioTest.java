@@ -31,7 +31,7 @@ public class PortfolioTest {
   @Test
   public void validConstructorTest() {
     try {
-      Portfolio p = new Portfolio(0,shareList, LocalDate.now());
+      Portfolio p = new Portfolio("Joe5",shareList, LocalDate.now());
       FileAbstract fileDatabase = new CSVFile();
     } catch (Exception e) {
       fail("Throws error even though portfolio was created correctly.");
@@ -42,7 +42,7 @@ public class PortfolioTest {
   @Test
   public void invalidListConstructorTest() {
     try {
-      Portfolio p = new Portfolio(0,new HashSet<>(), LocalDate.now());
+      Portfolio p = new Portfolio("Joe4",new HashSet<>(), LocalDate.now());
       fail("Does not throw error even though portfolio was created incorrectly.");
     } catch (IllegalArgumentException e) {
       //
@@ -52,7 +52,7 @@ public class PortfolioTest {
   // getValuation tests
   @Test
   public void getValuation() {
-    Portfolio p = new Portfolio(0,shareList, LocalDate.now());
+    Portfolio p = new Portfolio("Joe6",shareList, LocalDate.now());
     // all elements in portfolio
     assertEquals(60.0, p.getValuation((share) -> true), 0);
     // only companies that start with m
@@ -62,7 +62,7 @@ public class PortfolioTest {
 
   @Test
   public void getListOfShares() {
-    Portfolio p = new Portfolio(0,shareList, LocalDate.now());
+    Portfolio p = new Portfolio("joe7",shareList, LocalDate.now());
     assertEquals(shareList,p.getListOfShares());
   }
 }

@@ -96,12 +96,6 @@ public class ShareTest {
     assertEquals("Apple", s.getCompanyName());
   }
 
-  // getSharePrice test
-  @Test
-  public void testValidGetSharePrice() {
-    Share s = new Share("Apple", LocalDate.now(), 2.2, 4);
-    assertEquals(177.57, s.getSharePrice(LocalDate.parse("2021-12-31")), 0);
-  }
 
 
 }

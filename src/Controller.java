@@ -1,5 +1,5 @@
 public interface Controller {
-  boolean createPortfolio();
+  void createPortfolio();
   void viewPortfolio();
   void addShareWithApiInput();
   void singleRunThrough();
