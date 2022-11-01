@@ -12,32 +12,21 @@ import java.util.function.Predicate;
 import static utility.Constants.PORTFOLIO_DIRECTORY;
 
 public class ModelImplementation implements ModelInterface {
-  private int id=0;
   private Set<Share> shares;
-  // maintains last portfolio used for faster inference
   private List<Portfolio> portfolios;
   public ModelImplementation(){
     this.shares = new HashSet<>();
     this.portfolios = new ArrayList<>();
-    FileInterface fileDatabase = new CSVFile();
-    System.out.println(this.getPortfolio().size());
-////    String[] protfolioStrings = this.getPortfolio().split(",");
-////    for(int i=2; i<protfolioStrings.length; i+=2)
-////      System.out.println(protfolioStrings[i]);
-////      fileDatabase.readFromFile(PORTFOLIO_DIRECTORY, portfolioStrings.get(0));
   }
   @Override
-  public void createPortfolio() {
-    // remember to delete share list after creating portfolio
-    Portfolio portfolioObject = new Portfolio(id++,shares, LocalDate.now());
-    //System.out.println(portfolioObject.toString());
+  public void createPortfolio(String portfolioName) {
+    Portfolio portfolioObject = new Portfolio(portfolioName,new HashSet<>(shares), LocalDate.now());
     FileInterface fileDatabase = new CSVFile();
     String formattedString = fileDatabase.convertObjectListIntoString(new ArrayList<>(shares));
     String shareFileName = UUID.randomUUID().toString();
     List<String> referenceList = new ArrayList<>();
     referenceList.add(shareFileName);
     if (fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, shareFileName ,formattedString.getBytes())){
-      //System.out.println(formattedString);
       fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
               fileDatabase.convertObjectIntoString(portfolioObject.toString(), referenceList).getBytes());
     }

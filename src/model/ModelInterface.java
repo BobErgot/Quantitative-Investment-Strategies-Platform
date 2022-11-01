@@ -8,8 +8,9 @@ public interface ModelInterface {
 
   /**
    * Creates final portfolio after adding all the shares.
+   * @param portfolioName Name of the portfolio to be created
    */
-  void createPortfolio();
+  void createPortfolio(String portfolioName);
 
   /**
    * Uses FileAPI to get a list of portfolios in string format

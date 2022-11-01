@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 
 class Portfolio {
 
-  final int id;
+  final String id;
   final Set<Share> shares;
   final LocalDate creationDate;
 
-  public Portfolio(int id, Set<Share> shares, LocalDate creationDate) {
+  public Portfolio(String id, Set<Share> shares, LocalDate creationDate) {
     if (shares.size() == 0) {
       throw new IllegalArgumentException("The size of list of shares must be greater than zero!");
     }
@@ -48,7 +48,7 @@ class Portfolio {
     List<Share> shareList = new ArrayList<>(shares);
     for (int i = 0; i < shares.size(); i++) {
       String record = shareList.get(i).toString().replace("\n", ",");
-      record = record.substring(0, record.length()-2);
+      record = record.substring(0, record.length() - 2);
       toString.append(record).append("|");
     }
     return toString.toString();
