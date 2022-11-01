@@ -55,4 +55,7 @@ class Portfolio {
   }
 
 
+  public int getId() {
+    return this.id;
+  }
 }
