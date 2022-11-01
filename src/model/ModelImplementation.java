@@ -77,7 +77,7 @@ public class ModelImplementation implements ModelInterface {
           String[] inputLineData = stockRecord.split(",");
           double high = Double.parseDouble(inputLineData[2]);
           double low = Double.parseDouble(inputLineData[3]);
-          stockPrice = new Random().nextDouble(low, high);
+          stockPrice = low;
         }
       }
     } else {

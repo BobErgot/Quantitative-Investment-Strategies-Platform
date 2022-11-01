@@ -83,11 +83,11 @@ public class WebAPI implements APIInterface {
           LOGGER.log(Level.SEVERE, "Error occurred during getting result stream");
           return -1;
         }
-        if (inputLine.substring(0, 10).equals(date.toString())) {
+        if (inputLine.length() >= 10 && inputLine.substring(0, 10).equals(date.toString())) {
           String [] inputLineData = inputLine.split(",");
           double high = Double.parseDouble(inputLineData[2]);
           double low = Double.parseDouble(inputLineData[3]);
-          return new Random().nextDouble(low, high);
+          return low;
         }
         response.append(inputLine).append(System.getProperty("line.separator"));
       }

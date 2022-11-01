@@ -55,7 +55,9 @@ public class CSVFile extends FileAbstract {
         Future<Integer> operation = fileChannel.read(buffer, 0);
         operation.get();
         String fileContent = new String(buffer.array()).trim();
-        fileData.addAll(Arrays.stream(fileContent.split("\n")).toList());
+        for (String lineData : fileContent.split("\n")){
+          fileData.add(lineData);
+        }
         buffer.clear();
       } catch (IOException | ExecutionException | InterruptedException exception) {
         LOGGER.log(Level.SEVERE, "Error occurred in reading file: ", exception);

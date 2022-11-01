@@ -32,7 +32,7 @@ public class ModelImplementationTest {
     String[] companies = {"Apple", "Microsoft", "Google", "Amazon", "Netflix", "Meta", "Cognizant",
             "Salesforce", "Tesla", "Mathworks"};
     for (int i = 0; i < 10; i++) {
-      model.addShareToModel(companies[i], LocalDate.now(), new Random().nextInt(1,10));
+      model.addShareToModel(companies[i], LocalDate.now(), new Random().nextInt(10));
     }
     model.createPortfolio("portfolio2");
   }
@@ -41,7 +41,7 @@ public class ModelImplementationTest {
   @Test
   public void testGetPortfolio() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("TSCO.LON", LocalDate.now(), new Random().nextInt(1,10));
+    model.addShareToModel("TSCO.LON", LocalDate.now(), new Random().nextInt(10));
     assertEquals("abc", model.getPortfolio());
   }
 
@@ -50,7 +50,7 @@ public class ModelImplementationTest {
   public void testBlankIdPortfolioById() {
     ModelInterface model = new ModelImplementation();
     for (int i = 0; i < 10; i++)
-      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(1,10));
+      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(10));
     try {
       model.getPortfolioById("");
       fail("Test case passed even though empty Id was given");
@@ -64,7 +64,7 @@ public class ModelImplementationTest {
   public void testInvalidPortfolioById() {
     ModelInterface model = new ModelImplementation();
     for (int i = 0; i < 10; i++)
-      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(1,10));
+      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(10));
     try {
       model.getPortfolioById("100");
       fail("Test case passed even though invalid Id was given");
@@ -78,7 +78,7 @@ public class ModelImplementationTest {
   public void testValidPortfolioById() {
     ModelInterface model = new ModelImplementation();
     for (int i = 0; i < 10; i++)
-      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(1,10));
+      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(10));
     model.getPortfolioById("1");
   }
 
@@ -87,7 +87,7 @@ public class ModelImplementationTest {
   public void testBlankGetValuation() {
     ModelInterface model = new ModelImplementation();
     for (int i = 0; i < 10; i++)
-      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(1,10));
+      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(10));
     try {
       assertEquals(10.0, model.getValuation("", share -> true), 0);
       fail("Test case passed even though invalid Id was given");
@@ -101,7 +101,7 @@ public class ModelImplementationTest {
   public void testInvalidGetValuation() {
     ModelInterface model = new ModelImplementation();
     for (int i = 0; i < 10; i++)
-      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(1,10));
+      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(10));
     try {
       assertEquals(10.0, model.getValuation("1000", share -> true), 0);
       fail("Test case passed even though invalid Id was given");
@@ -115,7 +115,7 @@ public class ModelImplementationTest {
   public void testValidGetValuation() {
     ModelInterface model = new ModelImplementation();
     for (int i = 0; i < 10; i++)
-      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(1,10));
+      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(10));
     assertEquals(10.0, model.getValuation("1", share -> true), 0);
   }
 
@@ -123,7 +123,7 @@ public class ModelImplementationTest {
   public void testInvalidgetValuation() {
     ModelInterface model = new ModelImplementation();
     for (int i = 0; i < 10; i++)
-      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(1,10));
+      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(10));
     model.getValuation("1", share -> true);
   }
 
