@@ -2,6 +2,7 @@ package model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
@@ -21,9 +22,9 @@ public class ModelImplementation implements ModelInterface {
   @Override
   public void createPortfolio() {
     // remember to delete share list after creating portfolio
-    Portfolio portfolioObject = new Portfolio(id++,shares, LocalDate.now());
+    Portfolio portfolioObject = new Portfolio(id++,new HashSet<>(shares), LocalDate.now());
     //System.out.println(portfolioObject.toString());
-    FileAbstract fileDatabase = new CSVFile();
+    FileInterface fileDatabase = new CSVFile();
     String formattedString = fileDatabase.convertObjectListIntoString(shares);
     String shareFileName = UUID.randomUUID().toString();
     List<String> referenceList = new ArrayList<>();
@@ -39,7 +40,7 @@ public class ModelImplementation implements ModelInterface {
 
   @Override
   public List<String> getPortfolio() {
-    FileAbstract fileDatabase = new CSVFile();
+    FileInterface fileDatabase = new CSVFile();
     return fileDatabase.readFromFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY);
   }
 
@@ -69,6 +70,7 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
+  @Deprecated
   public boolean addShareToModel(String companyName, LocalDate date, double price, int numShares)
       throws IllegalArgumentException {
     Share shareObject = new Share(companyName, date, price, numShares);

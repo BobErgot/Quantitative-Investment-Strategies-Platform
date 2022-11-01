@@ -6,17 +6,19 @@ import static org.junit.Assert.fail;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
 public class PortfolioTest {
 
-  List<Share> shareList;
+  Set<Share> shareList;
 
   @Before
   public void createShareList() {
-    shareList = new ArrayList<>();
+    shareList = new HashSet<>();
     String[] companies = {"Apple", "Microsoft", "Google", "Amazon", "Netflix", "Meta", "Cognizant",
         "Salesforce", "Tesla", "Mathworks"};
     for (int i = 0; i < 10; i++) {
@@ -40,7 +42,7 @@ public class PortfolioTest {
   @Test
   public void invalidListConstructorTest() {
     try {
-      Portfolio p = new Portfolio(0,new ArrayList<>(), LocalDate.now());
+      Portfolio p = new Portfolio(0,new HashSet<>(), LocalDate.now());
       fail("Does not throw error even though portfolio was created incorrectly.");
     } catch (IllegalArgumentException e) {
       //
