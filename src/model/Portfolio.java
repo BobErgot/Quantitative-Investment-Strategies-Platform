@@ -54,8 +54,7 @@ class Portfolio {
     return toString.toString();
   }
 
-
-  public int getId() {
+  public String getId() {
     return this.id;
   }
 }

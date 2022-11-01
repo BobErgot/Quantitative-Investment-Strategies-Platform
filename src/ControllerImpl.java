@@ -27,7 +27,8 @@ public class ControllerImpl implements Controller {
         this.addShareWithApiInput();
         break;
       case 2:
-        modelObject.createPortfolio();
+        // TODO
+        //modelObject.createPortfolio();
         break;
       case 3:
         return false;
@@ -53,10 +54,12 @@ public class ControllerImpl implements Controller {
       boolean flag = false;
       do {
         viewObject.selectPortfolio();
-        int selectedId = scanner.nextInt();
-        flag = modelObject.idIsPresent(selectedId);
-        if (flag)
-          viewObject.showValuation(modelObject.getValuation(id, (a) -> true));
+        // TODO
+//        int selectedId = scanner.nextInt();
+//        flag = modelObject.idIsPresent(selectedId);
+//        if (flag) {
+//          viewObject.showValuation(modelObject.getValuation(id, (a) -> true));
+//        }
       }
       while(!flag);
     }

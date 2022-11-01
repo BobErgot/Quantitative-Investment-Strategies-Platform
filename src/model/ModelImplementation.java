@@ -10,6 +10,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 import static utility.Constants.PORTFOLIO_DIRECTORY;
+import static utility.Constants.STOCK_DIRECTORY;
 
 public class ModelImplementation implements ModelInterface {
   private Set<Share> shares;
@@ -43,27 +44,30 @@ public class ModelImplementation implements ModelInterface {
   @Override
   public String getPortfolioById(String id) {
     FileAbstract fileDatabase = new CSVFile();
-    return fileDatabase.getListOfPortfoliosById(id).toString();
+    //TODO
+    //return fileDatabase.getListOfPortfoliosById(id).toString();
+    return "";
   }
 
   @Override
   public <T> double getValuation(String id, Predicate<T> filter) {
     FileAbstract fileDatabase = new CSVFile();
-    Portfolio portfolioObject = fileDatabase.getListOfPortfoliosById(id);
-    return portfolioObject.getValuation((Predicate<Share>) filter);
+    // TODO
+    //Portfolio portfolioObject = fileDatabase.getListOfPortfoliosById(id);
+    //return portfolioObject.getValuation((Predicate<Share>) filter);
+    return 0;
   }
 
   @Override
   public boolean addShareToModel(String companyName, int numShares) {
-    WebAPI apiObject = new WebAPI();
+    FileAbstract fileDatabase = new CSVFile();
     try {
-      // TODO get share by company id and number of shares
-//      Share share = apiObject.getShare(companyName,numShares);
-      Share share = apiObject.getShare(companyName);
+      List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
 
-      shares.add(share);
+      // TODO get share by company id and number of shares
+
       return true;
-    } catch (TimeoutException timeoutException) {
+    } catch (Exception e) {
       return false;
     }
   }
@@ -78,9 +82,9 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public boolean idIsPresent(int selectedId) {
+  public boolean idIsPresent(String selectedId) {
     for(Portfolio portfolio: portfolios){
-      if(portfolio.getId()==selectedId)
+      if(portfolio.getId().equals(selectedId))
         return true;
     }
     return false;
