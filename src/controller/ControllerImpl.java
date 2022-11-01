@@ -3,6 +3,7 @@ package controller;
 import controller.Controller;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.time.LocalDate;
 import java.util.Scanner;
 import model.ModelImplementation;
 import model.ModelInterface;
@@ -73,7 +74,7 @@ public class ControllerImpl implements Controller {
     String companyName = scanner.next();
     viewObject.showAddShareWithApiInputMenu(1);
     int numShares = scanner.nextInt();
-    modelObject.addShareToModel(companyName, numShares);
+    modelObject.addShareToModel(companyName, LocalDate.now(), numShares);
   }
 
   @Override

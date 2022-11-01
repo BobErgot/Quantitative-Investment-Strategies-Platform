@@ -34,21 +34,21 @@ public interface ModelInterface {
 
   /**
    * Adds share to local list of shares given company name, using WebAPI.
-   * @param companyName Company  name to get share of.
-   * @param numShares Number of shares purchased.
+   * @param companyName Company  name to get share of
+   * @param date Date for which the stock price needs to be calculated.
+   * @param numShares Number of shares purchased
    * @return value of stock
    */
-  double getStockPrice(String companyName, int numShares);
+  double getStockPrice(String companyName, LocalDate date, int numShares);
 
   /**
-   * Adds share to local list of shares given details of the share (manual entry).
+   * Adds share to local list of shares given details of the share.
    * @param companyName Company  name to get share of.
    * @param date Date of share purchased.
-   * @param price Price of share on that date.
    * @param numShares Number of shares purchased.
    * @return If successfully  added or not.
    */
-  boolean addShareToModel(String companyName, LocalDate date, double price, int numShares);
+  boolean addShareToModel(String companyName, LocalDate date, int numShares);
 
   void addPortfolioByUpload(String path);
 

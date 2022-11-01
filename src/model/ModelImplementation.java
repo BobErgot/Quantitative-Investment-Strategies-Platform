@@ -67,13 +67,13 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public double getStockPrice(String companyName, int numShares) {
+  public double getStockPrice(String companyName, LocalDate date, int numShares) {
     FileAbstract fileDatabase = new CSVFile();
     double stockPrice = -1.00;
     List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
     if (stockData.size() != 0) {
       for (String stockRecord : stockData) {
-        if (stockRecord.substring(0, 10).equals(LocalDate.now().toString())) {
+        if (stockRecord.substring(0, 10).equals(date.toString())) {
           String[] inputLineData = stockRecord.split(",");
           double high = Double.parseDouble(inputLineData[2]);
           double low = Double.parseDouble(inputLineData[3]);
@@ -82,15 +82,15 @@ public class ModelImplementation implements ModelInterface {
       }
     } else {
       APIInterface webAPi = new WebAPI();
-      stockPrice = webAPi.getShareValueByGivenDate(companyName, LocalDate.now());
+      stockPrice = webAPi.getShareValueByGivenDate(companyName, date);
     }
     return (stockPrice >= 0)? numShares*stockPrice : -1.00;
   }
 
   @Override
-  @Deprecated
-  public boolean addShareToModel(String companyName, LocalDate date, double price, int numShares) throws IllegalArgumentException {
-    Share shareObject = new Share(companyName, date, price, numShares);
+  public boolean addShareToModel(String companyName, LocalDate date, int numShares) throws IllegalArgumentException {
+    Share shareObject = new Share(companyName, date, getStockPrice(companyName, date, numShares),
+            numShares);
     this.shares.add(shareObject);
     return true;
   }
