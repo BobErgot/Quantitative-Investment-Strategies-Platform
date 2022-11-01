@@ -47,7 +47,7 @@ public class ModelImplementationTest {
   public void testBlankIdPortfolioById() {
     ModelInterface model = new ModelImplementation();
     for(int i=0; i<10; i++)
-      model.addShareToModel("Abc"+i);
+      model.addShareToModel("Abc"+i,2);
     try {
       model.getPortfolioById("");
       fail("Test case passed even though empty Id was given");
@@ -61,7 +61,7 @@ public class ModelImplementationTest {
   public void testInvalidPortfolioById() {
     ModelInterface model = new ModelImplementation();
     for(int i=0; i<10; i++)
-      model.addShareToModel("Abc"+i);
+      model.addShareToModel("Abc"+i,2);
     try {
       model.getPortfolioById("100");
       fail("Test case passed even though invalid Id was given");
@@ -75,7 +75,7 @@ public class ModelImplementationTest {
   public void testValidPortfolioById() {
     ModelInterface model = new ModelImplementation();
     for(int i=0; i<10; i++)
-      model.addShareToModel("Abc"+i);
+      model.addShareToModel("Abc"+i,2);
     model.getPortfolioById("1");
   }
   // Check if valuation is correct.
@@ -83,7 +83,7 @@ public class ModelImplementationTest {
   public void testBlankGetValuation() {
     ModelInterface model = new ModelImplementation();
     for(int i=0; i<10; i++)
-      model.addShareToModel("Abc"+i);
+      model.addShareToModel("Abc"+i,2);
     try {
       assertEquals(10.0, model.getValuation("", share -> true), 0);
       fail("Test case passed even though invalid Id was given");
@@ -97,7 +97,7 @@ public class ModelImplementationTest {
   public void testInvalidGetValuation() {
     ModelInterface model = new ModelImplementation();
     for(int i=0; i<10; i++)
-      model.addShareToModel("Abc"+i);
+      model.addShareToModel("Abc"+i,2);
     try {
       assertEquals(10.0, model.getValuation("1000", share -> true), 0);
       fail("Test case passed even though invalid Id was given");
@@ -111,14 +111,14 @@ public class ModelImplementationTest {
   public void testValidGetValuation() {
     ModelInterface model = new ModelImplementation();
     for(int i=0; i<10; i++)
-      model.addShareToModel("Abc"+i);
+      model.addShareToModel("Abc"+i,2);
     assertEquals(10.0,model.getValuation("1",share->true),0);
   }
   @Test
   public void testInvalidgetValuation() {
     ModelInterface model = new ModelImplementation();
     for(int i=0; i<10; i++)
-      model.addShareToModel("Abc"+i);
+      model.addShareToModel("Abc"+i,2);
     model.getValuation("1",share->true);
   }
   // *test for both overloaded functions*

@@ -30,14 +30,15 @@ public interface ModelInterface {
    * @param filter Filter to sort through stocks in portfolio.
    * @return Valuation of portfolio.
    */
-  double getValuation(String id, Predicate<Share> filter);
+  <T> double getValuation(String id, Predicate<T> filter);
 
   /**
    * Adds share to local list of shares given company name, using WebAPI.
    * @param companyName Company  name to get share of.
+   * @param numShares Number of shares purchased.
    * @return If successfully  added or not.
    */
-  boolean addShareToModel(String companyName);
+  boolean addShareToModel(String companyName, int numShares);
 
   /**
    * Adds share to local list of shares given details of the share (manual entry).
@@ -48,4 +49,6 @@ public interface ModelInterface {
    * @return If successfully  added or not.
    */
   boolean addShareToModel(String companyName, LocalDate date, double price, int numShares);
+
+  boolean idIsPresent(int selectedId);
 }
