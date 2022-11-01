@@ -101,12 +101,4 @@ abstract class FileAbstract implements FileInterface {
     }
     return false;
   }
-
-  public double getShareValueByGivenDate(String stockSymbol, LocalDate date) {
-    return 0;
-  }
-
-  public Portfolio getListOfPortfoliosById(String id) {
-    return null;
-  }
 }

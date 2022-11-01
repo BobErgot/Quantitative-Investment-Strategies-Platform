@@ -97,9 +97,4 @@ public class CSVFile extends FileAbstract {
     }
     return stringFormat.toString();
   }
-
-  @Override
-  public long getIndex(String folderName, String filePrefix, String hashKey) {
-    return 0;
-  }
 }

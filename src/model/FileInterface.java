@@ -95,14 +95,4 @@ public interface FileInterface {
    * @param <T> Custom object whose list is passed as parameter
    */
   <T> String convertObjectListIntoString(List<T> objectList);
-
-  /**
-   * Returns the index as positive number if hashKey is found in file data else returns negative
-   * number which could be supposed position for this hashKey
-   * @param folderName directory where the file needs to be stored
-   * @param filePrefix the symbol of the stock whose data needs to be stored
-   * @param hashKey the key that needs to be searched in the file
-   * @return index position in the file
-   */
-  long getIndex(String folderName, String filePrefix, String hashKey);
 }
