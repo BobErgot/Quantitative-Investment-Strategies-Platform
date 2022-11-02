@@ -235,11 +235,14 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public boolean addPortfolioByUpload(String path) {
-    // TODO
-    FileAbstract fileAbstractObject = new CSVFile();
-//    return fileAbstractObject.addPortfolioFromPath(path);
-    return true;
+  public boolean addPortfolioByUpload(String path, String folderName, String fileName,
+                                      String extension) {
+    FileAbstract fileDatabase = new CSVFile();
+    if (fileDatabase.exists(path, folderName, fileName, extension)){
+      List<String> uploadFileData = fileDatabase.readFromFile(path, folderName, fileName);
+
+    }
+    return false;
   }
 
   @Override

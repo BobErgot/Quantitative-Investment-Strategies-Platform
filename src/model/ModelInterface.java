@@ -46,7 +46,8 @@ public interface ModelInterface {
    */
   boolean addShareToModel(String companyName, LocalDate date, int numShares);
 
-  boolean addPortfolioByUpload(String path);
+  boolean addPortfolioByUpload(String path, String folderName, String fileName,
+                               String extension);
 
   boolean idIsPresent(String selectedId);
 
