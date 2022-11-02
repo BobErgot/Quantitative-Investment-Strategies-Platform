@@ -1,5 +1,6 @@
 package model;
 
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,8 +22,7 @@ public class WebAPITest {
   @Test
   public void getShareValueByGivenDate() throws IOException {
     WebAPI webAPI = new WebAPI();
-    Double value = webAPI.getShareValueByGivenDate("TSCO.LON",
-            LocalDate.parse("2022-10-28"));
-    assertTrue(value <= 216.6000 && value >= 212.900);
+    List<String> value = webAPI.getData("TSCO.LON", LocalDate.parse("2022-10-28"));
+//    assertTrue(value <= 216.6000 && value >= 212.900);
   }
 }

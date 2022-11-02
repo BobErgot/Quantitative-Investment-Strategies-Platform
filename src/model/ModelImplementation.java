@@ -89,20 +89,20 @@ public class ModelImplementation implements ModelInterface {
     if (id.length() == 0 || portfolioObject == null) {
       throw new IllegalArgumentException("Invalid ID Passed");
     }
-    return portfolioObject.getValuation();
+    return portfolioObject.getValuation((share)->this.mapShareGivenDate(share,date));
   }
-  private Share mapShareGivenDate(Share share, LocalDate date){
-    String
+  private double mapShareGivenDate(Share share, LocalDate date){
+    return this.getStockPrice(share.getCompanyName(),date,share.getNumShares()) * share.getNumShares();
   }
 
   //  @Override
-  private <T> double getValuation(String id, Predicate<T> filter) {
+  private <T> double getValuationGivenFilter(String id, Predicate<T> filter) {
     FileAbstract fileDatabase = new CSVFile();
     Portfolio portfolioObject = this.getPortfolioObjectById(id);
     if (id.length() == 0 || portfolioObject == null) {
       throw new IllegalArgumentException("Invalid ID Passed");
     }
-    return portfolioObject.getValuation((Predicate<Share>) filter);
+    return portfolioObject.getValuationGivenFilter((Predicate<Share>) filter);
   }
 
   public double calculateAveragePrice(int position, List<String> stockData) {

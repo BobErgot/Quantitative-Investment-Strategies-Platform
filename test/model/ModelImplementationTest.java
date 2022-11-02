@@ -115,7 +115,7 @@ public class ModelImplementationTest {
     ModelInterface model = new ModelImplementation();
     model.addShareToModel("Apple", LocalDate.now(), new Random().nextInt(10));
     try {
-      model.getValuation("", share -> true);
+      model.getValuationGivenDate("", LocalDate.parse("2021/11/02"));
       fail("Test case passed even though invalid Id was given");
     } catch (IllegalArgumentException e) {
       //
@@ -128,7 +128,7 @@ public class ModelImplementationTest {
     ModelInterface model = new ModelImplementation();
     model.addShareToModel("Apple", LocalDate.now(), new Random().nextInt(10));
     try {
-      model.getValuation("NotApple", share -> true);
+      model.getValuationGivenDate("NotApple", LocalDate.parse("2021/11/02"));
       fail("Test case passed even though invalid Id was given");
     } catch (IllegalArgumentException e) {
       //
@@ -140,7 +140,8 @@ public class ModelImplementationTest {
   public void testValidGetValuation() {
     ModelInterface model = new ModelImplementation();
     model.addShareToModel("Apple", LocalDate.now(), new Random().nextInt(10));
-    assertEquals(200000000, model.getValuation("Apple", share -> true));
+
+    assertEquals(200000000, model.getValuationGivenDate("Apple", LocalDate.parse("2021/11/02")),0);
   }
 
   // test blank ID present
@@ -191,11 +192,4 @@ public class ModelImplementationTest {
     assertTrue(model.canCreateShare());
   }
 
-  @Test
-  public void testInvalidgetValuation() {
-    ModelInterface model = new ModelImplementation();
-    for (int i = 0; i < 10; i++)
-      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(10));
-    model.getValuation("1", share -> true);
-  }
 }
