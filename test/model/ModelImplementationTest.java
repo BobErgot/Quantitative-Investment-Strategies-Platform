@@ -151,6 +151,14 @@ public class ModelImplementationTest {
     assertFalse(model.idIsPresent(""));
   }
 
+//  @Test
+//  public void testGetStockPrice() {
+//    ModelImplementation model = new ModelImplementation();
+//    double value = model.getStockPrice("IBM", LocalDate.parse("2022-10-22"), 3);
+//    System.out.println(value);
+//    assertTrue(value < 138.8615);
+//  }
+
   // test invalid ID present
   @Test
   public void testInvalidIdIsPresent() {
@@ -183,4 +191,11 @@ public class ModelImplementationTest {
     assertTrue(model.canCreateShare());
   }
 
+  @Test
+  public void testInvalidgetValuation() {
+    ModelInterface model = new ModelImplementation();
+    for (int i = 0; i < 10; i++)
+      model.addShareToModel("Abc" + i, LocalDate.now(), new Random().nextInt(10));
+    model.getValuation("1", share -> true);
+  }
 }

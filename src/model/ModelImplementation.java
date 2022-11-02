@@ -1,17 +1,20 @@
 package model;
 
-import static utility.Constants.PORTFOLIO_DIRECTORY;
-import static utility.Constants.PORTFOLIO_NOT_FOUND;
-import static utility.Constants.STOCK_DIRECTORY;
-import static utility.Constants.TICKER_DIRECTORY;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
+
+import static utility.Constants.PORTFOLIO_DIRECTORY;
+import static utility.Constants.PORTFOLIO_NOT_FOUND;
+import static utility.Constants.STOCK_DIRECTORY;
+import static utility.Constants.TICKER_DIRECTORY;
 
 public class ModelImplementation implements ModelInterface {
 
@@ -33,8 +36,8 @@ public class ModelImplementation implements ModelInterface {
     referenceList.add(shareFileName);
     if (fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, shareFileName, formattedString.getBytes())) {
       fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
-          fileDatabase.convertObjectIntoString(portfolioObject.toString(), referenceList)
-              .getBytes());
+              fileDatabase.convertObjectIntoString(portfolioObject.toString(),
+                      referenceList).getBytes());
     }
     shares = new HashSet<>();
     portfolios.add(portfolioObject);
@@ -72,20 +75,84 @@ public class ModelImplementation implements ModelInterface {
     return portfolioObject.getValuation((Predicate<Share>) filter);
   }
 
-  private double getStockPrice(String companyName, LocalDate date, int numShares) {
-    FileAbstract fileDatabase = new CSVFile();
+  public double searchStockDataList(LocalDate date, List<String> stockData) {
     double stockPrice = -1.00;
-    List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
-    if (stockData.size() != 0) {
-      for (String stockRecord : stockData) {
-        if (stockRecord.length() >= 10 && stockRecord.substring(0, 10).equals(date.toString())) {
-          String[] inputLineData = stockRecord.split(",");
-          double high = Double.parseDouble(inputLineData[2]);
-          double low = Double.parseDouble(inputLineData[3]);
-          stockPrice = low;
+    int header = 1;
+    int footer = stockData.size() - 1;
+    LocalDateTime dateTime = date.atStartOfDay();
+    LocalDateTime headerDate = LocalDate.parse(stockData.get(header)
+            .split(",", 2)[0]).atStartOfDay();
+    LocalDateTime footerDate = LocalDate.parse(stockData.get(footer)
+            .split(",", 2)[0]).atStartOfDay();
+    if (date.isAfter(ChronoLocalDate.from(headerDate))
+            || date.isBefore(ChronoLocalDate.from(footerDate))) {
+      return stockPrice;
+    }
+    while (header < footer-1) {
+      long footerDistance = footerDate.until(dateTime, ChronoUnit.DAYS);
+      long headerDistance = dateTime.until(headerDate, ChronoUnit.DAYS);
+      if (headerDistance == 0) {
+        double high = Double.parseDouble(stockData.get(header).split(",")[2]);
+        double low = Double.parseDouble(stockData.get(header).split(",")[3]);
+        return low + (high - low) / 2;
+      }
+      if (footerDistance == 0) {
+        double high = Double.parseDouble(stockData.get(footer).split(",")[2]);
+        double low = Double.parseDouble(stockData.get(footer).split(",")[3]);
+        return low + (high - low) / 2;
+      }
+      if (headerDistance > footerDistance) {
+        if (header < footer - footerDistance) {
+          header = (int) (footer - footerDistance);
+          headerDate = LocalDate.parse(stockData.get(header)
+                  .split(",", 2)[0]).atStartOfDay();
+        } else {
+          int mid = header + (footer-header)/2;
+          LocalDateTime midDate = LocalDate.parse(stockData.get(mid)
+                  .split(",", 2)[0]).atStartOfDay();
+          if (midDate.isAfter(dateTime)){
+            header = mid;
+          } else {
+            header++;
+          }
+        }
+      } else {
+        if (footer > header + headerDistance) {
+          footer = (int) (header + headerDistance);
+          footerDate = LocalDate.parse(stockData.get(footer)
+                  .split(",", 2)[0]).atStartOfDay();
+        } else {
+          int mid = footer - (footer-header)/2;
+          LocalDateTime midDate = LocalDate.parse(stockData.get(mid)
+                  .split(",", 2)[0]).atStartOfDay();
+          if (midDate.isBefore(dateTime)){
+            footer = mid;
+          } else {
+            footer--;
+          }
         }
       }
-    } else {
+    }
+    if (header == footer-1){
+      double high = Double.parseDouble(stockData.get(footer).split(",")[2]);
+      double low = Double.parseDouble(stockData.get(footer).split(",")[3]);
+      return low + (high - low) / 2;
+    }
+    return stockPrice;
+  }
+
+    private double getStockPrice(String companyName, LocalDate date, int numShares) {
+    if (date.isAfter(LocalDate.now())) {
+      return -1;
+    }
+    FileAbstract fileDatabase = new CSVFile();
+    double stockPrice = -1;
+    List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
+    if (stockData.size() != 0) {
+      stockPrice = searchStockDataList(date, stockData);
+      if (stockPrice > -1) return stockPrice;
+    }
+    if (stockPrice == -1){
       APIInterface webAPi = new WebAPI();
       stockPrice = webAPi.getShareValueByGivenDate(companyName, date);
     }
@@ -93,10 +160,8 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public boolean addShareToModel(String companyName, LocalDate date, int numShares)
-      throws IllegalArgumentException {
-    Share shareObject = new Share(companyName, date, getStockPrice(companyName, date, numShares),
-        numShares);
+  public boolean addShareToModel(String companyName, LocalDate date, int numShares) throws IllegalArgumentException {
+    Share shareObject = new Share(companyName, date, getStockPrice(companyName, date, numShares), numShares);
     this.shares.add(shareObject);
     return true;
   }

@@ -87,7 +87,7 @@ public class WebAPI implements APIInterface {
           String [] inputLineData = inputLine.split(",");
           double high = Double.parseDouble(inputLineData[2]);
           double low = Double.parseDouble(inputLineData[3]);
-          return low;
+          return low + (high - low) / 2;
         }
         response.append(inputLine).append(System.getProperty("line.separator"));
       }
