@@ -94,4 +94,9 @@ public class ViewImpl implements View {
     this.out.println(missing+" is not present, please enter again!");
   }
 
+  @Override
+  public void askForDate() {
+    this.out.println("Please enter date in yyyy-mm-dd format.");
+  }
+
 }

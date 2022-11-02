@@ -44,4 +44,6 @@ public interface View {
   void askForPortfolioName();
 
   void notPresentError(String missing);
+
+  void askForDate();
 }

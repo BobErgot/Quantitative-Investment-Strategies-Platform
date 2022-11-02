@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 import model.ModelImplementation;
 import model.ModelInterface;
 import view.View;
@@ -80,14 +81,14 @@ public class ControllerImpl implements Controller {
       isValidCompany =
           companyName.length() > 0 && companyName.length() <= 10 && Character.isAlphabetic(
               companyName.charAt(0)) && modelObject.checkTicker(companyName);
-      if(isValidCompany) {
+      if (isValidCompany) {
         viewObject.showAddShareWithApiInputMenu(1);
         int numShares = scanner.nextInt();
         modelObject.addShareToModel(companyName, LocalDate.now(), numShares);
-      }
-      else
+      } else {
         viewObject.notPresentError("Company");
-    } while(!isValidCompany);
+      }
+    } while (!isValidCompany);
   }
 
   @Override
@@ -101,6 +102,20 @@ public class ControllerImpl implements Controller {
         viewObject.selectPortfolio();
         String selectedId = scanner.next().trim();
         flag = modelObject.idIsPresent(selectedId);
+        boolean invalidDate = false;
+        LocalDate date;
+        String stockDate;
+        do {
+          viewObject.askForDate();
+          stockDate = scanner.next();
+          invalidDate = !(Pattern.matches("\\d{4}-\\d{2}-\\d{2}", stockDate));
+          date = LocalDate.parse(stockDate);
+          invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31)) && date.isBefore(
+              LocalDate.now());
+          if (invalidDate) {
+            viewObject.printInvalidInputMessage();
+          }
+        } while (invalidDate);
         if (flag) {
           viewObject.showValuation(modelObject.getValuation(selectedId, (a) -> true));
         } else {
