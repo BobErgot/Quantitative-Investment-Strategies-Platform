@@ -48,4 +48,6 @@ public interface View {
   void notPresentError(String missing);
 
   void askForDate();
+
+  void printCompanyStockUpdated();
 }

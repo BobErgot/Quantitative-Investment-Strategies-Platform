@@ -85,7 +85,15 @@ public class ControllerImpl implements Controller {
       if (isValidCompany) {
         viewObject.showAddShareWithApiInputMenu(1);
         int numShares = scanner.nextInt();
-        modelObject.addShareToModel(companyName, LocalDate.now(), numShares);
+        try {
+          boolean companyAddedWithoutChange = modelObject.addShareToModel(companyName, LocalDate.now(), numShares);
+          if(!companyAddedWithoutChange)
+            viewObject.printCompanyStockUpdated();
+        }
+        catch (IllegalArgumentException illegalArgumentException)
+        {
+          isValidCompany = false;
+        }
       } else {
         viewObject.notPresentError("Company");
       }

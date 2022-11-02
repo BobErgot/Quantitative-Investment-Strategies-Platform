@@ -95,4 +95,9 @@ public class ViewImpl implements View {
   public void askForDate() {
     this.out.println("Please enter date in yyyy-mm-dd format.");
   }
+
+  @Override
+  public void printCompanyStockUpdated() {
+    this.out.println("This company's number of stocks have been updated!");
+  }
 }
