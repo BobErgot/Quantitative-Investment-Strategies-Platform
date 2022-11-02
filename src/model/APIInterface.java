@@ -1,9 +1,10 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface APIInterface {
 
-  double getShareValueByGivenDate(String stockSymbol, LocalDate date);
+  List<String> getData(String stockSymbol, LocalDate date);
 
 }

@@ -75,6 +75,11 @@ public class ModelImplementation implements ModelInterface {
     return portfolioObject.getValuation((Predicate<Share>) filter);
   }
 
+  public double calculateAveragePrice(int position, List<String> stockData){
+    double high = Double.parseDouble(stockData.get(position).split(",")[2]);
+    double low = Double.parseDouble(stockData.get(position).split(",")[3]);
+    return low + (high - low) / 2;
+  }
   public double searchStockDataList(LocalDate date, List<String> stockData) {
     double stockPrice = -1.00;
     int header = 1;
@@ -84,22 +89,20 @@ public class ModelImplementation implements ModelInterface {
             .split(",", 2)[0]).atStartOfDay();
     LocalDateTime footerDate = LocalDate.parse(stockData.get(footer)
             .split(",", 2)[0]).atStartOfDay();
-    if (date.isAfter(ChronoLocalDate.from(headerDate))
-            || date.isBefore(ChronoLocalDate.from(footerDate))) {
-      return stockPrice;
+    if (date.isAfter(ChronoLocalDate.from(headerDate))) {
+      return calculateAveragePrice(header, stockData);
+    }
+    if (date.isBefore(ChronoLocalDate.from(footerDate))){
+        return stockPrice;
     }
     while (header < footer-1) {
       long footerDistance = footerDate.until(dateTime, ChronoUnit.DAYS);
       long headerDistance = dateTime.until(headerDate, ChronoUnit.DAYS);
       if (headerDistance == 0) {
-        double high = Double.parseDouble(stockData.get(header).split(",")[2]);
-        double low = Double.parseDouble(stockData.get(header).split(",")[3]);
-        return low + (high - low) / 2;
+        return calculateAveragePrice(header, stockData);
       }
       if (footerDistance == 0) {
-        double high = Double.parseDouble(stockData.get(footer).split(",")[2]);
-        double low = Double.parseDouble(stockData.get(footer).split(",")[3]);
-        return low + (high - low) / 2;
+        return calculateAveragePrice(footer, stockData);
       }
       if (headerDistance > footerDistance) {
         if (header < footer - footerDistance) {
@@ -134,9 +137,7 @@ public class ModelImplementation implements ModelInterface {
       }
     }
     if (header == footer-1){
-      double high = Double.parseDouble(stockData.get(footer).split(",")[2]);
-      double low = Double.parseDouble(stockData.get(footer).split(",")[3]);
-      return low + (high - low) / 2;
+      return calculateAveragePrice(footer, stockData);
     }
     return stockPrice;
   }
@@ -154,7 +155,11 @@ public class ModelImplementation implements ModelInterface {
     }
     if (stockPrice == -1){
       APIInterface webAPi = new WebAPI();
-      stockPrice = webAPi.getShareValueByGivenDate(companyName, date);
+      stockData = webAPi.getData(companyName, date);
+      if (stockData.size() != 0) {
+        stockPrice = searchStockDataList(date, stockData);
+        if (stockPrice > -1) return stockPrice;
+      }
     }
     return (stockPrice >= 0) ? numShares * stockPrice : -1.00;
   }

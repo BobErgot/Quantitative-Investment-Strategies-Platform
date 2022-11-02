@@ -69,7 +69,6 @@ public class ControllerImpl implements Controller {
         viewObject.printInvalidInputMessage();
       }
     } while (invalidInput || !portfolioCompleted);
-
   }
 
   @Override

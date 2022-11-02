@@ -8,6 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +21,8 @@ import static utility.Constants.STOCK_ENDPOINT;
 public class WebAPI implements APIInterface {
   protected final Logger LOGGER = Logger.getLogger(this.getClass().getName());
   @Override
-  public double getShareValueByGivenDate(String stockSymbol, LocalDate date) {
+  public List<String> getData(String stockSymbol, LocalDate date) {
+    List<String> fileData = new ArrayList<>();
     String url = STOCK_ENDPOINT;
     String charset = "UTF-8";
 
@@ -37,7 +40,7 @@ public class WebAPI implements APIInterface {
               URLEncoder.encode("full", charset));
     } catch (UnsupportedEncodingException exception) {
       LOGGER.log(Level.SEVERE, "Error occurred while querying: ", exception);
-      return -1;
+      return fileData;
     }
     java.net.URLConnection connection = null;
     try {
@@ -46,7 +49,7 @@ public class WebAPI implements APIInterface {
       connection.setRequestProperty("Accept-Charset", charset);
     } catch (IOException ioException) {
       LOGGER.log(Level.SEVERE, "Error occurred while querying: ", ioException);
-      return -1;
+      return fileData;
     }
     int responseCode = 0;
     String responseMessage;
@@ -58,11 +61,11 @@ public class WebAPI implements APIInterface {
         LOGGER.info("API response: " + responseMessage);
       } catch (IOException ioException) {
         LOGGER.log(Level.SEVERE, "Error occurred during connection: ", ioException);
-        return -1;
+        return fileData;
       }
     } else {
       LOGGER.log(Level.SEVERE, "Error occurred during connection");
-      return -1;
+      return fileData;
     }
     if (responseCode == HttpURLConnection.HTTP_OK) { // success
       HttpURLConnection httpConnection = (HttpURLConnection) connection;
@@ -71,7 +74,7 @@ public class WebAPI implements APIInterface {
         in = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
       } catch (IOException e) {
         LOGGER.log(Level.SEVERE, "Error occurred during getting result stream");
-        return -1;
+        return fileData;
       }
       String inputLine;
       StringBuilder response = new StringBuilder();
@@ -81,14 +84,9 @@ public class WebAPI implements APIInterface {
           if ((inputLine = in.readLine()) == null) break;
         } catch (IOException e) {
           LOGGER.log(Level.SEVERE, "Error occurred during getting result stream");
-          return -1;
+          return fileData;
         }
-        if (inputLine.length() >= 10 && inputLine.substring(0, 10).equals(date.toString())) {
-          String [] inputLineData = inputLine.split(",");
-          double high = Double.parseDouble(inputLineData[2]);
-          double low = Double.parseDouble(inputLineData[3]);
-          return low + (high - low) / 2;
-        }
+        fileData.add(inputLine);
         response.append(inputLine).append(System.getProperty("line.separator"));
       }
       try {
@@ -100,8 +98,8 @@ public class WebAPI implements APIInterface {
       fileDatabase.writeToFile(STOCK_DIRECTORY, stockSymbol, response.toString().getBytes());
     } else {
       LOGGER.log(Level.SEVERE, "Failure: GET request did not work");
-      return -1;
+      return fileData;
     }
-    return -1;
+    return fileData;
   }
 }
