@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
 import model.ModelImplementation;
 import model.ModelInterface;
 import view.View;
@@ -78,9 +79,9 @@ public class ControllerImpl implements Controller {
     do {
       viewObject.showAddShareWithApiInputMenu(0);
       String companyName = scanner.next().trim();
-      isValidCompany =
-          companyName.length() > 0 && companyName.length() <= 10 && Character.isAlphabetic(
-              companyName.charAt(0)) && modelObject.checkTicker(companyName);
+      isValidCompany = companyName.length() > 0 && companyName.length() <= 10
+              && Character.isAlphabetic(companyName.charAt(0))
+              && modelObject.checkTicker(companyName);
       if (isValidCompany) {
         viewObject.showAddShareWithApiInputMenu(1);
         int numShares = scanner.nextInt();
@@ -110,8 +111,9 @@ public class ControllerImpl implements Controller {
           stockDate = scanner.next();
           invalidDate = !(Pattern.matches("\\d{4}-\\d{2}-\\d{2}", stockDate));
           date = LocalDate.parse(stockDate);
-          invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31)) && date.isBefore(
-              LocalDate.now());
+          invalidDate = invalidDate
+                  && date.isAfter(LocalDate.of(1949, 12, 31))
+                  && date.isBefore(LocalDate.now());
           if (invalidDate) {
             viewObject.printInvalidInputMessage();
           }
@@ -174,5 +176,4 @@ public class ControllerImpl implements Controller {
       }
     } while (invalidInput || haveUserContinue);
   }
-
 }

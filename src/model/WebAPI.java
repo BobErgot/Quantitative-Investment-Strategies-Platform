@@ -20,6 +20,7 @@ import static utility.Constants.STOCK_ENDPOINT;
 
 public class WebAPI implements APIInterface {
   protected final Logger LOGGER = Logger.getLogger(this.getClass().getName());
+
   @Override
   public List<String> getData(String stockSymbol, LocalDate date) {
     List<String> fileData = new ArrayList<>();
@@ -28,16 +29,11 @@ public class WebAPI implements APIInterface {
 
     String query = null;
     try {
-      query = String.format("function=%s",
-              URLEncoder.encode("TIME_SERIES_DAILY", charset));
-      query = query + "&" + String.format("symbol=%s",
-              URLEncoder.encode(stockSymbol, charset));
-      query = query + "&" + String.format("apikey=%s",
-              URLEncoder.encode(STOCK_API_KEY, charset));
-      query = query + "&" + String.format("datatype=%s",
-              URLEncoder.encode("csv", charset));
-      query = query + "&" + String.format("outputsize=%s",
-              URLEncoder.encode("full", charset));
+      query = String.format("function=%s", URLEncoder.encode("TIME_SERIES_DAILY", charset));
+      query = query + "&" + String.format("symbol=%s", URLEncoder.encode(stockSymbol, charset));
+      query = query + "&" + String.format("apikey=%s", URLEncoder.encode(STOCK_API_KEY, charset));
+      query = query + "&" + String.format("datatype=%s", URLEncoder.encode("csv", charset));
+      query = query + "&" + String.format("outputsize=%s", URLEncoder.encode("full", charset));
     } catch (UnsupportedEncodingException exception) {
       LOGGER.log(Level.SEVERE, "Error occurred while querying: ", exception);
       return fileData;

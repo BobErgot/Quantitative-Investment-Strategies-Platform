@@ -70,32 +70,33 @@ public class ModelImplementation implements ModelInterface {
   public <T> double getValuation(String id, Predicate<T> filter) {
     FileAbstract fileDatabase = new CSVFile();
     Portfolio portfolioObject = this.getPortfolioObjectById(id);
-    if(id.length()==0 || portfolioObject==null)
+    if (id.length() == 0 || portfolioObject == null)
       throw new IllegalArgumentException("Invalid ID Passed");
     return portfolioObject.getValuation((Predicate<Share>) filter);
   }
 
-  public double calculateAveragePrice(int position, List<String> stockData){
+  public double calculateAveragePrice(int position, List<String> stockData) {
     double high = Double.parseDouble(stockData.get(position).split(",")[2]);
     double low = Double.parseDouble(stockData.get(position).split(",")[3]);
     return low + (high - low) / 2;
   }
+
   public double searchStockDataList(LocalDate date, List<String> stockData) {
     double stockPrice = -1.00;
     int header = 1;
     int footer = stockData.size() - 1;
     LocalDateTime dateTime = date.atStartOfDay();
-    LocalDateTime headerDate = LocalDate.parse(stockData.get(header)
-            .split(",", 2)[0]).atStartOfDay();
-    LocalDateTime footerDate = LocalDate.parse(stockData.get(footer)
-            .split(",", 2)[0]).atStartOfDay();
+    LocalDateTime headerDate = LocalDate.parse(stockData.get(header).split(",", 2)[0])
+            .atStartOfDay();
+    LocalDateTime footerDate = LocalDate.parse(stockData.get(footer).split(",", 2)[0])
+            .atStartOfDay();
     if (date.isAfter(ChronoLocalDate.from(headerDate))) {
       return calculateAveragePrice(header, stockData);
     }
-    if (date.isBefore(ChronoLocalDate.from(footerDate))){
-        return stockPrice;
+    if (date.isBefore(ChronoLocalDate.from(footerDate))) {
+      return stockPrice;
     }
-    while (header < footer-1) {
+    while (header < footer - 1) {
       long footerDistance = footerDate.until(dateTime, ChronoUnit.DAYS);
       long headerDistance = dateTime.until(headerDate, ChronoUnit.DAYS);
       if (headerDistance == 0) {
@@ -110,10 +111,10 @@ public class ModelImplementation implements ModelInterface {
           headerDate = LocalDate.parse(stockData.get(header)
                   .split(",", 2)[0]).atStartOfDay();
         } else {
-          int mid = header + (footer-header)/2;
+          int mid = header + (footer - header) / 2;
           LocalDateTime midDate = LocalDate.parse(stockData.get(mid)
                   .split(",", 2)[0]).atStartOfDay();
-          if (midDate.isAfter(dateTime)){
+          if (midDate.isAfter(dateTime)) {
             header = mid;
           } else {
             header++;
@@ -122,13 +123,11 @@ public class ModelImplementation implements ModelInterface {
       } else {
         if (footer > header + headerDistance) {
           footer = (int) (header + headerDistance);
-          footerDate = LocalDate.parse(stockData.get(footer)
-                  .split(",", 2)[0]).atStartOfDay();
+          footerDate = LocalDate.parse(stockData.get(footer).split(",", 2)[0]).atStartOfDay();
         } else {
-          int mid = footer - (footer-header)/2;
-          LocalDateTime midDate = LocalDate.parse(stockData.get(mid)
-                  .split(",", 2)[0]).atStartOfDay();
-          if (midDate.isBefore(dateTime)){
+          int mid = footer - (footer - header) / 2;
+          LocalDateTime midDate = LocalDate.parse(stockData.get(mid).split(",", 2)[0]).atStartOfDay();
+          if (midDate.isBefore(dateTime)) {
             footer = mid;
           } else {
             footer--;
@@ -136,13 +135,13 @@ public class ModelImplementation implements ModelInterface {
         }
       }
     }
-    if (header == footer-1){
+    if (header == footer - 1) {
       return calculateAveragePrice(footer, stockData);
     }
     return stockPrice;
   }
 
-    private double getStockPrice(String companyName, LocalDate date, int numShares) {
+  private double getStockPrice(String companyName, LocalDate date, int numShares) {
     if (date.isAfter(LocalDate.now())) {
       return -1;
     }
@@ -153,7 +152,7 @@ public class ModelImplementation implements ModelInterface {
       stockPrice = searchStockDataList(date, stockData);
       if (stockPrice > -1) return stockPrice * numShares;
     }
-    if (stockPrice == -1){
+    if (stockPrice == -1) {
       APIInterface webAPi = new WebAPI();
       stockData = webAPi.getData(companyName, date);
       if (stockData.size() != 0) {
@@ -165,8 +164,10 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public boolean addShareToModel(String companyName, LocalDate date, int numShares) throws IllegalArgumentException {
-    Share shareObject = new Share(companyName, date, getStockPrice(companyName, date, numShares), numShares);
+  public boolean addShareToModel(String companyName, LocalDate date, int numShares)
+          throws IllegalArgumentException {
+    Share shareObject = new Share(companyName, date, getStockPrice(companyName, date,
+            numShares), numShares);
     this.shares.add(shareObject);
     return true;
   }
@@ -193,9 +194,7 @@ public class ModelImplementation implements ModelInterface {
   public boolean checkTicker(String symbol) {
     FileAbstract fileDatabase = new CSVFile();
     List<String> stockData = fileDatabase.readFromFile(TICKER_DIRECTORY,
-        String.valueOf(Character.toUpperCase(symbol.charAt(0))));
+            String.valueOf(Character.toUpperCase(symbol.charAt(0))));
     return stockData.contains(symbol);
   }
-
 }
-

@@ -38,8 +38,8 @@ public class CSVFile extends FileAbstract {
     Path filePath = null;
     try {
       Files.createDirectories(directoryPath);
-      Optional<Path> file = Files.list(directoryPath).filter(path -> path.getFileName()
-              .toFile().getName().startsWith(filePrefix)).findFirst();
+      Optional<Path> file = Files.list(directoryPath).filter(path ->
+              path.getFileName().toFile().getName().startsWith(filePrefix)).findFirst();
       if (file.isPresent()) {
         filePath = file.get();
       }
@@ -55,7 +55,7 @@ public class CSVFile extends FileAbstract {
         Future<Integer> operation = fileChannel.read(buffer, 0);
         operation.get();
         String fileContent = new String(buffer.array()).trim();
-        for (String lineData : fileContent.split("\n")){
+        for (String lineData : fileContent.split("\n")) {
           fileData.add(lineData.trim());
         }
         buffer.clear();

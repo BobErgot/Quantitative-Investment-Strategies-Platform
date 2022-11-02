@@ -59,9 +59,7 @@ class Share implements Comparable {
   }
 
   public String toString() {
-    return  "+companyName:" + this.companyName + "\n"
-            + "purchaseDate:" + this.purchaseDate + "\n"
-            + "price:" + this.price + "\n"
-            + "numShares:" + this.numShares + "\n";
+    return "+companyName:" + this.companyName + "\n" + "purchaseDate:" + this.purchaseDate
+            + "\n" + "price:" + this.price + "\n" + "numShares:" + this.numShares + "\n";
   }
 }

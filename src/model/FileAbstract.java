@@ -27,8 +27,8 @@ abstract class FileAbstract implements FileInterface {
     Path directoryPath = Paths.get(directory);
     try {
       Files.createDirectories(directoryPath);
-      Optional<Path> file = Files.list(directoryPath).filter(path -> path.getFileName().toFile()
-              .getName().startsWith(filePrefix)).findFirst();
+      Optional<Path> file = Files.list(directoryPath).filter(path ->
+              path.getFileName().toFile().getName().startsWith(filePrefix)).findFirst();
       if (file.isPresent()) {
         return file.get();
       }
@@ -56,8 +56,8 @@ abstract class FileAbstract implements FileInterface {
 
   @Override
   public Path createFilePath(String folderName, String fileName, String extension) {
-    return Paths.get(HOME + FILE_SEPARATOR + folderName + FILE_SEPARATOR
-            + fileName + "." + extension);
+    return Paths.get(HOME + FILE_SEPARATOR + folderName + FILE_SEPARATOR + fileName + "."
+            + extension);
   }
 
   @Override

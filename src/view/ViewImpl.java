@@ -14,21 +14,18 @@ public class ViewImpl implements View {
   @Override
   public void showMainMenu() {
     this.out.println("Please select an option from 1-x from the main menu");
-
     this.out.println("Main Menu:");
     this.out.println("1. Create Portfolio");
     this.out.println("2. Upload Portfolio from given path.");
     this.out.println("3. View Portfolio");
     this.out.println("4. Exit");
-
   }
 
   @Override
   public void showCreatePortfolioMenu(boolean canCreateShare) {
     this.out.println("Please select an option:");
     this.out.println("1. Add Shares");
-    if(canCreateShare)
-      this.out.println("2. Create Portfolio (Finalize current Portfolio)");
+    if (canCreateShare) this.out.println("2. Create Portfolio (Finalize current Portfolio)");
     this.out.println("3. Go back.");
   }
 
@@ -61,7 +58,7 @@ public class ViewImpl implements View {
 
   @Override
   public void showValuation(double valuation) {
-    this.out.println("Valuation of Portfolio is:\t"+valuation);
+    this.out.println("Valuation of Portfolio is:\t" + valuation);
   }
 
   @Override
@@ -91,7 +88,7 @@ public class ViewImpl implements View {
 
   @Override
   public void notPresentError(String missing) {
-    this.out.println(missing+" is not present, please enter again!");
+    this.out.println(missing + " is not present, please enter again!");
   }
 
   @Override

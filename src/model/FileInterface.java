@@ -8,7 +8,7 @@ public interface FileInterface {
    * Creates a new file at the specified path passed to it as parameter.
    *
    * @param folderName directory of file structure where the file needs to be stored
-   * @param filePrefix   Prefix name of the file to be searched
+   * @param filePrefix Prefix name of the file to be searched
    * @param extension  extension of the file to be read
    * @return boolean value based on file creation success or failure
    */
@@ -27,6 +27,7 @@ public interface FileInterface {
   /**
    * Return the path formed from the given folder name, file name and extension relative to Home
    * path.
+   *
    * @param folderName directory of file structure where the file needs to be stored
    * @param fileName   name of the file to be searched
    * @param extension  extension of the file to be read
@@ -81,7 +82,8 @@ public interface FileInterface {
 
   /**
    * Convert Object into record representation for this file implementation.
-   * @param object object in string format that needs to be mapped to this file format
+   *
+   * @param object        object in string format that needs to be mapped to this file format
    * @param referenceFile if object is dependent on other object type, then it can be stored in
    *                      another file, and a reference of that file is given
    * @return string representation of that object in this file implementation
@@ -90,9 +92,10 @@ public interface FileInterface {
 
   /**
    * Convert Object List into records representation for this file implementation.
+   *
    * @param objectList list of objects that is to be represented in this file implementation
+   * @param <T>        Custom object whose list is passed as parameter
    * @return string representation of that object list in this file implementation
-   * @param <T> Custom object whose list is passed as parameter
    */
   <T> String convertObjectListIntoString(List<T> objectList);
 }

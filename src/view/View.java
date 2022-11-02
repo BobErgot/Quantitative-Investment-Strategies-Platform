@@ -16,12 +16,14 @@ public interface View {
 
   /**
    * Show menu if user wants to add shares with API.
+   *
    * @param parameterNumber Which parameter needs to be displayed.
    */
   void showAddShareWithApiInputMenu(int parameterNumber);
 
   /**
    * Show list of portfolios in a given format.
+   *
    * @param portfolioList list of portfolios to display.
    */
   void showViewPortfolioMenu(List<String> portfolioList);
