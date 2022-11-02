@@ -1,17 +1,16 @@
 package model;
 
+import static utility.Constants.PORTFOLIO_DIRECTORY;
+import static utility.Constants.PORTFOLIO_NOT_FOUND;
+import static utility.Constants.STOCK_DIRECTORY;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
-
-import static utility.Constants.PORTFOLIO_DIRECTORY;
-import static utility.Constants.PORTFOLIO_NOT_FOUND;
-import static utility.Constants.STOCK_DIRECTORY;
 
 public class ModelImplementation implements ModelInterface {
 
@@ -32,7 +31,9 @@ public class ModelImplementation implements ModelInterface {
     List<String> referenceList = new ArrayList<>();
     referenceList.add(shareFileName);
     if (fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, shareFileName, formattedString.getBytes())) {
-      fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY, fileDatabase.convertObjectIntoString(portfolioObject.toString(), referenceList).getBytes());
+      fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
+          fileDatabase.convertObjectIntoString(portfolioObject.toString(), referenceList)
+              .getBytes());
     }
     shares = new HashSet<>();
     portfolios.add(portfolioObject);
@@ -84,13 +85,14 @@ public class ModelImplementation implements ModelInterface {
       APIInterface webAPi = new WebAPI();
       stockPrice = webAPi.getShareValueByGivenDate(companyName, date);
     }
-    return (stockPrice >= 0)? numShares*stockPrice : -1.00;
+    return (stockPrice >= 0) ? numShares * stockPrice : -1.00;
   }
 
   @Override
-  public boolean addShareToModel(String companyName, LocalDate date, int numShares) throws IllegalArgumentException {
+  public boolean addShareToModel(String companyName, LocalDate date, int numShares)
+      throws IllegalArgumentException {
     Share shareObject = new Share(companyName, date, getStockPrice(companyName, date, numShares),
-            numShares);
+        numShares);
     this.shares.add(shareObject);
     return true;
   }
@@ -101,8 +103,16 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public void addPortfolioByUpload(String path) {
+  public boolean canCreateShare() {
+    return this.shares.size()>0;
+  }
+
+  @Override
+  public boolean addPortfolioByUpload(String path) {
     // TODO
+    FileAbstract fileAbstractObject = new CSVFile();
+//    return fileAbstractObject.addPortfolioFromPath(path);
+    return true;
   }
 
 }

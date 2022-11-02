@@ -50,7 +50,9 @@ public interface ModelInterface {
    */
   boolean addShareToModel(String companyName, LocalDate date, int numShares);
 
-  void addPortfolioByUpload(String path);
+  boolean addPortfolioByUpload(String path);
 
   boolean idIsPresent(String selectedId);
+
+  boolean canCreateShare();
 }

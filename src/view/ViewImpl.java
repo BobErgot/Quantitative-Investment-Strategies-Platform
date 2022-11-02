@@ -24,10 +24,11 @@ public class ViewImpl implements View {
   }
 
   @Override
-  public void showCreatePortfolioMenu() {
+  public void showCreatePortfolioMenu(boolean canCreateShare) {
     this.out.println("Please select an option:");
     this.out.println("1. Add Shares");
-    this.out.println("2. Create Portfolio (Finalize current Portfolio)");
+    if(canCreateShare)
+      this.out.println("2. Create Portfolio (Finalize current Portfolio)");
     this.out.println("3. Go back.");
   }
 
@@ -86,5 +87,10 @@ public class ViewImpl implements View {
   @Override
   public void askForPortfolioName() {
     this.out.println("Please write down the unique name of portfolio");
+  }
+
+  @Override
+  public void fileNotPresentError() {
+    this.out.println("File is not present, please enter again!");
   }
 }

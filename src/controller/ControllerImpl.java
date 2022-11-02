@@ -29,28 +29,33 @@ public class ControllerImpl implements Controller {
     do {
       invalidInput = false;
       portfolioCompleted = false;
-      viewObject.showCreatePortfolioMenu();
+      boolean canCreateShare = modelObject.canCreateShare();
+      viewObject.showCreatePortfolioMenu(canCreateShare);
       int choice = scanner.nextInt();
       switch (choice) {
         case 1:
           this.addShareWithApiInput();
           break;
         case 2:
-          boolean invalidPortfolioName = false;
-          do {
-            invalidPortfolioName = false;
-            viewObject.askForPortfolioName();
-            String portfolioName = scanner.next();
-            if (portfolioName.length() > 0) {
-              modelObject.createPortfolio(portfolioName);
-              portfolioCompleted = true;
-            } else {
-              invalidPortfolioName = true;
-            }
-            if (invalidPortfolioName) {
-              viewObject.printInvalidInputMessage();
-            }
-          } while (invalidPortfolioName);
+          if(canCreateShare) {
+            boolean invalidPortfolioName = false;
+            do {
+              invalidPortfolioName = false;
+              viewObject.askForPortfolioName();
+              String portfolioName = scanner.next();
+              if (portfolioName.length() > 0) {
+                modelObject.createPortfolio(portfolioName);
+                portfolioCompleted = true;
+              } else {
+                invalidPortfolioName = true;
+              }
+              if (invalidPortfolioName) {
+                viewObject.printInvalidInputMessage();
+              }
+            } while (invalidPortfolioName);
+          }
+          else
+            invalidInput=true;
           break;
         case 3:
 //          modelObject.clearPortfolioList();
@@ -91,6 +96,8 @@ public class ControllerImpl implements Controller {
         if (flag) {
           viewObject.showValuation(modelObject.getValuation(selectedId, (a) -> true));
         }
+        else
+          viewObject.fileNotPresentError();
       } while (!flag);
     }
   }
@@ -102,8 +109,8 @@ public class ControllerImpl implements Controller {
       viewObject.showUploadPortfolioOptions();
       String path = scanner.next();
       if (path.length() > 0) {
-        validPath = true;
-        modelObject.addPortfolioByUpload(path);
+        // if portfolio successfully uploaded , it will return true.
+        validPath = modelObject.addPortfolioByUpload(path);
       }
       if (!validPath) {
         viewObject.printInvalidInputMessage();
@@ -112,10 +119,14 @@ public class ControllerImpl implements Controller {
   }
 
   @Override
-  public void singleRunThrough() {
+  public void go() {
     boolean invalidInput;
+    boolean haveUserContinue;
+
     do {
       invalidInput = false;
+      haveUserContinue=true;
+
       viewObject.showMainMenu();
       int choice = scanner.nextInt();
       switch (choice) {
@@ -129,6 +140,7 @@ public class ControllerImpl implements Controller {
           this.viewPortfolio();
           break;
         case 4:
+          haveUserContinue = false;
           break;
         default:
           invalidInput = true;
@@ -137,21 +149,7 @@ public class ControllerImpl implements Controller {
       if (invalidInput) {
         viewObject.printInvalidInputMessage();
       }
-    } while (invalidInput);
-  }
-
-  @Override
-  public void go() {
-    boolean userContinue;
-    do {
-      userContinue = false;
-      this.singleRunThrough();
-      viewObject.askIfUserContinues();
-      int choice = scanner.nextInt();
-      if (choice == 1) {
-        userContinue = true;
-      }
-    } while (userContinue);
+    } while (invalidInput || haveUserContinue);
   }
 
 }

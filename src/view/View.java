@@ -12,7 +12,7 @@ public interface View {
   /**
    * Shows portfolio creation menu.
    */
-  void showCreatePortfolioMenu();
+  void showCreatePortfolioMenu(boolean canCreateShare);
 
   /**
    * Show menu if user wants to add shares with API.
@@ -42,4 +42,6 @@ public interface View {
   void askIfUserContinues();
 
   void askForPortfolioName();
+
+  void fileNotPresentError();
 }
