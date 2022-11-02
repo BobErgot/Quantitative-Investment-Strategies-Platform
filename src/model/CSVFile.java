@@ -56,7 +56,7 @@ public class CSVFile extends FileAbstract {
         operation.get();
         String fileContent = new String(buffer.array()).trim();
         for (String lineData : fileContent.split("\n")){
-          fileData.add(lineData);
+          fileData.add(lineData.trim());
         }
         buffer.clear();
       } catch (IOException | ExecutionException | InterruptedException exception) {

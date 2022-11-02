@@ -43,5 +43,5 @@ public interface View {
 
   void askForPortfolioName();
 
-  void fileNotPresentError();
+  void notPresentError(String missing);
 }

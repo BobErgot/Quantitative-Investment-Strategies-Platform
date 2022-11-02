@@ -1,6 +1,5 @@
 package controller;
 
-import controller.Controller;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
@@ -37,12 +36,12 @@ public class ControllerImpl implements Controller {
           this.addShareWithApiInput();
           break;
         case 2:
-          if(canCreateShare) {
+          if (canCreateShare) {
             boolean invalidPortfolioName = false;
             do {
               invalidPortfolioName = false;
               viewObject.askForPortfolioName();
-              String portfolioName = scanner.next();
+              String portfolioName = scanner.next().trim();
               if (portfolioName.length() > 0) {
                 modelObject.createPortfolio(portfolioName);
                 portfolioCompleted = true;
@@ -53,14 +52,14 @@ public class ControllerImpl implements Controller {
                 viewObject.printInvalidInputMessage();
               }
             } while (invalidPortfolioName);
+          } else {
+            invalidInput = true;
           }
-          else
-            invalidInput=true;
           break;
         case 3:
 //          modelObject.clearPortfolioList();
-          invalidInput=false;
-          portfolioCompleted=true;
+          invalidInput = false;
+          portfolioCompleted = true;
           break;
         default:
           invalidInput = true;
@@ -75,11 +74,21 @@ public class ControllerImpl implements Controller {
 
   @Override
   public void addShareWithApiInput() {
-    viewObject.showAddShareWithApiInputMenu(0);
-    String companyName = scanner.next();
-    viewObject.showAddShareWithApiInputMenu(1);
-    int numShares = scanner.nextInt();
-    modelObject.addShareToModel(companyName, LocalDate.now(), numShares);
+    boolean isValidCompany;
+    do {
+      viewObject.showAddShareWithApiInputMenu(0);
+      String companyName = scanner.next().trim();
+      isValidCompany =
+          companyName.length() > 0 && companyName.length() <= 10 && Character.isAlphabetic(
+              companyName.charAt(0)) && modelObject.checkTicker(companyName);
+      if(isValidCompany) {
+        viewObject.showAddShareWithApiInputMenu(1);
+        int numShares = scanner.nextInt();
+        modelObject.addShareToModel(companyName, LocalDate.now(), numShares);
+      }
+      else
+        viewObject.notPresentError("Company");
+    } while(!isValidCompany);
   }
 
   @Override
@@ -91,13 +100,13 @@ public class ControllerImpl implements Controller {
       boolean flag = false;
       do {
         viewObject.selectPortfolio();
-        String selectedId = scanner.next();
+        String selectedId = scanner.next().trim();
         flag = modelObject.idIsPresent(selectedId);
         if (flag) {
           viewObject.showValuation(modelObject.getValuation(selectedId, (a) -> true));
+        } else {
+          viewObject.notPresentError("File");
         }
-        else
-          viewObject.fileNotPresentError();
       } while (!flag);
     }
   }
@@ -107,7 +116,7 @@ public class ControllerImpl implements Controller {
     boolean validPath = false;
     do {
       viewObject.showUploadPortfolioOptions();
-      String path = scanner.next();
+      String path = scanner.next().trim();
       if (path.length() > 0) {
         // if portfolio successfully uploaded , it will return true.
         validPath = modelObject.addPortfolioByUpload(path);
@@ -125,7 +134,7 @@ public class ControllerImpl implements Controller {
 
     do {
       invalidInput = false;
-      haveUserContinue=true;
+      haveUserContinue = true;
 
       viewObject.showMainMenu();
       int choice = scanner.nextInt();

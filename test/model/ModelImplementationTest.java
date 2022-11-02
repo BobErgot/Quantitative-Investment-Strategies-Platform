@@ -50,7 +50,7 @@ public class ModelImplementationTest {
   @Test
   public void checkTicker() {
     ModelImplementation model = new ModelImplementation();
-    assertTrue(model.checkTicker("AAIC-P-B"));
+    assertTrue(model.checkTicker("IBM"));
   }
 
 

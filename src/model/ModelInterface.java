@@ -55,4 +55,6 @@ public interface ModelInterface {
   boolean idIsPresent(String selectedId);
 
   boolean canCreateShare();
+
+  boolean checkTicker(String symbol);
 }

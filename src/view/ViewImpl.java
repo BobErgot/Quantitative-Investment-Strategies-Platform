@@ -90,7 +90,8 @@ public class ViewImpl implements View {
   }
 
   @Override
-  public void fileNotPresentError() {
-    this.out.println("File is not present, please enter again!");
+  public void notPresentError(String missing) {
+    this.out.println(missing+" is not present, please enter again!");
   }
+
 }

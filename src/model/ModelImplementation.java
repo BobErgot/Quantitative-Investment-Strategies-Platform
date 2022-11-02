@@ -1,10 +1,12 @@
 package model;
 
+import static utility.Constants.HOME;
 import static utility.Constants.PORTFOLIO_DIRECTORY;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
 import static utility.Constants.STOCK_DIRECTORY;
 import static utility.Constants.TICKER_DIRECTORY;
 
+import java.nio.file.FileSystems;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -115,7 +117,7 @@ public class ModelImplementation implements ModelInterface {
 //    return fileAbstractObject.addPortfolioFromPath(path);
     return true;
   }
-
+  @Override
   public boolean checkTicker(String symbol) {
     FileAbstract fileDatabase = new CSVFile();
     List<String> stockData = fileDatabase.readFromFile(TICKER_DIRECTORY,
