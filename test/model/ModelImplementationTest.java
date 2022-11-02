@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class ModelImplementationTest {
@@ -44,6 +45,14 @@ public class ModelImplementationTest {
     model.addShareToModel("TSCO.LON", LocalDate.now(), new Random().nextInt(10));
     assertEquals("abc", model.getPortfolio());
   }
+
+  // test ticker check
+  @Test
+  public void checkTicker() {
+    ModelImplementation model = new ModelImplementation();
+    assertTrue(model.checkTicker("AAIC-P-B"));
+  }
+
 
   // negative id or invalid string
   @Test

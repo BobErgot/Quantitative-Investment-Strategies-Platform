@@ -4,11 +4,13 @@ import java.nio.file.FileSystems;
 import java.time.LocalDate;
 
 public final class Constants {
-
-  public static final String HOME = System.getProperty("user.home");
   public final static String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
+
+  public static final String HOME = System.getProperty("user.dir") + FILE_SEPARATOR + "stocker";
   public static final String STOCK_DIRECTORY = "stock";
   public static final String PORTFOLIO_DIRECTORY = "portfolio";
+
+  public static final String TICKER_DIRECTORY = "ticker";
   public static final String STOCK_ENDPOINT = "https://www.alphavantage.co/query";
   public static final String STOCK_API_KEY = "T5770I9RBI1FTSXJ";
 

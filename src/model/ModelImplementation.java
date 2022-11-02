@@ -3,6 +3,7 @@ package model;
 import static utility.Constants.PORTFOLIO_DIRECTORY;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
 import static utility.Constants.STOCK_DIRECTORY;
+import static utility.Constants.TICKER_DIRECTORY;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class ModelImplementation implements ModelInterface {
     List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
     if (stockData.size() != 0) {
       for (String stockRecord : stockData) {
-        if (stockRecord.substring(0, 10).equals(date.toString())) {
+        if (stockRecord.length() >= 10 && stockRecord.substring(0, 10).equals(date.toString())) {
           String[] inputLineData = stockRecord.split(",");
           double high = Double.parseDouble(inputLineData[2]);
           double low = Double.parseDouble(inputLineData[3]);
@@ -113,6 +114,13 @@ public class ModelImplementation implements ModelInterface {
     FileAbstract fileAbstractObject = new CSVFile();
 //    return fileAbstractObject.addPortfolioFromPath(path);
     return true;
+  }
+
+  public boolean checkTicker(String symbol) {
+    FileAbstract fileDatabase = new CSVFile();
+    List<String> stockData = fileDatabase.readFromFile(TICKER_DIRECTORY,
+            String.valueOf(Character.toUpperCase(symbol.charAt(0))));
+    return stockData.contains(symbol);
   }
 
 }
