@@ -119,6 +119,20 @@ public class ControllerImpl implements Controller {
           }
         } while (invalidDate);
         if (flag) {
+          boolean invalidDate = false;
+          LocalDate date;
+          String stockDate;
+          do {
+            viewObject.askForDate();
+            stockDate = scanner.next();
+            invalidDate = !(Pattern.matches("\\d{4}-\\d{2}-\\d{2}", stockDate));
+            date = LocalDate.parse(stockDate);
+            invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31)) && date.isBefore(
+                LocalDate.now());
+            if (invalidDate) {
+              viewObject.printInvalidInputMessage();
+            }
+          } while (invalidDate);
           viewObject.showValuation(modelObject.getValuation(selectedId, (a) -> true));
         } else {
           viewObject.notPresentError("File");

@@ -30,12 +30,11 @@ public interface ModelInterface {
 
   /**
    * Given the data get valuation of entire portfolio.
-   *
-   * @param id     ID of portfolio to get valuation of.
-   * @param filter Filter to sort through stocks in portfolio.
+   * @param id ID of portfolio to get valuation of.
+   * @param date Get stock valuation given date.
    * @return Valuation of portfolio.
    */
-  <T> double getValuation(String id, Predicate<T> filter);
+  <T> double getValuationGivenDate(String id, LocalDate date);
 
   /**
    * Adds share to local list of shares given details of the share.
