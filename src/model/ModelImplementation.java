@@ -1,12 +1,10 @@
 package model;
 
-import static utility.Constants.HOME;
 import static utility.Constants.PORTFOLIO_DIRECTORY;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
 import static utility.Constants.STOCK_DIRECTORY;
 import static utility.Constants.TICKER_DIRECTORY;
 
-import java.nio.file.FileSystems;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,9 +47,11 @@ public class ModelImplementation implements ModelInterface {
   }
 
   private Portfolio getPortfolioObjectById(String id) {
-    for (Portfolio portfolio : portfolios) {
-      if (portfolio.getId().equals(id)) {
-        return portfolio;
+    if (id.length() > 0) {
+      for (Portfolio portfolio : portfolios) {
+        if (portfolio.getId().equals(id)) {
+          return portfolio;
+        }
       }
     }
     return null;
@@ -67,11 +67,12 @@ public class ModelImplementation implements ModelInterface {
   public <T> double getValuation(String id, Predicate<T> filter) {
     FileAbstract fileDatabase = new CSVFile();
     Portfolio portfolioObject = this.getPortfolioObjectById(id);
+    if(id.length()==0 || portfolioObject==null)
+      throw new IllegalArgumentException("Invalid ID Passed");
     return portfolioObject.getValuation((Predicate<Share>) filter);
   }
 
-  @Override
-  public double getStockPrice(String companyName, LocalDate date, int numShares) {
+  private double getStockPrice(String companyName, LocalDate date, int numShares) {
     FileAbstract fileDatabase = new CSVFile();
     double stockPrice = -1.00;
     List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
@@ -107,7 +108,7 @@ public class ModelImplementation implements ModelInterface {
 
   @Override
   public boolean canCreateShare() {
-    return this.shares.size()>0;
+    return this.shares.size() > 0;
   }
 
   @Override
@@ -117,11 +118,12 @@ public class ModelImplementation implements ModelInterface {
 //    return fileAbstractObject.addPortfolioFromPath(path);
     return true;
   }
+
   @Override
   public boolean checkTicker(String symbol) {
     FileAbstract fileDatabase = new CSVFile();
     List<String> stockData = fileDatabase.readFromFile(TICKER_DIRECTORY,
-            String.valueOf(Character.toUpperCase(symbol.charAt(0))));
+        String.valueOf(Character.toUpperCase(symbol.charAt(0))));
     return stockData.contains(symbol);
   }
 

@@ -33,15 +33,6 @@ public interface ModelInterface {
   <T> double getValuation(String id, Predicate<T> filter);
 
   /**
-   * Adds share to local list of shares given company name, using WebAPI.
-   * @param companyName Company  name to get share of
-   * @param date Date for which the stock price needs to be calculated.
-   * @param numShares Number of shares purchased
-   * @return value of stock
-   */
-  double getStockPrice(String companyName, LocalDate date, int numShares);
-
-  /**
    * Adds share to local list of shares given details of the share.
    * @param companyName Company  name to get share of.
    * @param date Date of share purchased.
