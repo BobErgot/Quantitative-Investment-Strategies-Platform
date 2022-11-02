@@ -2,6 +2,7 @@ package model;
 
 import static utility.Constants.PORTFOLIO_DIRECTORY;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
+import static utility.Constants.RELATIVE_PATH;
 import static utility.Constants.STOCK_DIRECTORY;
 import static utility.Constants.TICKER_DIRECTORY;
 
@@ -29,7 +30,8 @@ public class ModelImplementation implements ModelInterface {
     for (String portfolioString : portfolioStrings) {
       String[] output = portfolioString.split(",");
       Set<Share> portfolioShare = new HashSet<>();
-      for (String share : fileDatabase.readFromFile(PORTFOLIO_DIRECTORY, output[2].substring(3))) {
+      for (String share : fileDatabase.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
+              output[2].substring(3))) {
         String[] splitShare = share.split(",");
         portfolioShare.add(new Share(splitShare[0], LocalDate.parse(splitShare[1]),
             Double.parseDouble(splitShare[2]), Integer.parseInt(splitShare[3])));
@@ -46,8 +48,9 @@ public class ModelImplementation implements ModelInterface {
     String shareFileName = UUID.randomUUID().toString();
     List<String> referenceList = new ArrayList<>();
     referenceList.add(shareFileName);
-    if (fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, shareFileName, formattedString.getBytes())) {
-      fileDatabase.writeToFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
+    if (fileDatabase.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
+            formattedString.getBytes())) {
+      fileDatabase.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
           fileDatabase.convertObjectIntoString(portfolioObject.toString(),
               referenceList).getBytes());
     }
@@ -58,7 +61,7 @@ public class ModelImplementation implements ModelInterface {
   @Override
   public List<String> getPortfolio() {
     FileInterface fileDatabase = new CSVFile();
-    return fileDatabase.readFromFile(PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY);
+    return fileDatabase.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY);
   }
 
   private Portfolio getPortfolioObjectById(String id) {
@@ -92,7 +95,8 @@ public class ModelImplementation implements ModelInterface {
     return portfolioObject.getValuation((share)->this.mapShareGivenDate(share,date));
   }
   private double mapShareGivenDate(Share share, LocalDate date){
-    return this.getStockPrice(share.getCompanyName(),date,share.getNumShares()) * share.getNumShares();
+    return this.getStockPrice(share.getCompanyName(),date,
+            share.getNumShares()) * share.getNumShares();
   }
 
   //  @Override
@@ -179,7 +183,7 @@ public class ModelImplementation implements ModelInterface {
     }
     FileAbstract fileDatabase = new CSVFile();
     double stockPrice = -1;
-    List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
+    List<String> stockData = fileDatabase.readFromFile(RELATIVE_PATH, STOCK_DIRECTORY, companyName);
     if (stockData.size() != 0) {
       stockPrice = searchStockDataList(date, stockData);
       if (stockPrice > -1) {
@@ -229,7 +233,7 @@ public class ModelImplementation implements ModelInterface {
   @Override
   public boolean checkTicker(String symbol) {
     FileAbstract fileDatabase = new CSVFile();
-    List<String> stockData = fileDatabase.readFromFile(TICKER_DIRECTORY,
+    List<String> stockData = fileDatabase.readFromFile(RELATIVE_PATH, TICKER_DIRECTORY,
             String.valueOf(Character.toUpperCase(symbol.charAt(0))));
     return stockData.contains(symbol);
   }

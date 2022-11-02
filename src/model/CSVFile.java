@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -17,6 +16,7 @@ import java.util.logging.Level;
 
 import static utility.Constants.FILE_SEPARATOR;
 import static utility.Constants.HOME;
+import static utility.Constants.RELATIVE_PATH;
 
 public class CSVFile extends FileAbstract {
   private final static String EXTENSION = "csv";
@@ -31,15 +31,20 @@ public class CSVFile extends FileAbstract {
   }
 
   @Override
-  public List<String> readFromFile(String folderName, String filePrefix) {
+  public List<String> readFromFile(String path, String folderName, String filePrefix) {
     List<String> fileData = new ArrayList<>();
-    String directory = HOME + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
+    String directory = "";
+    if (path.equals(RELATIVE_PATH)) {
+      directory = HOME + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
+    } else {
+      directory = path + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
+    }
     Path directoryPath = Paths.get(directory);
     Path filePath = null;
     try {
       Files.createDirectories(directoryPath);
-      Optional<Path> file = Files.list(directoryPath).filter(path ->
-              path.getFileName().toFile().getName().startsWith(filePrefix)).findFirst();
+      Optional<Path> file = Files.list(directoryPath).filter(filepath ->
+              filepath.getFileName().toFile().getName().startsWith(filePrefix)).findFirst();
       if (file.isPresent()) {
         filePath = file.get();
       }

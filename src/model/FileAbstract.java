@@ -17,18 +17,24 @@ import java.util.logging.Logger;
 import static java.nio.file.StandardOpenOption.WRITE;
 import static utility.Constants.FILE_SEPARATOR;
 import static utility.Constants.HOME;
+import static utility.Constants.RELATIVE_PATH;
 
 abstract class FileAbstract implements FileInterface {
   protected final Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
   @Override
-  public Path createFile(String folderName, String filePrefix, String extension) {
-    String directory = HOME + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
+  public Path createFile(String path, String folderName, String filePrefix, String extension) {
+    String directory = "";
+    if (path.equals(RELATIVE_PATH)) {
+      directory = HOME + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
+    } else {
+      directory = path + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
+    }
     Path directoryPath = Paths.get(directory);
     try {
       Files.createDirectories(directoryPath);
-      Optional<Path> file = Files.list(directoryPath).filter(path ->
-              path.getFileName().toFile().getName().startsWith(filePrefix)).findFirst();
+      Optional<Path> file = Files.list(directoryPath).filter(filePath ->
+              filePath.getFileName().toFile().getName().startsWith(filePrefix)).findFirst();
       if (file.isPresent()) {
         return file.get();
       }
@@ -37,7 +43,7 @@ abstract class FileAbstract implements FileInterface {
       return null;
     }
     String fileName = filePrefix + LocalDate.now() + UUID.randomUUID();
-    Path filePath = createFilePath(folderName, fileName, extension);
+    Path filePath = createFilePath(path, folderName, fileName, extension);
     try {
       return Files.createFile(filePath);
     } catch (FileAlreadyExistsException fileAlreadyExistsException) {
@@ -50,21 +56,27 @@ abstract class FileAbstract implements FileInterface {
   }
 
   @Override
-  public boolean exists(String folderName, String fileName, String extension) {
-    return Files.exists(createFilePath(folderName, fileName, extension));
+  public boolean exists(String path, String folderName, String fileName, String extension) {
+    return Files.exists(createFilePath(path, folderName, fileName, extension));
   }
 
   @Override
-  public Path createFilePath(String folderName, String fileName, String extension) {
-    return Paths.get(HOME + FILE_SEPARATOR + folderName + FILE_SEPARATOR + fileName + "."
+  public Path createFilePath(String path, String folderName, String fileName, String extension) {
+    String root = "";
+    if (path.equals(RELATIVE_PATH)){
+      root = HOME;
+    } else {
+      root = path;
+    }
+    return Paths.get(root + FILE_SEPARATOR + folderName + FILE_SEPARATOR + fileName + "."
             + extension);
   }
 
   @Override
-  public boolean deleteFile(String folderName, String fileName, String extension) {
+  public boolean deleteFile(String path, String folderName, String fileName, String extension) {
     boolean operationStatus = false;
     try {
-      operationStatus = Files.deleteIfExists(createFilePath(folderName, fileName, extension));
+      operationStatus = Files.deleteIfExists(createFilePath(path, folderName, fileName, extension));
     } catch (IOException ioException) {
       LOGGER.log(Level.SEVERE, "Error occurred in file deletion: ", ioException);
       return false;
@@ -73,8 +85,8 @@ abstract class FileAbstract implements FileInterface {
   }
 
   @Override
-  public boolean writeToFile(String folderName, String filePrefix, byte[] dataBytes) {
-    Path filePath = createFile(folderName, filePrefix, getFileExtension());
+  public boolean writeToFile(String path, String folderName, String filePrefix, byte[] dataBytes) {
+    Path filePath = createFile(path, folderName, filePrefix, getFileExtension());
     if (null != filePath && filePath.toFile().isFile()) {
       try {
         AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(filePath, WRITE);

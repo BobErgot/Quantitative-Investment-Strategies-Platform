@@ -10,10 +10,10 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static utility.Constants.RELATIVE_PATH;
 import static utility.Constants.STOCK_API_KEY;
 import static utility.Constants.STOCK_DIRECTORY;
 import static utility.Constants.STOCK_ENDPOINT;
@@ -91,7 +91,8 @@ public class WebAPI implements APIInterface {
         throw new RuntimeException(e);
       }
       CSVFile fileDatabase = new CSVFile();
-      fileDatabase.writeToFile(STOCK_DIRECTORY, stockSymbol, response.toString().getBytes());
+      fileDatabase.writeToFile(RELATIVE_PATH, STOCK_DIRECTORY, stockSymbol,
+              response.toString().getBytes());
     } else {
       LOGGER.log(Level.SEVERE, "Failure: GET request did not work");
       return fileData;

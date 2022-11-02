@@ -5,6 +5,8 @@ import java.nio.file.FileSystems;
 public final class Constants {
   public final static String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
   public static final String HOME = System.getProperty("user.dir") + FILE_SEPARATOR + "stocker";
+
+  public static final String RELATIVE_PATH = "~";
   public static final String STOCK_DIRECTORY = "stock";
   public static final String PORTFOLIO_DIRECTORY = "portfolio";
   public static final String TICKER_DIRECTORY = "ticker";
