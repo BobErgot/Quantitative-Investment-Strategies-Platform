@@ -11,19 +11,21 @@ import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ModelImplementation implements ModelInterface {
 
   private final Set<Portfolio> portfolios;
-  private Set<Share> shares;
+  private HashMap<String,Share> shares;
 
   public ModelImplementation() {
-    this.shares = new HashSet<>();
+    this.shares = new HashMap<>();
     this.portfolios = new HashSet<>();
     List<String> portfolioStrings = this.getPortfolio();
     FileInterface fileDatabase = new CSVFile();
@@ -42,9 +44,10 @@ public class ModelImplementation implements ModelInterface {
 
   @Override
   public void createPortfolio(String portfolioName) {
-    Portfolio portfolioObject = new Portfolio(portfolioName, shares, LocalDate.now());
+    Set<Share> sharesSet = new HashSet<>(shares.values());
+    Portfolio portfolioObject = new Portfolio(portfolioName, sharesSet, LocalDate.now());
     FileInterface fileDatabase = new CSVFile();
-    String formattedString = fileDatabase.convertObjectListIntoString(new ArrayList<>(shares));
+    String formattedString = fileDatabase.convertObjectListIntoString(new ArrayList<>(sharesSet));
     String shareFileName = UUID.randomUUID().toString();
     List<String> referenceList = new ArrayList<>();
     referenceList.add(shareFileName);
@@ -54,7 +57,7 @@ public class ModelImplementation implements ModelInterface {
           fileDatabase.convertObjectIntoString(portfolioObject.toString(),
               referenceList).getBytes());
     }
-    shares = new HashSet<>();
+    shares = new HashMap<>();
     portfolios.add(portfolioObject);
   }
 
@@ -206,10 +209,19 @@ public class ModelImplementation implements ModelInterface {
   @Override
   public boolean addShareToModel(String companyName, LocalDate date, int numShares)
       throws IllegalArgumentException {
-    Share shareObject = new Share(companyName, date, getStockPrice(companyName, date, numShares),
+    double stockPrice =  getStockPrice(companyName, date, numShares);
+    if(stockPrice==-1)
+      throw new IllegalArgumentException("Invalid Share");
+    Share shareObject = new Share(companyName, date, stockPrice,
         numShares);
-    this.shares.add(shareObject);
-    return true;
+    if(this.shares.get(companyName)==null) {
+      this.shares.put(companyName, shareObject);
+      return true;
+    }
+    else {
+      this.shares.put(companyName, shareObject);
+      return false;
+    }
   }
 
   @Override

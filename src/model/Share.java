@@ -62,4 +62,11 @@ class Share implements Comparable {
     return "+companyName:" + this.companyName + "\n" + "purchaseDate:" + this.purchaseDate
             + "\n" + "price:" + this.price + "\n" + "numShares:" + this.numShares + "\n";
   }
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + this.companyName.hashCode();
+    return result;
+  }
 }
