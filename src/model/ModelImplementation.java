@@ -151,17 +151,17 @@ public class ModelImplementation implements ModelInterface {
     List<String> stockData = fileDatabase.readFromFile(STOCK_DIRECTORY, companyName);
     if (stockData.size() != 0) {
       stockPrice = searchStockDataList(date, stockData);
-      if (stockPrice > -1) return stockPrice;
+      if (stockPrice > -1) return stockPrice * numShares;
     }
     if (stockPrice == -1){
       APIInterface webAPi = new WebAPI();
       stockData = webAPi.getData(companyName, date);
       if (stockData.size() != 0) {
         stockPrice = searchStockDataList(date, stockData);
-        if (stockPrice > -1) return stockPrice;
+        if (stockPrice > -1) return stockPrice * numShares;
       }
     }
-    return (stockPrice >= 0) ? numShares * stockPrice : -1.00;
+    return -1;
   }
 
   @Override
