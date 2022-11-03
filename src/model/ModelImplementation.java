@@ -141,7 +141,7 @@ public class ModelImplementation implements ModelInterface {
       return calculateAveragePrice(header, stockData);
     }
     if (date.isBefore(ChronoLocalDate.from(footerDate))) {
-      return stockPrice;
+      return 0;
     }
     while (header < footer - 1) {
       long footerDistance = footerDate.until(dateTime, ChronoUnit.DAYS);

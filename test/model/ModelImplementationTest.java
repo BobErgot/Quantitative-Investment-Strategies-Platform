@@ -50,7 +50,7 @@ public class ModelImplementationTest {
   @Test
   public void testCheckTicker() {
     ModelImplementation model = new ModelImplementation();
-    assertTrue(model.checkTicker("APPL"));
+    assertTrue(model.checkTicker("AAPL"));
   }
 
   // test non-existent ticker
