@@ -16,12 +16,25 @@ import model.ModelInterface;
 import view.View;
 import view.ViewImpl;
 
+/**
+ * The controller implementation that receives all its inputs from an InputStream object and
+ * transmits all outputs to a PrintStream object. It also interacts with the model based on the
+ * received input from the user.
+ */
 public class ControllerImpl implements Controller {
 
   View viewObject;
   ModelInterface modelObject;
   Scanner scanner;
 
+  /**
+   * Construct a controller implementation object that has the provided InputStream, PrintStream
+   * and ModelInterface object.
+   *
+   * @param in InputStream object to receive all the inputs
+   * @param out PrintStream to transmit all the outputs to
+   * @param model ModelInterface to communicate and receive data from model implementation
+   */
   public ControllerImpl(InputStream in, PrintStream out, ModelInterface model) {
     this.scanner = new Scanner(in);
     this.viewObject = new ViewImpl(out);
