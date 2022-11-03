@@ -6,6 +6,7 @@ import java.time.LocalDate;
  * This interface represents all the API operations to be supported by the concrete implementation.
  */
 public interface APIInterface {
+
   /**
    * Make a GET API call to the stock data endpoint set in the Constants class.
    * @param stockSymbol company ticker for which the data needs to be fetched

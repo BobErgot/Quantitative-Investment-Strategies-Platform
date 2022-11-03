@@ -2,12 +2,25 @@ package model;
 
 import java.time.LocalDate;
 
-class Share implements Comparable {
+/**
+ * This class represents a share. A share has a date of purchase, company symbol/ticker, price on
+ * the date of purchase and number of stocks bought.
+ */
+class Share implements Comparable<Object> {
   private final LocalDate purchaseDate;
   private final String companyName;
   private final double price;
   private final int numShares;
 
+  /**
+   * Construct a Share object that has the provided company ticker, purchase date, price on
+   * purchase date and number of stocks bought.
+   *
+   * @param companyName company ticker/symbol
+   * @param purchaseDate date the share was bought
+   * @param price price of each stock on purchase date
+   * @param numShares number of stocks bought
+   */
   public Share(String companyName, LocalDate purchaseDate, double price, int numShares)
           throws IllegalArgumentException {
     if (companyName.length() == 0) {
@@ -25,13 +38,32 @@ class Share implements Comparable {
     this.numShares = numShares;
   }
 
+
+  /**
+   * Return the ticker/symbol of this share's stock
+   *
+   * @return the ticker/symbol as string
+   */
   public String getCompanyName() {
     return this.companyName;
   }
 
-
+  /**
+   * Return the value of this share
+   *
+   * @return the value of share as double
+   */
   public double getShareValue() {
     return this.numShares * this.price;
+  }
+
+  /**
+   * Return the number of the stocks in this share
+   *
+   * @return number of stocks as integer
+   */
+  public int getNumShares() {
+    return this.numShares;
   }
 
   @Override
@@ -54,19 +86,17 @@ class Share implements Comparable {
             && this.price == other.price && this.numShares == other.numShares;
   }
 
-  public int getNumShares() {
-    return this.numShares;
-  }
-
-  public String toString() {
-    return "+companyName:" + this.companyName + "\n" + "purchaseDate:" + this.purchaseDate
-            + "\n" + "price:" + this.price + "\n" + "numShares:" + this.numShares + "\n";
-  }
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + this.companyName.hashCode();
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "+companyName:" + this.companyName + "\n" + "purchaseDate:" + this.purchaseDate
+            + "\n" + "price:" + this.price + "\n" + "numShares:" + this.numShares + "\n";
   }
 }
