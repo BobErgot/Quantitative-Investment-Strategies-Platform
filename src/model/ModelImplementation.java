@@ -210,8 +210,12 @@ public class ModelImplementation implements ModelInterface {
       String webAPIData = webAPi.getData(companyName, date);
       stockData = fileInterface.validateFormat(webAPIData);
       if (stockData != null && stockData.size() != 0) {
+        StringBuilder fileData = new StringBuilder();
+        for(String stock: stockData){
+          fileData.append(stock).append(LINE_BREAKER);
+        }
         fileInterface.writeToFile(RELATIVE_PATH, STOCK_DIRECTORY, companyName,
-                stockData.toString().getBytes());
+                fileData.toString().getBytes());
         stockPrice = searchStockDataList(date, stockData);
         if (stockPrice > -1) {
           return stockPrice;

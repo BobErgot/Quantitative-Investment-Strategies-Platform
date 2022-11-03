@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static utility.Constants.LINE_BREAKER;
 import static utility.Constants.STOCK_API_KEY;
 import static utility.Constants.STOCK_ENDPOINT;
 
@@ -77,7 +78,7 @@ public class WebAPI implements APIInterface {
           LOGGER.log(Level.SEVERE, "Error occurred during getting result stream");
           return null;
         }
-        response.append(inputLine).append(System.getProperty("line.separator"));
+        response.append(inputLine).append(LINE_BREAKER);
       }
       try {
         in.close();
