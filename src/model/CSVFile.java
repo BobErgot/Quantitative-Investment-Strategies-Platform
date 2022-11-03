@@ -46,8 +46,7 @@ public class CSVFile extends FileAbstract {
     try {
       Files.createDirectories(directoryPath);
       Optional<Path> file = Files.list(directoryPath).filter(filepath ->
-              filepath.getFileName().toFile().getName().matches(("^" +
-                      filePrefix + "[0-9]{4}-[0,1][0-9]-[0-3][0-9].*$"))).findFirst();
+              filepath.getFileName().toFile().getName().startsWith(filePrefix)).findFirst();
       if (file.isPresent()) {
         filePath = file.get();
       }
