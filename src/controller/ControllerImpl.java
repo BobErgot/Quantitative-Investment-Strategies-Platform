@@ -1,11 +1,13 @@
 package controller;
 
+import static utility.Constants.FILE_SEPARATOR;
+import static utility.Constants.RELATIVE_PATH;
+
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-
 import model.ModelImplementation;
 import model.ModelInterface;
 import view.View;
@@ -44,7 +46,7 @@ public class ControllerImpl implements Controller {
               invalidPortfolioName = false;
               viewObject.askForPortfolioName();
               String portfolioName = scanner.next().trim();
-              if (portfolioName.length() > 0) {
+              if (portfolioName.length() > 0 && !modelObject.idIsPresent(portfolioName)) {
                 modelObject.createPortfolio(portfolioName);
                 portfolioCompleted = true;
               } else {
@@ -60,7 +62,6 @@ public class ControllerImpl implements Controller {
           break;
         case 3:
 //          modelObject.clearPortfolioList();
-          invalidInput = false;
           portfolioCompleted = true;
           break;
         default:
@@ -79,20 +80,21 @@ public class ControllerImpl implements Controller {
     do {
       viewObject.showAddShareWithApiInputMenu(0);
       String companyName = scanner.next().trim();
-      isValidCompany = companyName.length() > 0 && companyName.length() <= 10
-              && Character.isAlphabetic(companyName.charAt(0))
-              && modelObject.checkTicker(companyName);
+      isValidCompany =
+          companyName.length() > 0 && companyName.length() <= 10 && Character.isAlphabetic(
+              companyName.charAt(0)) && modelObject.checkTicker(companyName);
       if (isValidCompany) {
         viewObject.showAddShareWithApiInputMenu(1);
         int numShares = scanner.nextInt();
         try {
-          boolean companyAddedWithoutChange = modelObject.addShareToModel(companyName, LocalDate.now(), numShares);
-          if(!companyAddedWithoutChange)
+          boolean companyAddedWithoutChange = modelObject.addShareToModel(companyName,
+              LocalDate.now(), numShares);
+          if (!companyAddedWithoutChange) {
             viewObject.printCompanyStockUpdated();
-        }
-        catch (IllegalArgumentException illegalArgumentException)
-        {
+          }
+        } catch (IllegalArgumentException illegalArgumentException) {
           isValidCompany = false;
+          viewObject.developmentInProgress();
         }
       } else {
         viewObject.notPresentError("Company");
@@ -119,15 +121,14 @@ public class ControllerImpl implements Controller {
           stockDate = scanner.next();
           invalidDate = !(Pattern.matches("\\d{4}-\\d{2}-\\d{2}", stockDate));
           date = LocalDate.parse(stockDate);
-          invalidDate = invalidDate
-              && date.isAfter(LocalDate.of(1949, 12, 31))
-              && date.isBefore(LocalDate.now());
+          invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31)) && date.isBefore(
+              LocalDate.now());
           if (invalidDate) {
             viewObject.printInvalidInputMessage();
           }
         } while (invalidDate);
         if (flag) {
-          viewObject.showValuation(modelObject.getValuationGivenDate(selectedId,date));
+          viewObject.showValuation(modelObject.getValuationGivenDate(selectedId, date));
         } else {
           viewObject.notPresentError("File");
         }
@@ -140,10 +141,27 @@ public class ControllerImpl implements Controller {
     boolean validPath = false;
     do {
       viewObject.showUploadPortfolioOptions();
-      String path = scanner.next().trim();
-      if (path.length() > 0) {
-        // if portfolio successfully uploaded , it will return true.
-        validPath = modelObject.addPortfolioByUpload(path);
+      // if portfolio successfully uploaded , it will return true.
+      viewObject.uploadPath();
+      int choice = scanner.nextInt();
+      if (choice == 1 || choice == 2) {
+        // Relative zenith/harshit/bob.txt
+        viewObject.enterPath();
+        String str = scanner.next();
+        int idx = str.lastIndexOf(FILE_SEPARATOR);
+        String folderName = str.substring(0, idx);
+        String[] file = str.substring(idx).split("\\.");
+        if (choice == 1) {
+          // ex: C:/jo/jo.txt
+          // todo One folder has to be there right now
+          idx = folderName.lastIndexOf(FILE_SEPARATOR);
+          String root = str.substring(0, idx);
+          String folder = str.substring(idx);
+          validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
+        } else {
+          // ex: jo/jo.txt
+          validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0], file[1]);
+        }
       }
       if (!validPath) {
         viewObject.printInvalidInputMessage();

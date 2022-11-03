@@ -1,5 +1,7 @@
 package view;
 
+import static utility.Constants.FILE_SEPARATOR;
+
 import java.io.PrintStream;
 import java.util.List;
 
@@ -99,5 +101,23 @@ public class ViewImpl implements View {
   @Override
   public void printCompanyStockUpdated() {
     this.out.println("This company's number of stocks have been updated!");
+  }
+
+  @Override
+  public void developmentInProgress() {
+    this.out.println("This company's data has not been added yet, come back again soon!");
+  }
+
+  @Override
+  public void uploadPath() {
+      this.out.println("How do you want to upload this data? (Write your path sperated by "+FILE_SEPARATOR);
+      this.out.println("1. Absolute Path");
+      this.out.println("2. Relative Path");
+
+  }
+
+  @Override
+  public void enterPath() {
+    this.out.println("Enter path:");
   }
 }

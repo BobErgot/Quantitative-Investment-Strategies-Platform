@@ -50,4 +50,10 @@ public interface View {
   void askForDate();
 
   void printCompanyStockUpdated();
+
+  void developmentInProgress();
+
+  void uploadPath();
+
+  void enterPath();
 }
