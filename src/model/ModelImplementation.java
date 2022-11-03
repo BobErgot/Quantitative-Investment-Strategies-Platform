@@ -106,6 +106,11 @@ public class ModelImplementation implements ModelInterface {
   }
 
   private double mapShareGivenDate(Share share, LocalDate date) {
+    double stockPrice = this.getStockPrice(share.getCompanyName(), date);
+    if (stockPrice == -1){
+      throw new IllegalArgumentException("Data not available for this date. Try again after some "
+              + "time");
+    }
     return this.getStockPrice(share.getCompanyName(), date) * share.getNumShares();
   }
 
