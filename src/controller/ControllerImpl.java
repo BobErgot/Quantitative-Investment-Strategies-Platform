@@ -3,6 +3,7 @@ package controller;
 import static utility.Constants.FILE_SEPARATOR;
 import static utility.Constants.RELATIVE_PATH;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
@@ -163,12 +164,16 @@ public class ControllerImpl implements Controller {
             validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
           } catch (DataFormatException e) {
             throw new RuntimeException(e);
+          } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
           }
         } else {
           // ex: jo/jo.txt
           try {
             validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0], file[1]);
           } catch (DataFormatException e) {
+            throw new RuntimeException(e);
+          } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
           }
         }

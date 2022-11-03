@@ -7,6 +7,7 @@ import static utility.Constants.RELATIVE_PATH;
 import static utility.Constants.STOCK_DIRECTORY;
 import static utility.Constants.TICKER_DIRECTORY;
 
+import java.io.FileNotFoundException;
 import java.nio.file.InvalidPathException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -240,13 +241,14 @@ public class ModelImplementation implements ModelInterface {
 
   @Override
   public List<String> addPortfolioByUpload(String path, String folderName, String fileName,
-                                      String extension) throws DataFormatException {
+                                           String extension)
+          throws DataFormatException, FileNotFoundException {
     FileAbstract fileDatabase = new CSVFile();
-    List<String> uploadFileData = new ArrayList<>();
+    List<String> uploadFileData;
     if (fileDatabase.exists(path, folderName, fileName, extension)){
-      uploadFileData.addAll(fileDatabase.readFromFile(path, folderName, fileName));
+      uploadFileData = new ArrayList<>(fileDatabase.readFromFile(path, folderName, fileName));
     } else {
-      throw new InvalidPathException("Error", "Invalid path to file");
+      throw new FileNotFoundException("Error: Invalid path to file");
     }
     for(String data : uploadFileData)
     {
@@ -259,7 +261,7 @@ public class ModelImplementation implements ModelInterface {
           if (fileDatabase.exists(path, folderName, fileMetadata[0], fileMetadata[1])){
             stockFileData.addAll(fileDatabase.readFromFile(path, folderName, file));
           } else {
-            throw new InvalidPathException("Error", "Invalid path to stock list file");
+            throw new FileNotFoundException("Error: Invalid path to stock list file");
           }
           for(String stockData: stockFileData){
             String [] stockDataField = stockData.split(",");

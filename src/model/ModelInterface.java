@@ -1,5 +1,7 @@
 package model;
 
+import java.io.FileNotFoundException;
+import java.nio.file.InvalidPathException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Predicate;
@@ -48,7 +50,7 @@ public interface ModelInterface {
   boolean addShareToModel(String companyName, LocalDate date, int numShares, double stockPrice);
 
   List<String> addPortfolioByUpload(String path, String folderName, String fileName,
-                               String extension) throws DataFormatException;
+                               String extension) throws DataFormatException , FileNotFoundException;
 
   boolean idIsPresent(String selectedId);
 
