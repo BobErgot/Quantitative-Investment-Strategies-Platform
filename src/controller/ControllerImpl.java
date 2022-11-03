@@ -1,5 +1,8 @@
 package controller;
 
+import static utility.Constants.FILE_SEPARATOR;
+import static utility.Constants.RELATIVE_PATH;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -9,14 +12,9 @@ import java.util.DuplicateFormatFlagsException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
-
-import model.ModelImplementation;
 import model.ModelInterface;
 import view.View;
 import view.ViewImpl;
-
-import static utility.Constants.FILE_SEPARATOR;
-import static utility.Constants.RELATIVE_PATH;
 
 public class ControllerImpl implements Controller {
 
@@ -24,10 +22,10 @@ public class ControllerImpl implements Controller {
   ModelInterface modelObject;
   Scanner scanner;
 
-  public ControllerImpl(InputStream in, PrintStream out) {
+  public ControllerImpl(InputStream in, PrintStream out, ModelInterface model) {
     this.scanner = new Scanner(in);
     this.viewObject = new ViewImpl(out);
-    this.modelObject = new ModelImplementation();
+    this.modelObject = model;
   }
 
   @Override
@@ -38,6 +36,7 @@ public class ControllerImpl implements Controller {
       invalidInput = false;
       portfolioCompleted = false;
       boolean canCreateShare = modelObject.canCreateShare();
+      System.out.println("halo");
       viewObject.showCreatePortfolioMenu(canCreateShare);
       int choice = scanner.nextInt();
       switch (choice) {
@@ -85,21 +84,27 @@ public class ControllerImpl implements Controller {
       viewObject.showAddShareWithApiInputMenu(0);
       String companyName = scanner.next().trim();
       isValidCompany =
-              companyName.length() > 0 && companyName.length() <= 10 && Character.isAlphabetic(
-                      companyName.charAt(0)) && modelObject.checkTicker(companyName);
+          companyName.length() > 0 && companyName.length() <= 10 && Character.isAlphabetic(
+              companyName.charAt(0)) && modelObject.checkTicker(companyName);
       if (isValidCompany) {
         viewObject.showAddShareWithApiInputMenu(1);
         int numShares = scanner.nextInt();
-        try {
-          boolean companyAddedWithoutChange = modelObject.addShareToModel(companyName,
-                  LocalDate.now(), numShares, -1);
-          if (!companyAddedWithoutChange) {
-            viewObject.printCompanyStockUpdated();
-          }
-        } catch (IllegalArgumentException illegalArgumentException) {
+        if (numShares <= 0) {
+          viewObject.printInvalidInputMessage();
           isValidCompany = false;
-          viewObject.developmentInProgress();
+        } else {
+          try {
+            boolean companyAddedWithoutChange = modelObject.addShareToModel(companyName,
+                LocalDate.now(), numShares, -1);
+            if (!companyAddedWithoutChange) {
+              viewObject.printCompanyStockUpdated();
+            }
+          } catch (IllegalArgumentException illegalArgumentException) {
+            isValidCompany = false;
+            viewObject.developmentInProgress();
+          }
         }
+
       } else {
         viewObject.notPresentError("Company");
       }
@@ -166,12 +171,12 @@ public class ControllerImpl implements Controller {
         String str = scanner.next();
         int idx = str.lastIndexOf(FILE_SEPARATOR);
         String folderName = str.substring(0, idx);
-        String[] file = str.substring(idx+1).split("\\.");
+        String[] file = str.substring(idx + 1).split("\\.");
         try {
           if (choice == 1) {
             idx = folderName.lastIndexOf(FILE_SEPARATOR);
             String root = str.substring(0, idx);
-            String folder = str.substring(idx+1);
+            String folder = str.substring(idx + 1);
             idx = folder.lastIndexOf(FILE_SEPARATOR);
             folder = folder.substring(0, idx);
             validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
@@ -184,11 +189,9 @@ public class ControllerImpl implements Controller {
 
         } catch (DataFormatException d) {
           viewObject.printInvalidDateError();
-        }
-        catch (DuplicateFormatFlagsException exceptionMessage){
+        } catch (DuplicateFormatFlagsException exceptionMessage) {
           viewObject.printException(exceptionMessage.getMessage());
-        }
-        catch(IllegalArgumentException exception){
+        } catch (IllegalArgumentException exception) {
           viewObject.printException(exception.getMessage());
         }
       } else if (choice == 3) {
