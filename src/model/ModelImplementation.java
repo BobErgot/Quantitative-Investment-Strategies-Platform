@@ -281,8 +281,7 @@ public class ModelImplementation implements ModelInterface {
 
   @Override
   public boolean checkTicker(String symbol) {
-    FileAbstract fileDatabase = new CSVFile();
-    List<String> stockData = fileDatabase.readFromFile(RELATIVE_PATH, TICKER_DIRECTORY,
+    List<String> stockData = fileInterface.readFromFile(RELATIVE_PATH, TICKER_DIRECTORY,
             String.valueOf(Character.toUpperCase(symbol.charAt(0))));
     return stockData.contains(symbol);
   }
