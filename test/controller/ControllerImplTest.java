@@ -318,16 +318,38 @@ public class ControllerImplTest {
     ModelInterface model = new MockModelUpload(log);
     ControllerImpl controller = new ControllerImpl(in, out, model);
     controller.uploadPortfolio();
-    System.out.println(bytes.toString());
-    assertTrue(compareStringContents("Please enter date in yyyy-mm-dd format.\n"
-        + "Invalid date format!\n"
-        + "Please enter date in yyyy-mm-dd format.", bytes.toString()));
-    assertEquals(0, log.toString().length());
+    System.out.println(log.toString());
+    assertTrue(compareStringContents("\n"
+        + "Write path to portfolio:\n"
+        + "How do you want to upload this data? (Write your path sperated by \\\n"
+        + "1. Absolute Path\n"
+        + "2. Relative Path\n"
+        + "3. Go back\n"
+        + "Enter path:", bytes.toString()));
+    assertEquals("~,portfoliotest,testingportfoliovalid,csv", log.toString());
 
   }
   // upload non-existent portfolio
   @Test
   public void uploadInvalidPortfolio() {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes);
+    InputStream in = new ByteArrayInputStream(("2 portfoliotest/testingportfoliovalid.csv").getBytes());
+
+    StringBuilder log = new StringBuilder();
+    ModelInterface model = new MockModelUpload(log);
+    ControllerImpl controller = new ControllerImpl(in, out, model);
+    controller.uploadPortfolio();
+    System.out.println(log.toString());
+    assertTrue(compareStringContents("\n"
+        + "Write path to portfolio:\n"
+        + "How do you want to upload this data? (Write your path sperated by \\\n"
+        + "1. Absolute Path\n"
+        + "2. Relative Path\n"
+        + "3. Go back\n"
+        + "Enter path:", bytes.toString()));
+    assertEquals("~,portfoliotest,testingportfoliovalid,csv", log.toString());
+
   }
   // upload portfolio which are not unique test
   @Test
