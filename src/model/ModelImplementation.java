@@ -1,14 +1,6 @@
 package model;
 
-import static utility.Constants.LINE_BREAKER;
-import static utility.Constants.PORTFOLIO_DIRECTORY;
-import static utility.Constants.PORTFOLIO_NOT_FOUND;
-import static utility.Constants.RELATIVE_PATH;
-import static utility.Constants.STOCK_DIRECTORY;
-import static utility.Constants.TICKER_DIRECTORY;
-
 import java.io.FileNotFoundException;
-import java.nio.file.InvalidPathException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
@@ -20,13 +12,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
+
+import static utility.Constants.PORTFOLIO_DIRECTORY;
+import static utility.Constants.PORTFOLIO_NOT_FOUND;
+import static utility.Constants.RELATIVE_PATH;
+import static utility.Constants.STOCK_DIRECTORY;
+import static utility.Constants.TICKER_DIRECTORY;
 
 public class ModelImplementation implements ModelInterface {
 
   private final Set<Portfolio> portfolios;
-  private HashMap<String,Share> shares;
+  private HashMap<String, Share> shares;
 
   public ModelImplementation() {
     this.shares = new HashMap<>();
@@ -40,7 +37,7 @@ public class ModelImplementation implements ModelInterface {
               output[2].substring(3))) {
         String[] splitShare = share.split(",");
         portfolioShare.add(new Share(splitShare[0], LocalDate.parse(splitShare[1]),
-            Double.parseDouble(splitShare[2]), Integer.parseInt(splitShare[3])));
+                Double.parseDouble(splitShare[2]), Integer.parseInt(splitShare[3])));
       }
       portfolios.add(new Portfolio(output[0], portfolioShare, LocalDate.parse(output[1])));
     }
@@ -58,8 +55,8 @@ public class ModelImplementation implements ModelInterface {
     if (fileDatabase.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
             formattedString.getBytes())) {
       fileDatabase.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
-          fileDatabase.convertObjectIntoString(portfolioObject.toString(),
-              referenceList).getBytes());
+              fileDatabase.convertObjectIntoString(portfolioObject.toString(),
+                      referenceList).getBytes());
     }
     shares = new HashMap<>();
     portfolios.add(portfolioObject);
@@ -99,10 +96,11 @@ public class ModelImplementation implements ModelInterface {
     if (id.length() == 0 || portfolioObject == null) {
       throw new IllegalArgumentException("Invalid ID Passed");
     }
-    return portfolioObject.getValuation((share)->this.mapShareGivenDate(share,date));
+    return portfolioObject.getValuation((share) -> this.mapShareGivenDate(share, date));
   }
-  private double mapShareGivenDate(Share share, LocalDate date){
-    return this.getStockPrice(share.getCompanyName(),date) * share.getNumShares();
+
+  private double mapShareGivenDate(Share share, LocalDate date) {
+    return this.getStockPrice(share.getCompanyName(), date) * share.getNumShares();
   }
 
   //  @Override
@@ -127,9 +125,9 @@ public class ModelImplementation implements ModelInterface {
     int footer = stockData.size() - 1;
     LocalDateTime dateTime = date.atStartOfDay();
     LocalDateTime headerDate = LocalDate.parse(stockData.get(header)
-        .split(",", 2)[0]).atStartOfDay();
+            .split(",", 2)[0]).atStartOfDay();
     LocalDateTime footerDate = LocalDate.parse(stockData.get(footer)
-        .split(",", 2)[0]).atStartOfDay();
+            .split(",", 2)[0]).atStartOfDay();
     if (date.isAfter(ChronoLocalDate.from(headerDate))) {
       return calculateAveragePrice(header, stockData);
     }
@@ -149,11 +147,11 @@ public class ModelImplementation implements ModelInterface {
         if (header < footer - footerDistance) {
           header = (int) (footer - footerDistance);
           headerDate = LocalDate.parse(stockData.get(header)
-              .split(",", 2)[0]).atStartOfDay();
+                  .split(",", 2)[0]).atStartOfDay();
         } else {
           int mid = header + (footer - header) / 2;
           LocalDateTime midDate = LocalDate.parse(stockData.get(mid)
-              .split(",", 2)[0]).atStartOfDay();
+                  .split(",", 2)[0]).atStartOfDay();
           if (midDate.isAfter(dateTime)) {
             header = mid;
           } else {
@@ -164,11 +162,11 @@ public class ModelImplementation implements ModelInterface {
         if (footer > header + headerDistance) {
           footer = (int) (header + headerDistance);
           footerDate = LocalDate.parse(stockData.get(footer)
-              .split(",", 2)[0]).atStartOfDay();
+                  .split(",", 2)[0]).atStartOfDay();
         } else {
           int mid = footer - (footer - header) / 2;
           LocalDateTime midDate = LocalDate.parse(stockData.get(mid)
-              .split(",", 2)[0]).atStartOfDay();
+                  .split(",", 2)[0]).atStartOfDay();
           if (midDate.isBefore(dateTime)) {
             footer = mid;
           } else {
@@ -213,17 +211,16 @@ public class ModelImplementation implements ModelInterface {
   public boolean addShareToModel(String companyName, LocalDate date, int numShares,
                                  double stockPrice) throws IllegalArgumentException {
     if (stockPrice == -1) {
-      stockPrice =  getStockPrice(companyName, date);
+      stockPrice = getStockPrice(companyName, date);
     }
-    if(stockPrice==-1){
+    if (stockPrice == -1) {
       throw new IllegalArgumentException("Invalid Share");
     }
     Share shareObject = new Share(companyName, date, stockPrice, numShares);
-    if(this.shares.get(companyName)==null) {
+    if (this.shares.get(companyName) == null) {
       this.shares.put(companyName, shareObject);
       return true;
-    }
-    else {
+    } else {
       this.shares.put(companyName, shareObject);
       return false;
     }
@@ -240,41 +237,40 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public List<String> addPortfolioByUpload(String path, String folderName, String fileName,
+  public boolean addPortfolioByUpload(String path, String folderName, String fileName,
                                            String extension)
           throws DataFormatException, FileNotFoundException {
     FileAbstract fileDatabase = new CSVFile();
     List<String> uploadFileData;
-    if (fileDatabase.exists(path, folderName, fileName, extension)){
+    if (fileDatabase.exists(path, folderName, fileName, extension)) {
       uploadFileData = new ArrayList<>(fileDatabase.readFromFile(path, folderName, fileName));
     } else {
       throw new FileNotFoundException("Error: Invalid path to file");
     }
-    for(String data : uploadFileData)
-    {
-      if(null != data && !data.trim().equals("")){
-        String [] portfolioFields = data.split(",");
-        if(portfolioFields.length == 3){
+    for (String data : uploadFileData) {
+      if (null != data && !data.trim().equals("")) {
+        String[] portfolioFields = data.split(",");
+        if (portfolioFields.length == 3) {
           String file = portfolioFields[2].substring(3);
-          String [] fileMetadata = file.split("\\.");
+          String[] fileMetadata = file.split("\\.");
           List<String> stockFileData = new ArrayList<>();
-          if (fileDatabase.exists(path, folderName, fileMetadata[0], fileMetadata[1])){
+          if (fileDatabase.exists(path, folderName, fileMetadata[0], fileMetadata[1])) {
             stockFileData.addAll(fileDatabase.readFromFile(path, folderName, file));
           } else {
             throw new FileNotFoundException("Error: Invalid path to stock list file");
           }
-          for(String stockData: stockFileData){
-            String [] stockDataField = stockData.split(",");
+          for (String stockData : stockFileData) {
+            String[] stockDataField = stockData.split(",");
             addShareToModel(stockDataField[0], LocalDate.parse(stockDataField[1]),
                     Integer.parseInt(stockDataField[3]), Double.parseDouble(stockDataField[2]));
           }
           createPortfolio(portfolioFields[0].trim(), LocalDate.parse(portfolioFields[1].trim()));
-        } else  {
+        } else {
           throw new DataFormatException("Error: File content not in proper format.");
         }
       }
     }
-    return uploadFileData;
+    return (uploadFileData.size() > 0);
   }
 
   @Override
