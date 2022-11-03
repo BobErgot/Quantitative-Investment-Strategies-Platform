@@ -1,10 +1,8 @@
 package model;
 
 import java.io.FileNotFoundException;
-import java.nio.file.InvalidPathException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.zip.DataFormatException;
 
 public interface ModelInterface {
@@ -33,7 +31,8 @@ public interface ModelInterface {
 
   /**
    * Given the data get valuation of entire portfolio.
-   * @param id ID of portfolio to get valuation of.
+   *
+   * @param id   ID of portfolio to get valuation of.
    * @param date Get stock valuation given date.
    * @return Valuation of portfolio.
    */
@@ -50,7 +49,7 @@ public interface ModelInterface {
   boolean addShareToModel(String companyName, LocalDate date, int numShares, double stockPrice);
 
   boolean addPortfolioByUpload(String path, String folderName, String fileName,
-                               String extension) throws DataFormatException , FileNotFoundException;
+                               String extension) throws DataFormatException, FileNotFoundException;
 
   boolean idIsPresent(String selectedId);
 

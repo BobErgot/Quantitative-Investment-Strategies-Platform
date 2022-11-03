@@ -63,7 +63,7 @@ public class WebAPI implements APIInterface {
       LOGGER.log(Level.SEVERE, "Error occurred during connection");
       return fileData;
     }
-    if (responseCode == HttpURLConnection.HTTP_OK) { // success
+    if (responseCode == HttpURLConnection.HTTP_OK) {
       HttpURLConnection httpConnection = (HttpURLConnection) connection;
       BufferedReader in = null;
       try {

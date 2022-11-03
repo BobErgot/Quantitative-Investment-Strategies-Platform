@@ -31,13 +31,11 @@ class Portfolio {
     return shares.stream().map(converter).collect(Collectors.<R>toList());
   }
 
-  // filter-map-fold operation
   public double getValuation(Function<Share,Double> converter) {
-//    List<Share> eligibleShares = this.filter(new ArrayList<>(shares), predicate);
     List<Double> mappedShares = this.map(new ArrayList<>(shares), converter);
     return mappedShares.stream().reduce(0.0, Double::sum);
   }
-  // filter-map-fold operation
+
   public double getValuationGivenFilter(Predicate<Share> predicate) {
     List<Share> eligibleShares = this.filter(new ArrayList<>(shares), predicate);
     List<Double> mappedShares = this.map(eligibleShares, Share::getShareValue);

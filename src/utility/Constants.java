@@ -4,7 +4,6 @@ import java.nio.file.FileSystems;
 
 public final class Constants {
   public final static String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
-
   public final static String LINE_BREAKER = System.getProperty("line.separator");
   public static final String HOME = System.getProperty("user.dir");
   public static final String RELATIVE_PATH = "~";
