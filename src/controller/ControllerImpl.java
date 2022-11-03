@@ -36,7 +36,6 @@ public class ControllerImpl implements Controller {
       invalidInput = false;
       portfolioCompleted = false;
       boolean canCreateShare = modelObject.canCreateShare();
-      System.out.println("halo");
       viewObject.showCreatePortfolioMenu(canCreateShare);
       int choice = scanner.nextInt();
       switch (choice) {
@@ -83,9 +82,11 @@ public class ControllerImpl implements Controller {
     do {
       viewObject.showAddShareWithApiInputMenu(0);
       String companyName = scanner.next().trim();
+
       isValidCompany =
           companyName.length() > 0 && companyName.length() <= 10 && Character.isAlphabetic(
               companyName.charAt(0)) && modelObject.checkTicker(companyName);
+
       if (isValidCompany) {
         viewObject.showAddShareWithApiInputMenu(1);
         int numShares = scanner.nextInt();
@@ -183,6 +184,7 @@ public class ControllerImpl implements Controller {
           } else {
             validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
                 file[1]);
+
           }
         } catch (FileNotFoundException e) {
           viewObject.notPresentError("File");
