@@ -16,6 +16,7 @@ import java.util.zip.DataFormatException;
 
 import static utility.Constants.LINE_BREAKER;
 import static utility.Constants.PORTFOLIO_DIRECTORY;
+import static utility.Constants.PORTFOLIO_FILENAME;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
 import static utility.Constants.RELATIVE_PATH;
 import static utility.Constants.STOCK_DIRECTORY;
@@ -45,7 +46,7 @@ public class ModelImplementation implements ModelInterface {
     referenceList.add(shareFileName);
     if (fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
             formattedString.getBytes())) {
-      fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
+      fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_FILENAME,
               fileInterface.convertObjectIntoString(portfolioObject.toString(),
                       referenceList).getBytes());
     }
@@ -57,7 +58,7 @@ public class ModelImplementation implements ModelInterface {
   public List<String> getPortfolio() {
     List<String> portfolioOutput = new ArrayList<>();
     List <String> fileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
-            PORTFOLIO_DIRECTORY);
+            PORTFOLIO_FILENAME);
     for (String portfolio: fileContent){
       String [] portfolioFields = portfolio.trim().split(",");
       List <String> stockFileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,

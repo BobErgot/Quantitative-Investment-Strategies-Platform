@@ -52,11 +52,14 @@ class Portfolio {
     StringBuilder toString = new StringBuilder("+id:" + this.id + "\ncreationDate:"
             + creationDate + "\n*shares:");
     List<Share> shareList = new ArrayList<>(shares);
-    for (int i = 0; i < shares.size(); i++) {
+    for (int i = 0; i < shares.size()-1; i++) {
       String record = shareList.get(i).toString().replace("\n", ",");
-      record = record.substring(0, record.length() - 2);
+      record = record.substring(0, record.length() - 1);
       toString.append(record).append("|");
     }
+    String record = shareList.get(shares.size()-1).toString().replace("\n", ",");
+    record = record.substring(0, record.length() - 1);
+    toString.append(record);
     return toString.toString();
   }
 

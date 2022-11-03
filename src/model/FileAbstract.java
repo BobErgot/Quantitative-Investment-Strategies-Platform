@@ -66,11 +66,11 @@ abstract class FileAbstract implements FileInterface {
   public Path createFilePath(String path, String folderName, String fileName, String extension) {
     String root = "";
     if (path.equals(RELATIVE_PATH)) {
-      root = HOME + FILE_SEPARATOR;
+      root = HOME;
     } else {
       root = path;
     }
-    return Paths.get(root + folderName + FILE_SEPARATOR + fileName + "." + extension);
+    return Paths.get(root + FILE_SEPARATOR + folderName + FILE_SEPARATOR + fileName + "." + extension);
   }
 
   @Override

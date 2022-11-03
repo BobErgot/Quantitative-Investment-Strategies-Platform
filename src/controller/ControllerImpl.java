@@ -168,19 +168,13 @@ public class ControllerImpl implements Controller {
         String[] file = str.substring(idx+1).split("\\.");
         try {
           if (choice == 1) {
-            // D:\CS5010_PDP\Assignments & Projects\PDP\example\sampleportfolio.csv
-            // ex: C:/jo/jo.txt
-            // todo One folder has to be there right now
             idx = folderName.lastIndexOf(FILE_SEPARATOR);
             String root = str.substring(0, idx);
             String folder = str.substring(idx+1);
-            System.out.println(root+"\t"+ folder+"\t"+ file[0]+"\t"+file[1]);
-
+            idx = folder.lastIndexOf(FILE_SEPARATOR);
+            folder = folder.substring(0, idx);
             validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
           } else {
-            //
-            // ex: jo/jo.txt
-            System.out.println(RELATIVE_PATH+"\t"+ folderName+"\t"+ file[0]+"\t"+file[1]);
             validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
                 file[1]);
           }
