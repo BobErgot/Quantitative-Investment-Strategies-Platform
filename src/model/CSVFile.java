@@ -20,14 +20,20 @@ import static utility.Constants.LINE_BREAKER;
 import static utility.Constants.RELATIVE_PATH;
 import static utility.Constants.STOCK_COLUMNS_COUNT;
 
+/**
+ * This class represents files and its operations when it's data is comma-separated values(csv)
+ * format.
+ */
 public class CSVFile extends FileAbstract {
   private final static String EXTENSION = "csv";
   private final static String RECORD_DELIMITER = "\n";
 
+  @Override
   public String getFileExtension() {
     return EXTENSION;
   }
 
+  @Override
   public String getRecordDelimiter() {
     return RECORD_DELIMITER;
   }
@@ -45,8 +51,8 @@ public class CSVFile extends FileAbstract {
     Path filePath = null;
     try {
       Files.createDirectories(directoryPath);
-      Optional<Path> file = Files.list(directoryPath).filter(filepath ->
-              filepath.getFileName().toFile().getName().startsWith(filePrefix)).findFirst();
+      Optional<Path> file = Files.list(directoryPath).filter(filepath -> filepath.getFileName()
+              .toFile().getName().startsWith(filePrefix)).findFirst();
       if (file.isPresent()) {
         filePath = file.get();
       }

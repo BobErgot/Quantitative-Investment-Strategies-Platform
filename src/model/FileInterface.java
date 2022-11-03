@@ -3,11 +3,14 @@ package model;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * This interface represents all the I/O operations to be supported by a file database
+ */
 public interface FileInterface {
   /**
    * Creates a new file at the specified path passed to it as parameter.
    *
-   * @param path specify absolute path or relative path by passing ~
+   * @param path       specify absolute path or relative path by passing ~
    * @param folderName directory of file structure where the file needs to be stored
    * @param filePrefix Prefix name of the file to be searched
    * @param extension  extension of the file to be read
@@ -18,7 +21,7 @@ public interface FileInterface {
   /**
    * Checks whether the file exists or not.
    *
-   * @param path specify absolute path or relative path by passing ~
+   * @param path       specify absolute path or relative path by passing ~
    * @param folderName directory of file structure where the file needs to be stored
    * @param fileName   name of the file to be searched
    * @param extension  extension of the file to be read
@@ -30,7 +33,7 @@ public interface FileInterface {
    * Return the path formed from the given folder name, file name and extension relative to Home
    * path.
    *
-   * @param path specify absolute path or relative path by passing ~
+   * @param path       specify absolute path or relative path by passing ~
    * @param folderName directory of file structure where the file needs to be stored
    * @param fileName   name of the file to be searched
    * @param extension  extension of the file to be read
@@ -41,7 +44,7 @@ public interface FileInterface {
   /**
    * Delete file at the specified path passed to it as parameter.
    *
-   * @param path specify absolute path or relative path by passing ~
+   * @param path       specify absolute path or relative path by passing ~
    * @param folderName directory of file structure where the file needs to be deleted from
    * @param fileName   name of the file to be searched
    * @param extension  extension of the file to be read
@@ -53,7 +56,7 @@ public interface FileInterface {
    * Writes data to file in format that is depended on the concrete implementation of this
    * interface.
    *
-   * @param path specify absolute path or relative path by passing ~
+   * @param path       specify absolute path or relative path by passing ~
    * @param folderName directory where the file needs to be stored
    * @param filePrefix the symbol of the stock whose data needs to be stored
    * @param dataBytes  data to be written to file in bytes format
@@ -65,7 +68,7 @@ public interface FileInterface {
    * Read data from file in format that is depended on the concrete implementation of this
    * interface.
    *
-   * @param path specify absolute path or relative path by passing ~
+   * @param path       specify absolute path or relative path by passing ~
    * @param folderName directory where the file needs to be read from
    * @param filePrefix the symbol of the stock whose data needs to be retrieved
    * @return individual records that are retrieved from file
@@ -105,5 +108,11 @@ public interface FileInterface {
    */
   <T> String convertObjectListIntoString(List<T> objectList);
 
-  public <T> List<T> validateFormat (String content);
+  /**
+   * Check data content that needs to be checked against file interface implementation.
+   * @param content data content in string format
+   * @param <T> Custom object whose list is passed as parameter
+   * @return list of individual reports
+   */
+  <T> List<T> validateFormat(String content);
 }

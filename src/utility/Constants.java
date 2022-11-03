@@ -2,6 +2,10 @@ package utility;
 
 import java.nio.file.FileSystems;
 
+/**
+ * Class with all the constants that will be used across the different classes in this codebase
+ * and functions as a configuration file.
+ */
 public final class Constants {
   public final static String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
   public final static String LINE_BREAKER = System.getProperty("line.separator");

@@ -19,6 +19,12 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Abstract base class for implementations of {@link FileInterface}. This clas contains all the
+ * method definitions that are common to the concrete implementations of the {@link FileInterface}
+ * interface. A new implementation of the interface has the option of extending this class, or
+ * directly implementing all the methods.
+ */
 abstract class FileAbstract implements FileInterface {
 
   protected final Logger LOGGER = Logger.getLogger(this.getClass().getName());
@@ -38,9 +44,8 @@ abstract class FileAbstract implements FileInterface {
     Path directoryPath = Paths.get(directory);
     try {
       Files.createDirectories(directoryPath);
-      Optional<Path> file = Files.list(directoryPath)
-          .filter(filePath -> filePath.getFileName().toFile().getName().startsWith(filePrefix))
-          .findFirst();
+      Optional<Path> file = Files.list(directoryPath).filter(filePath ->
+              filePath.getFileName().toFile().getName().startsWith(filePrefix)).findFirst();
       if (file.isPresent()) {
         return file.get();
       }
