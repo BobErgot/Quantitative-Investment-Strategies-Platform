@@ -106,8 +106,7 @@ public class ControllerImpl implements Controller {
   }
   @Override
   public boolean showValuationOfPortfolio(String selectedId){
-    boolean flag = modelObject.idIsPresent(selectedId);
-    if(!flag)
+    if(!modelObject.idIsPresent(selectedId))
       return false;
     boolean invalidDate = false;
     LocalDate date;
@@ -156,7 +155,6 @@ public class ControllerImpl implements Controller {
         int idx = str.lastIndexOf(FILE_SEPARATOR);
         String folderName = str.substring(0, idx);
         String[] file = str.substring(idx).split("\\.");
-        List<String> portfolios;
         if (choice == 1) {
           // ex: C:/jo/jo.txt
           // todo One folder has to be there right now
@@ -164,7 +162,7 @@ public class ControllerImpl implements Controller {
           String root = str.substring(0, idx);
           String folder = str.substring(idx);
           try {
-            portfolios = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
+            validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
           } catch (DataFormatException e) {
             throw new RuntimeException(e);
           } catch (FileNotFoundException e) {
@@ -173,7 +171,7 @@ public class ControllerImpl implements Controller {
         } else {
           // ex: jo/jo.txt
           try {
-            portfolios = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
+            validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
                 file[1]);
           } catch (DataFormatException e) {
             throw new RuntimeException(e);
@@ -181,9 +179,6 @@ public class ControllerImpl implements Controller {
             throw new RuntimeException(e);
           }
         }
-        validPath = portfolios.size() > 0;
-        System.out.println(portfolios);
-
       }
       if (!validPath) {
         viewObject.printInvalidInputMessage();
