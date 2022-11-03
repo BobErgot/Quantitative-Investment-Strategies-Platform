@@ -56,4 +56,6 @@ public interface View {
   void uploadPath();
 
   void enterPath();
+
+  void printInvalidDateError();
 }
