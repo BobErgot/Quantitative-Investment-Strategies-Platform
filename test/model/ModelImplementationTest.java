@@ -66,8 +66,7 @@ public class ModelImplementationTest {
     ModelInterface model = new ModelImplementation();
     String[] companies = {"AAPL", "MSFT", "GOOG", "AMZN", "NFLX", "META", "CTSH", "CRM", "TSLA"};
     for (String company : companies) {
-      model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10),
-              -1);
+      model.addShareToModel(company, LocalDate.now(), 2, -1);
     }
     //TODO
     model.createPortfolio("port3", LocalDate.now());
@@ -167,7 +166,7 @@ public class ModelImplementationTest {
     ModelInterface model = new ModelImplementation();
     model.addShareToModel("AADR", LocalDate.now(), new Random().nextInt(10),
             -1);
-    assertTrue(model.idIsPresent("Apple"));
+    assertTrue(model.idIsPresent("AADR"));
   }
 
   // test can't create share
