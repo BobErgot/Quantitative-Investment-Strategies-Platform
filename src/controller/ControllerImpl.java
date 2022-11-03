@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.DuplicateFormatFlagsException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
@@ -183,6 +184,12 @@ public class ControllerImpl implements Controller {
 
         } catch (DataFormatException d) {
           viewObject.printInvalidDateError();
+        }
+        catch (DuplicateFormatFlagsException exceptionMessage){
+          viewObject.printException(exceptionMessage.getMessage());
+        }
+        catch(IllegalArgumentException exception){
+          viewObject.printException(exception.getMessage());
         }
       } else if (choice == 3) {
         return;

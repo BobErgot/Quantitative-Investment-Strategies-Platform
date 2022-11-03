@@ -58,4 +58,6 @@ public interface View {
   void enterPath();
 
   void printInvalidDateError();
+
+  void printException(String message);
 }

@@ -129,4 +129,9 @@ public class ViewImpl implements View {
   public void printInvalidDateError() {
     this.out.println("Invalid date format!");
   }
+
+  @Override
+  public void printException(String message) {
+    this.out.println(message);
+  }
 }
