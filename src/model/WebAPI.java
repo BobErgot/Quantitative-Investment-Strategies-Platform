@@ -40,7 +40,7 @@ public class WebAPI implements APIInterface {
     }
     java.net.URLConnection connection = null;
     try {
-      LOGGER.info(url + "?" + query);
+      LOGGER.log(Level.FINE, url + "?" + query);
       connection = new URL(url + "?" + query).openConnection();
       connection.setRequestProperty("Accept-Charset", charset);
     } catch (IOException ioException) {
@@ -54,7 +54,7 @@ public class WebAPI implements APIInterface {
         HttpURLConnection httpConnection = (HttpURLConnection) connection;
         responseCode = httpConnection.getResponseCode();
         responseMessage = httpConnection.getResponseMessage();
-        LOGGER.info("API response: " + responseMessage);
+        LOGGER.log(Level.FINE,"API response: " + responseMessage);
       } catch (IOException ioException) {
         LOGGER.log(Level.SEVERE, "Error occurred during connection: ", ioException);
         return null;
