@@ -25,12 +25,16 @@ abstract class FileAbstract implements FileInterface {
 
   @Override
   public Path createFile(String path, String folderName, String filePrefix, String extension) {
+    String root = HOME;
+    String folderPath = "";
     String directory = "";
-    if (path.equals(RELATIVE_PATH)) {
-      directory = HOME + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
-    } else {
-      directory = path + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
+    if (!path.equals(RELATIVE_PATH)) {
+      root = path;
     }
+    if (!folderName.isEmpty()) {
+      folderPath = folderName + FILE_SEPARATOR;
+    }
+    directory = root + FILE_SEPARATOR + folderPath;
     Path directoryPath = Paths.get(directory);
     try {
       Files.createDirectories(directoryPath);
@@ -64,13 +68,15 @@ abstract class FileAbstract implements FileInterface {
 
   @Override
   public Path createFilePath(String path, String folderName, String fileName, String extension) {
-    String root = "";
-    if (path.equals(RELATIVE_PATH)) {
-      root = HOME;
-    } else {
+    String root = HOME;
+    String folderPath = "";
+    if (!path.equals(RELATIVE_PATH)) {
       root = path;
     }
-    return Paths.get(root + FILE_SEPARATOR + folderName + FILE_SEPARATOR + fileName + "." + extension);
+    if (!folderName.isEmpty()) {
+      folderPath = folderName + FILE_SEPARATOR;
+    }
+    return Paths.get(root + FILE_SEPARATOR + folderPath + fileName + "." + extension);
   }
 
   @Override
