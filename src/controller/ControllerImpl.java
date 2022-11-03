@@ -12,6 +12,7 @@ import java.util.DuplicateFormatFlagsException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
+
 import model.ModelInterface;
 import view.View;
 import view.ViewImpl;
@@ -31,8 +32,8 @@ public class ControllerImpl implements Controller {
    * Construct a controller implementation object that has the provided InputStream, PrintStream
    * and ModelInterface object.
    *
-   * @param in InputStream object to receive all the inputs
-   * @param out PrintStream to transmit all the outputs to
+   * @param in    InputStream object to receive all the inputs
+   * @param out   PrintStream to transmit all the outputs to
    * @param model ModelInterface to communicate and receive data from model implementation
    */
   public ControllerImpl(InputStream in, PrintStream out, ModelInterface model) {
@@ -96,9 +97,8 @@ public class ControllerImpl implements Controller {
       viewObject.showAddShareWithApiInputMenu(0);
       String companyName = scanner.next().trim();
 
-      isValidCompany =
-          companyName.length() > 0 && companyName.length() <= 10 && Character.isAlphabetic(
-              companyName.charAt(0)) && modelObject.checkTicker(companyName);
+      isValidCompany = companyName.length() > 0 && companyName.length() <= 10
+              && Character.isAlphabetic(companyName.charAt(0)) && modelObject.checkTicker(companyName);
 
       if (isValidCompany) {
         viewObject.showAddShareWithApiInputMenu(1);
@@ -109,7 +109,7 @@ public class ControllerImpl implements Controller {
         } else {
           try {
             boolean companyAddedWithoutChange = modelObject.addShareToModel(companyName,
-                LocalDate.now(), numShares, -1);
+                    LocalDate.now(), numShares, -1);
             if (!companyAddedWithoutChange) {
               viewObject.printCompanyStockUpdated();
             }
@@ -146,8 +146,8 @@ public class ControllerImpl implements Controller {
         }
 
       }
-      invalidDate =
-          invalidDate && date.isAfter(LocalDate.of(1949, 12, 31)) && date.isBefore(LocalDate.now());
+      invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31))
+              && date.isBefore(LocalDate.now());
       if (invalidDate) {
         viewObject.printInvalidInputMessage();
       }
@@ -180,7 +180,6 @@ public class ControllerImpl implements Controller {
       viewObject.uploadPath();
       int choice = scanner.nextInt();
       if (choice == 1 || choice == 2) {
-        // Relative zenith/harshit/bob.txt
         viewObject.enterPath();
         String str = scanner.next();
         int idx = str.lastIndexOf(FILE_SEPARATOR);
@@ -195,8 +194,7 @@ public class ControllerImpl implements Controller {
             folder = folder.substring(0, idx);
             validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
           } else {
-            validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
-                file[1]);
+            validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0], file[1]);
           }
         } catch (FileNotFoundException e) {
           viewObject.notPresentError("File");
