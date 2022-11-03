@@ -23,16 +23,27 @@ import static utility.Constants.RELATIVE_PATH;
 import static utility.Constants.STOCK_DIRECTORY;
 import static utility.Constants.TICKER_DIRECTORY;
 
+/**
+ * This class behaves as a gateway between model objects and operations and the controller and
+ * provides all model level functionalities to the controller interface from higher level.
+ */
 public class ModelImplementation implements ModelInterface {
 
   private final Set<Portfolio> portfolios;
-  private final FileInterface fileInterface;
   private HashMap<String, Share> shares;
+  private final FileInterface fileInterface;
+  private final APIInterface webAPi;
 
+  /**
+   * Construct a model implementation object and initialises the local set of shares and
+   * portfolios and creates objects of file and api interface which it will be using to work with
+   * model on lower level.
+   */
   public ModelImplementation() {
     this.shares = new HashMap<>();
     this.portfolios = new HashSet<>();
-    fileInterface = new CSVFile();
+    this.fileInterface = new CSVFile();
+    this.webAPi = new WebAPI();
     this.getPortfolio();
   }
 
@@ -75,8 +86,9 @@ public class ModelImplementation implements ModelInterface {
       }
       Portfolio portfolioObject = new Portfolio(portfolioFields[0], shareList,
               LocalDate.parse(portfolioFields[1]));
+      portfolioOutput.add("-------------------------------------------------------");
       portfolioOutput.add(portfolioObject.toString());
-      portfolioOutput.add(LINE_BREAKER + "XXXXXXXXXXXXX" + LINE_BREAKER);
+      portfolioOutput.add("-------------------------------------------------------" + LINE_BREAKER);
       portfolios.add(portfolioObject);
     }
     return portfolioOutput;
@@ -125,13 +137,13 @@ public class ModelImplementation implements ModelInterface {
     return portfolioObject.getValuationGivenFilter((Predicate<Share>) filter);
   }
 
-  public double calculateAveragePrice(int position, List<String> stockData) {
+  private double calculateAveragePrice(int position, List<String> stockData) {
     double high = Double.parseDouble(stockData.get(position).split(",")[2]);
     double low = Double.parseDouble(stockData.get(position).split(",")[3]);
     return low + (high - low) / 2;
   }
 
-  public double searchStockDataList(LocalDate date, List<String> stockData) {
+  private double searchStockDataList(LocalDate date, List<String> stockData) {
     double stockPrice = -1.00;
     int header = 1;
     int footer = stockData.size() - 1;
@@ -204,7 +216,6 @@ public class ModelImplementation implements ModelInterface {
       }
     }
     if (stockPrice == -1) {
-      APIInterface webAPi = new WebAPI();
       String webAPIData = webAPi.getData(companyName, date);
       stockData = fileInterface.validateFormat(webAPIData);
       if (stockData != null && stockData.size() != 0) {
