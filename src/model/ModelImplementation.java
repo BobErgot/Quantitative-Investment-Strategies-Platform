@@ -79,13 +79,9 @@ public class ModelImplementation implements ModelInterface {
   }
 
   private Portfolio getPortfolioObjectById(String id) {
-
     if (id.length() > 0) {
-
       for (Portfolio portfolio : portfolios) {
-
         if (portfolio.getId().equals(id)) {
-
           return portfolio;
         }
       }
@@ -112,7 +108,6 @@ public class ModelImplementation implements ModelInterface {
     return this.getStockPrice(share.getCompanyName(), date) * share.getNumShares();
   }
 
-  //  @Override
   private <T> double getValuationGivenFilter(String id, Predicate<T> filter) {
     Portfolio portfolioObject = this.getPortfolioObjectById(id);
     if (id.length() == 0 || portfolioObject == null) {
