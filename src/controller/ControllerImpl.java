@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
@@ -106,18 +107,27 @@ public class ControllerImpl implements Controller {
 
   @Override
   public boolean showValuationOfPortfolio(String selectedId) {
-    if (!modelObject.idIsPresent(selectedId))
+    if (!modelObject.idIsPresent(selectedId)) {
       return false;
+    }
     boolean invalidDate = false;
     LocalDate date;
     String stockDate;
     do {
-      viewObject.askForDate();
-      stockDate = scanner.next();
-      invalidDate = !(Pattern.matches("\\d{4}-\\d{2}-\\d{2}", stockDate));
-      date = LocalDate.parse(stockDate);
-      invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31))
-              && date.isBefore(LocalDate.now());
+      while (true) {
+        try {
+          viewObject.askForDate();
+          stockDate = scanner.next();
+          invalidDate = !(Pattern.matches("\\d{4}-\\d{2}-\\d{2}", stockDate));
+          date = LocalDate.parse(stockDate);
+          break;
+        } catch (DateTimeParseException dtp) {
+          viewObject.printInvalidDateError();
+        }
+
+      }
+      invalidDate =
+          invalidDate && date.isAfter(LocalDate.of(1949, 12, 31)) && date.isBefore(LocalDate.now());
       if (invalidDate) {
         viewObject.printInvalidInputMessage();
       }
@@ -156,32 +166,28 @@ public class ControllerImpl implements Controller {
         int idx = str.lastIndexOf(FILE_SEPARATOR);
         String folderName = str.substring(0, idx);
         String[] file = str.substring(idx).split("\\.");
-        if (choice == 1) {
-          // ex: C:/jo/jo.txt
-          // todo One folder has to be there right now
-          idx = folderName.lastIndexOf(FILE_SEPARATOR);
-          String root = str.substring(0, idx);
-          String folder = str.substring(idx);
-          try {
+        try {
+          if (choice == 1) {
+            // ex: C:/jo/jo.txt
+            // todo One folder has to be there right now
+            idx = folderName.lastIndexOf(FILE_SEPARATOR);
+            String root = str.substring(0, idx);
+            String folder = str.substring(idx);
             validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
-          } catch (DataFormatException e) {
-            throw new RuntimeException(e);
-          } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-          }
-        } else {
-          // ex: jo/jo.txt
-          try {
+          } else {
+            // ex: jo/jo.txt
             validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
-                    file[1]);
-          } catch (DataFormatException e) {
-            throw new RuntimeException(e);
-          } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+                file[1]);
           }
+        } catch (FileNotFoundException e) {
+          viewObject.notPresentError("File");
+
+        } catch (DataFormatException d) {
+          viewObject.printInvalidDateError();
         }
-      }
-      if (!validPath) {
+      } else if (choice == 3) {
+        return;
+      } else {
         viewObject.printInvalidInputMessage();
       }
     } while (!validPath);

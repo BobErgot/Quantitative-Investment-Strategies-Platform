@@ -27,7 +27,9 @@ public class ViewImpl implements View {
   public void showCreatePortfolioMenu(boolean canCreateShare) {
     this.out.println("Please select an option:");
     this.out.println("1. Add Shares");
-    if (canCreateShare) this.out.println("2. Create Portfolio (Finalize current Portfolio)");
+    if (canCreateShare) {
+      this.out.println("2. Create Portfolio (Finalize current Portfolio)");
+    }
     this.out.println("3. Go back.");
   }
 
@@ -110,14 +112,21 @@ public class ViewImpl implements View {
 
   @Override
   public void uploadPath() {
-      this.out.println("How do you want to upload this data? (Write your path sperated by "+FILE_SEPARATOR);
-      this.out.println("1. Absolute Path");
-      this.out.println("2. Relative Path");
+    this.out.println(
+        "How do you want to upload this data? (Write your path sperated by " + FILE_SEPARATOR);
+    this.out.println("1. Absolute Path");
+    this.out.println("2. Relative Path");
+    this.out.println("3. Go back");
 
   }
 
   @Override
   public void enterPath() {
     this.out.println("Enter path:");
+  }
+
+  @Override
+  public void printInvalidDateError() {
+    this.out.println("Invalid date format!");
   }
 }
