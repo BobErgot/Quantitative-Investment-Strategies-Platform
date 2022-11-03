@@ -7,10 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
-
 import model.ModelImplementation;
 import model.ModelInterface;
 import view.View;
@@ -91,7 +91,7 @@ public class ControllerImpl implements Controller {
         int numShares = scanner.nextInt();
         try {
           boolean companyAddedWithoutChange = modelObject.addShareToModel(companyName,
-                  LocalDate.now(), numShares, -1);
+              LocalDate.now(), numShares, -1);
           if (!companyAddedWithoutChange) {
             viewObject.printCompanyStockUpdated();
           }
@@ -104,7 +104,28 @@ public class ControllerImpl implements Controller {
       }
     } while (!isValidCompany);
   }
-
+  @Override
+  public boolean showValuationOfPortfolio(String selectedId){
+    boolean flag = modelObject.idIsPresent(selectedId);
+    if(!flag)
+      return false;
+    boolean invalidDate = false;
+    LocalDate date;
+    String stockDate;
+    do {
+      viewObject.askForDate();
+      stockDate = scanner.next();
+      invalidDate = !(Pattern.matches("\\d{4}-\\d{2}-\\d{2}", stockDate));
+      date = LocalDate.parse(stockDate);
+      invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31)) && date.isBefore(
+          LocalDate.now());
+      if (invalidDate) {
+        viewObject.printInvalidInputMessage();
+      }
+    } while (invalidDate);
+    viewObject.showValuation(modelObject.getValuationGivenDate(selectedId, date));
+    return true;
+  }
   @Override
   public void viewPortfolio() {
     viewObject.showViewPortfolioMenu(modelObject.getPortfolio());
@@ -115,26 +136,7 @@ public class ControllerImpl implements Controller {
       do {
         viewObject.selectPortfolio();
         String selectedId = scanner.next().trim();
-        flag = modelObject.idIsPresent(selectedId);
-        boolean invalidDate = false;
-        LocalDate date;
-        String stockDate;
-        do {
-          viewObject.askForDate();
-          stockDate = scanner.next();
-          invalidDate = !(Pattern.matches("\\d{4}-\\d{2}-\\d{2}", stockDate));
-          date = LocalDate.parse(stockDate);
-          invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31)) && date.isBefore(
-              LocalDate.now());
-          if (invalidDate) {
-            viewObject.printInvalidInputMessage();
-          }
-        } while (invalidDate);
-        if (flag) {
-          viewObject.showValuation(modelObject.getValuationGivenDate(selectedId, date));
-        } else {
-          viewObject.notPresentError("File");
-        }
+        flag = showValuationOfPortfolio(selectedId);
       } while (!flag);
     }
   }
@@ -154,6 +156,7 @@ public class ControllerImpl implements Controller {
         int idx = str.lastIndexOf(FILE_SEPARATOR);
         String folderName = str.substring(0, idx);
         String[] file = str.substring(idx).split("\\.");
+        List<String> portfolios;
         if (choice == 1) {
           // ex: C:/jo/jo.txt
           // todo One folder has to be there right now
@@ -161,7 +164,7 @@ public class ControllerImpl implements Controller {
           String root = str.substring(0, idx);
           String folder = str.substring(idx);
           try {
-            validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
+            portfolios = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
           } catch (DataFormatException e) {
             throw new RuntimeException(e);
           } catch (FileNotFoundException e) {
@@ -170,13 +173,17 @@ public class ControllerImpl implements Controller {
         } else {
           // ex: jo/jo.txt
           try {
-            validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0], file[1]);
+            portfolios = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
+                file[1]);
           } catch (DataFormatException e) {
             throw new RuntimeException(e);
           } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
           }
         }
+        validPath = portfolios.size() > 0;
+        System.out.println(portfolios);
+
       }
       if (!validPath) {
         viewObject.printInvalidInputMessage();
