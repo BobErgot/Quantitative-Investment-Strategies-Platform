@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.zip.DataFormatException;
 
 public interface ModelInterface {
 
@@ -11,7 +12,7 @@ public interface ModelInterface {
    *
    * @param portfolioName Name of the portfolio to be created
    */
-  void createPortfolio(String portfolioName);
+  void createPortfolio(String portfolioName, LocalDate date);
 
   /**
    * Uses FileAPI to get a list of portfolios in string format
@@ -44,10 +45,10 @@ public interface ModelInterface {
    * @param numShares   Number of shares purchased.
    * @return If successfully  added or not.
    */
-  boolean addShareToModel(String companyName, LocalDate date, int numShares);
+  boolean addShareToModel(String companyName, LocalDate date, int numShares, double stockPrice);
 
-  boolean addPortfolioByUpload(String path, String folderName, String fileName,
-                               String extension);
+  List<String> addPortfolioByUpload(String path, String folderName, String fileName,
+                               String extension) throws DataFormatException;
 
   boolean idIsPresent(String selectedId);
 

@@ -8,6 +8,8 @@ import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import java.util.zip.DataFormatException;
+
 import model.ModelImplementation;
 import model.ModelInterface;
 import view.View;
@@ -47,7 +49,7 @@ public class ControllerImpl implements Controller {
               viewObject.askForPortfolioName();
               String portfolioName = scanner.next().trim();
               if (portfolioName.length() > 0 && !modelObject.idIsPresent(portfolioName)) {
-                modelObject.createPortfolio(portfolioName);
+                modelObject.createPortfolio(portfolioName, LocalDate.now());
                 portfolioCompleted = true;
               } else {
                 invalidPortfolioName = true;
@@ -88,7 +90,7 @@ public class ControllerImpl implements Controller {
         int numShares = scanner.nextInt();
         try {
           boolean companyAddedWithoutChange = modelObject.addShareToModel(companyName,
-              LocalDate.now(), numShares);
+                  LocalDate.now(), numShares, -1);
           if (!companyAddedWithoutChange) {
             viewObject.printCompanyStockUpdated();
           }
@@ -157,10 +159,18 @@ public class ControllerImpl implements Controller {
           idx = folderName.lastIndexOf(FILE_SEPARATOR);
           String root = str.substring(0, idx);
           String folder = str.substring(idx);
-          validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
+          try {
+            validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
+          } catch (DataFormatException e) {
+            throw new RuntimeException(e);
+          }
         } else {
           // ex: jo/jo.txt
-          validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0], file[1]);
+          try {
+            validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0], file[1]);
+          } catch (DataFormatException e) {
+            throw new RuntimeException(e);
+          }
         }
       }
       if (!validPath) {

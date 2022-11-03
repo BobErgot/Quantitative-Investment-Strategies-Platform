@@ -1,11 +1,13 @@
 package model;
 
+import static utility.Constants.LINE_BREAKER;
 import static utility.Constants.PORTFOLIO_DIRECTORY;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
 import static utility.Constants.RELATIVE_PATH;
 import static utility.Constants.STOCK_DIRECTORY;
 import static utility.Constants.TICKER_DIRECTORY;
 
+import java.nio.file.InvalidPathException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
@@ -18,6 +20,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 public class ModelImplementation implements ModelInterface {
 
@@ -43,9 +46,9 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public void createPortfolio(String portfolioName) {
+  public void createPortfolio(String portfolioName, LocalDate date) {
     Set<Share> sharesSet = new HashSet<>(shares.values());
-    Portfolio portfolioObject = new Portfolio(portfolioName, sharesSet, LocalDate.now());
+    Portfolio portfolioObject = new Portfolio(portfolioName, sharesSet, date);
     FileInterface fileDatabase = new CSVFile();
     String formattedString = fileDatabase.convertObjectListIntoString(new ArrayList<>(sharesSet));
     String shareFileName = UUID.randomUUID().toString();
@@ -98,8 +101,7 @@ public class ModelImplementation implements ModelInterface {
     return portfolioObject.getValuation((share)->this.mapShareGivenDate(share,date));
   }
   private double mapShareGivenDate(Share share, LocalDate date){
-    return this.getStockPrice(share.getCompanyName(),date,
-            share.getNumShares()) * share.getNumShares();
+    return this.getStockPrice(share.getCompanyName(),date) * share.getNumShares();
   }
 
   //  @Override
@@ -180,7 +182,7 @@ public class ModelImplementation implements ModelInterface {
     return stockPrice;
   }
 
-  private double getStockPrice(String companyName, LocalDate date, int numShares) {
+  private double getStockPrice(String companyName, LocalDate date) {
     if (date.isAfter(LocalDate.now())) {
       return -1;
     }
@@ -207,13 +209,15 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public boolean addShareToModel(String companyName, LocalDate date, int numShares)
-      throws IllegalArgumentException {
-    double stockPrice =  getStockPrice(companyName, date, numShares);
-    if(stockPrice==-1)
+  public boolean addShareToModel(String companyName, LocalDate date, int numShares,
+                                 double stockPrice) throws IllegalArgumentException {
+    if (stockPrice == -1) {
+      stockPrice =  getStockPrice(companyName, date);
+    }
+    if(stockPrice==-1){
       throw new IllegalArgumentException("Invalid Share");
-    Share shareObject = new Share(companyName, date, stockPrice,
-        numShares);
+    }
+    Share shareObject = new Share(companyName, date, stockPrice, numShares);
     if(this.shares.get(companyName)==null) {
       this.shares.put(companyName, shareObject);
       return true;
@@ -235,14 +239,40 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public boolean addPortfolioByUpload(String path, String folderName, String fileName,
-                                      String extension) {
+  public List<String> addPortfolioByUpload(String path, String folderName, String fileName,
+                                      String extension) throws DataFormatException {
     FileAbstract fileDatabase = new CSVFile();
+    List<String> uploadFileData = new ArrayList<>();
     if (fileDatabase.exists(path, folderName, fileName, extension)){
-      List<String> uploadFileData = fileDatabase.readFromFile(path, folderName, fileName);
-
+      uploadFileData.addAll(fileDatabase.readFromFile(path, folderName, fileName));
+    } else {
+      throw new InvalidPathException("Error", "Invalid path to file");
     }
-    return false;
+    for(String data : uploadFileData)
+    {
+      if(null != data && !data.trim().equals("")){
+        String [] portfolioFields = data.split(",");
+        if(portfolioFields.length == 3){
+          String file = portfolioFields[2].substring(3);
+          String [] fileMetadata = file.split("\\.");
+          List<String> stockFileData = new ArrayList<>();
+          if (fileDatabase.exists(path, folderName, fileMetadata[0], fileMetadata[1])){
+            stockFileData.addAll(fileDatabase.readFromFile(path, folderName, file));
+          } else {
+            throw new InvalidPathException("Error", "Invalid path to stock list file");
+          }
+          for(String stockData: stockFileData){
+            String [] stockDataField = stockData.split(",");
+            addShareToModel(stockDataField[0], LocalDate.parse(stockDataField[1]),
+                    Integer.parseInt(stockDataField[3]), Double.parseDouble(stockDataField[2]));
+          }
+          createPortfolio(portfolioFields[0].trim(), LocalDate.parse(portfolioFields[1].trim()));
+        } else  {
+          throw new DataFormatException("Error: File content not in proper format.");
+        }
+      }
+    }
+    return uploadFileData;
   }
 
   @Override
