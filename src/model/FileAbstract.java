@@ -1,5 +1,10 @@
 package model;
 
+import static java.nio.file.StandardOpenOption.WRITE;
+import static utility.Constants.FILE_SEPARATOR;
+import static utility.Constants.HOME;
+import static utility.Constants.RELATIVE_PATH;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
@@ -14,12 +19,8 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static java.nio.file.StandardOpenOption.WRITE;
-import static utility.Constants.FILE_SEPARATOR;
-import static utility.Constants.HOME;
-import static utility.Constants.RELATIVE_PATH;
-
 abstract class FileAbstract implements FileInterface {
+
   protected final Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
   @Override
@@ -33,8 +34,9 @@ abstract class FileAbstract implements FileInterface {
     Path directoryPath = Paths.get(directory);
     try {
       Files.createDirectories(directoryPath);
-      Optional<Path> file = Files.list(directoryPath).filter(filePath ->
-              filePath.getFileName().toFile().getName().startsWith(filePrefix)).findFirst();
+      Optional<Path> file = Files.list(directoryPath)
+          .filter(filePath -> filePath.getFileName().toFile().getName().startsWith(filePrefix))
+          .findFirst();
       if (file.isPresent()) {
         return file.get();
       }
@@ -63,12 +65,12 @@ abstract class FileAbstract implements FileInterface {
   @Override
   public Path createFilePath(String path, String folderName, String fileName, String extension) {
     String root = "";
-    if (path.equals(RELATIVE_PATH)){
+    if (path.equals(RELATIVE_PATH)) {
       root = HOME + FILE_SEPARATOR;
     } else {
       root = path;
     }
-    return Paths.get( root, folderName + FILE_SEPARATOR + fileName + "." + extension);
+    return Paths.get(root + folderName + FILE_SEPARATOR + fileName + "." + extension);
   }
 
   @Override
