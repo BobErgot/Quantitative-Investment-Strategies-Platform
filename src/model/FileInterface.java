@@ -104,4 +104,6 @@ public interface FileInterface {
    * @return string representation of that object list in this file implementation
    */
   <T> String convertObjectListIntoString(List<T> objectList);
+
+  public <T> List<T> validateFormat (String content);
 }

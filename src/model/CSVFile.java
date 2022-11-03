@@ -16,7 +16,9 @@ import java.util.logging.Level;
 
 import static utility.Constants.FILE_SEPARATOR;
 import static utility.Constants.HOME;
+import static utility.Constants.LINE_BREAKER;
 import static utility.Constants.RELATIVE_PATH;
+import static utility.Constants.STOCK_COLUMNS_COUNT;
 
 public class CSVFile extends FileAbstract {
   private final static String EXTENSION = "csv";
@@ -104,5 +106,22 @@ public class CSVFile extends FileAbstract {
       stringFormat.append("\n");
     }
     return stringFormat.toString();
+  }
+
+  @Override
+  public <T> List<T> validateFormat(String content) {
+    List<T> lideData = new ArrayList<>();
+    if (null == content || content.trim().isEmpty()) {
+      return null;
+    }
+    String[] contentLine = content.trim().split(LINE_BREAKER);
+    for (int i = 0; i < contentLine.length - 1; i++) {
+      String[] recordFields = contentLine[i].trim().split(",");
+      if (recordFields.length != STOCK_COLUMNS_COUNT) {
+        continue;
+      }
+      lideData.add((T) contentLine[i]);
+    }
+    return lideData;
   }
 }

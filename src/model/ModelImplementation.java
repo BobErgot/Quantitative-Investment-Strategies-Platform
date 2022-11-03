@@ -207,8 +207,11 @@ public class ModelImplementation implements ModelInterface {
     }
     if (stockPrice == -1) {
       APIInterface webAPi = new WebAPI();
-      stockData = webAPi.getData(companyName, date);
-      if (stockData.size() != 0) {
+      String webAPIData = webAPi.getData(companyName, date);
+      stockData = fileInterface.validateFormat(webAPIData);
+      if (stockData != null && stockData.size() != 0) {
+        fileInterface.writeToFile(RELATIVE_PATH, STOCK_DIRECTORY, companyName,
+                stockData.toString().getBytes());
         stockPrice = searchStockDataList(date, stockData);
         if (stockPrice > -1) {
           return stockPrice;

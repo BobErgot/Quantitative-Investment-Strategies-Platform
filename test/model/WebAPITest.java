@@ -10,6 +10,6 @@ public class WebAPITest {
   @Test
   public void getShareValueByGivenDate() throws IOException {
     WebAPI webAPI = new WebAPI();
-    List<String> value = webAPI.getData("TSCO.LON", LocalDate.parse("2022-10-28"));
+    String value =  webAPI.getData("TSCO.LON", LocalDate.parse("2022-10-28"));
   }
 }
