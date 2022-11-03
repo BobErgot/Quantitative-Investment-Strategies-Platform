@@ -39,7 +39,8 @@ abstract class FileAbstract implements FileInterface {
     try {
       Files.createDirectories(directoryPath);
       Optional<Path> file = Files.list(directoryPath)
-          .filter(filePath -> filePath.getFileName().toFile().getName().startsWith(filePrefix))
+          .filter(filePath -> filePath.getFileName().toFile().getName().matches(("^" +
+                  filePrefix + "[0-9]{4}-[0,1][0-9]-[0-3][0-9].*$")))
           .findFirst();
       if (file.isPresent()) {
         return file.get();
