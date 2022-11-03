@@ -33,8 +33,8 @@ public class ControllerImpl implements Controller {
    * ModelInterface object.
    *
    * @param in    InputStream object to receive all the inputs
-   * @param out   PrintStream to transmit all the outputs to
-   * @param model ModelInterface to communicate and receive data from model implementation
+   * @param out   PrintStream object to transmit all the outputs to
+   * @param model ModelInterface object to communicate and receive data from model implementation
    */
   public ControllerImpl(InputStream in, PrintStream out, ModelInterface model) {
     this.scanner = new Scanner(in);

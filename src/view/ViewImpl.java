@@ -5,10 +5,20 @@ import static utility.Constants.FILE_SEPARATOR;
 import java.io.PrintStream;
 import java.util.List;
 
+/**
+ * The controller implementation that receives all its inputs from an InputStream object and
+ * transmits all outputs to a PrintStream object. It also interacts with the model based on the
+ * received input from the user.
+ */
 public class ViewImpl implements View {
 
   PrintStream out;
 
+  /**
+   * Construct a view implementation object that has the provided PrintStream object.
+   *
+   * @param out PrintStream object to transmit all the outputs to
+   */
   public ViewImpl(PrintStream out) {
     this.out = out;
   }

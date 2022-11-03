@@ -2,6 +2,9 @@ package view;
 
 import java.util.List;
 
+/**
+ * This interface represents all the operations to be supported by a view implementation.
+ */
 public interface View {
 
   /**
