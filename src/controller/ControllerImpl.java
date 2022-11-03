@@ -184,7 +184,6 @@ public class ControllerImpl implements Controller {
           } else {
             validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
                 file[1]);
-
           }
         } catch (FileNotFoundException e) {
           viewObject.notPresentError("File");
