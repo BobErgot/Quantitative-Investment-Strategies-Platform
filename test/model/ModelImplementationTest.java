@@ -1,16 +1,18 @@
 package model;
 
-import org.junit.Test;
-
-import java.time.LocalDate;
-import java.util.Random;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
 
+import java.time.LocalDate;
+import java.util.Random;
+import org.junit.Test;
+
+/**
+ * Classes to test model in MVC.
+ */
 public class ModelImplementationTest {
 
   // create Empty portfolio
@@ -31,8 +33,7 @@ public class ModelImplementationTest {
     ModelInterface model = new ModelImplementation();
     String[] companies = {"AAPL", "MSFT", "GOOG", "AMZN", "NFLX", "META", "CTSH", "CRM", "TSLA"};
     for (String company : companies) {
-      model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10),
-              -1);
+      model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10), -1);
     }
     model.createPortfolio("port2", LocalDate.now());
   }
@@ -41,8 +42,7 @@ public class ModelImplementationTest {
   @Test
   public void testGetPortfolio() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("TSCO.LON", LocalDate.now(), new Random().nextInt(10)
-            , -1);
+    model.addShareToModel("TSCO.LON", LocalDate.now(), new Random().nextInt(10), -1);
     assertEquals("abc", model.getPortfolio());
   }
 
@@ -79,8 +79,7 @@ public class ModelImplementationTest {
     ModelInterface model = new ModelImplementation();
     String[] companies = {"AAPL", "MSFT", "GOOG", "AMZN", "NFLX", "META", "CTSH", "CRM", "TSLA"};
     for (String company : companies) {
-      model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10),
-              -1);
+      model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10), -1);
     }
     model.createPortfolio("port4", LocalDate.now());
     assertEquals(PORTFOLIO_NOT_FOUND, model.getPortfolioById("Yapple"));
@@ -93,8 +92,7 @@ public class ModelImplementationTest {
     ModelInterface model = new ModelImplementation();
     String[] companies = {"ZD", "ZDGE", "ZDVSV", "ZEAL", "ZECP", "ZEN", "ZENV", "ZEPP"};
     for (String company : companies) {
-      model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10),
-              -1);
+      model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10), -1);
     }
     try {
       model.getPortfolioById("");
@@ -108,8 +106,7 @@ public class ModelImplementationTest {
   @Test
   public void testBlankGetValuation() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("WAVC", LocalDate.now(), new Random().nextInt(10),
-            -1);
+    model.addShareToModel("WAVC", LocalDate.now(), new Random().nextInt(10), -1);
     try {
       model.getValuationGivenDate("", LocalDate.parse("2021-11-02"));
       fail("Test case passed even though invalid Id was given");
@@ -122,8 +119,7 @@ public class ModelImplementationTest {
   @Test
   public void testInvalidGetValuation() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("YELP", LocalDate.now(), new Random().nextInt(10),
-            -1);
+    model.addShareToModel("YELP", LocalDate.now(), new Random().nextInt(10), -1);
     try {
       model.getValuationGivenDate("NOTYELP", LocalDate.parse("2021-11-02"));
       fail("Test case passed even though invalid Id was given");
@@ -136,18 +132,15 @@ public class ModelImplementationTest {
   @Test
   public void testValidGetValuation() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("VALN", LocalDate.now(), new Random().nextInt(10),
-            -1);
-    assertEquals(200000000, model.getValuationGivenDate("VALN",
-            LocalDate.parse("2021-11-02")), 0);
+    model.addShareToModel("VALN", LocalDate.now(), new Random().nextInt(10), -1);
+    assertEquals(200000000, model.getValuationGivenDate("VALN", LocalDate.parse("2021-11-02")), 0);
   }
 
   // test blank ID present
   @Test
   public void testBlankIdIsPresent() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("TAGS", LocalDate.now(), new Random().nextInt(10),
-            -1);
+    model.addShareToModel("TAGS", LocalDate.now(), new Random().nextInt(10), -1);
     assertFalse(model.idIsPresent(""));
   }
 
@@ -155,8 +148,7 @@ public class ModelImplementationTest {
   @Test
   public void testInvalidIdIsPresent() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("Apple", LocalDate.now(), new Random().nextInt(10),
-            -1);
+    model.addShareToModel("Apple", LocalDate.now(), new Random().nextInt(10), -1);
     assertFalse(model.idIsPresent("notPresent"));
   }
 
@@ -164,8 +156,7 @@ public class ModelImplementationTest {
   @Test
   public void testIdIsPresent() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("AADR", LocalDate.now(), new Random().nextInt(10),
-            -1);
+    model.addShareToModel("AADR", LocalDate.now(), new Random().nextInt(10), -1);
     assertTrue(model.idIsPresent("AADR"));
   }
 
@@ -173,8 +164,7 @@ public class ModelImplementationTest {
   @Test
   public void testCantCreateShare() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("AAL", LocalDate.now(), new Random().nextInt(10),
-            -1);
+    model.addShareToModel("AAL", LocalDate.now(), new Random().nextInt(10), -1);
     assertFalse(model.canCreateShare());
   }
 
@@ -182,8 +172,7 @@ public class ModelImplementationTest {
   @Test
   public void testCanCreateShare() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("EAOR", LocalDate.now(), new Random().nextInt(10),
-            -1);
+    model.addShareToModel("EAOR", LocalDate.now(), new Random().nextInt(10), -1);
     assertTrue(model.canCreateShare());
   }
 }

@@ -1,10 +1,10 @@
-package controller.MockModels;
+package controller;
 
-import static controller.MockModels.MockModelUtil.merge;
+import static controller.MockModelUtil.merge;
 
 import model.ModelImplementation;
 
-public class MockModelUpload extends ModelImplementation {
+class MockModelUpload extends ModelImplementation {
 
   StringBuilder log;
 

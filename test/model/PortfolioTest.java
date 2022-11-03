@@ -1,15 +1,17 @@
 package model;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+/**
+ * Classes to test Portfolio Class in model.
+ */
 public class PortfolioTest {
 
   Set<Share> shareList;
@@ -18,7 +20,7 @@ public class PortfolioTest {
   public void createShareList() {
     shareList = new HashSet<>();
     String[] companies = {"Apple", "Microsoft", "Google", "Amazon", "Netflix", "Meta", "Cognizant",
-            "Salesforce", "Tesla", "Mathworks"};
+        "Salesforce", "Tesla", "Mathworks"};
     for (int i = 0; i < 10; i++) {
       Share s = new Share(companies[i], LocalDate.now(), 2, 3);
       shareList.add(s);
@@ -46,17 +48,6 @@ public class PortfolioTest {
       // Test passed
     }
   }
-
-  // getValuation tests
-//  @Test
-//  public void getValuation() {
-//    Portfolio p = new Portfolio("0", shareList, LocalDate.now());
-//    // all elements in portfolio
-//    assertEquals(60.0, p.getValuation((share) -> true), 0);
-//    // only companies that start with m
-//    assertEquals(18.0, p.getValuation((share) -> share.getCompanyName().startsWith("M")),
-//            0);
-//  }
 
   // get list of shares test
   @Test
