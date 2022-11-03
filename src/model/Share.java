@@ -40,7 +40,7 @@ class Share implements Comparable<Object> {
 
 
   /**
-   * Return the ticker/symbol of this share's stock
+   * Return the ticker/symbol of this share's stock.
    *
    * @return the ticker/symbol as string
    */
@@ -49,7 +49,7 @@ class Share implements Comparable<Object> {
   }
 
   /**
-   * Return the value of this share
+   * Return the value of this share.
    *
    * @return the value of share as double
    */
@@ -58,7 +58,7 @@ class Share implements Comparable<Object> {
   }
 
   /**
-   * Return the number of the stocks in this share
+   * Return the number of the stocks in this share.
    *
    * @return number of stocks as integer
    */

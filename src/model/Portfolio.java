@@ -8,12 +8,24 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents a portfolio. A portfolio has a unique id for one user, creation date of
+ * portfolio and list of share objects associated with this portfolio.
+ */
 class Portfolio {
 
   final String id;
-  final Set<Share> shares;
   final LocalDate creationDate;
+  final Set<Share> shares;
 
+  /**
+   * Construct a Portfolio object that has the provided unique id for one user, creation date of
+   * portfolio and set of share objects associated with it.
+   *
+   * @param id           unique string as portfolio name
+   * @param shares       set of shares associated with this portfolio
+   * @param creationDate date when this portfolio was created
+   */
   public Portfolio(String id, Set<Share> shares, LocalDate creationDate) {
     if (shares.size() == 0) {
       throw new IllegalArgumentException("The size of list of shares must be greater than zero!");
@@ -21,6 +33,24 @@ class Portfolio {
     this.id = id;
     this.shares = shares;
     this.creationDate = creationDate;
+  }
+
+  /**
+   * Return the unique id of this portfolio.
+   *
+   * @return the id as string
+   */
+  public String getId() {
+    return this.id;
+  }
+
+  /**
+   * Return the set of shares associated with this portfolio.
+   *
+   * @return the id as string
+   */
+  public Set<Share> getListOfShares() {
+    return this.shares;
   }
 
   private <T> List<T> filter(List<T> shares, Predicate<T> predicate) {
@@ -31,37 +61,38 @@ class Portfolio {
     return shares.stream().map(converter).collect(Collectors.<R>toList());
   }
 
-  public double getValuation(Function<Share,Double> converter) {
+  /**
+   * It returns the valuation for the portfolio based on the double value mapped to each share in
+   * the portfolio.
+   *
+   * @param converter it is a mapper between share object and double value
+   * @return total valuation of all shares in portfolio based on double value associated with it
+   */
+  public double getValuation(Function<Share, Double> converter) {
     List<Double> mappedShares = this.map(new ArrayList<>(shares), converter);
     return mappedShares.stream().reduce(0.0, Double::sum);
   }
 
-  public double getValuationGivenFilter(Predicate<Share> predicate) {
+  protected double getValuationGivenFilter(Predicate<Share> predicate) {
     List<Share> eligibleShares = this.filter(new ArrayList<>(shares), predicate);
     List<Double> mappedShares = this.map(eligibleShares, Share::getShareValue);
     return mappedShares.stream().reduce(0.0, Double::sum);
   }
 
-  public Set<Share> getListOfShares() {
-    return this.shares;
-  }
-
+  @Override
   public String toString() {
-    StringBuilder toString = new StringBuilder("+id:" + this.id + "\ncreationDate:"
-            + creationDate + "\n*shares:");
+    StringBuilder toString = new StringBuilder("+id:" + this.id + "\ncreationDate:" + creationDate
+            + "\n*shares:");
     List<Share> shareList = new ArrayList<>(shares);
-    for (int i = 0; i < shares.size()-1; i++) {
+    for (int i = 0; i < shares.size() - 1; i++) {
       String record = shareList.get(i).toString().replace("\n", ",");
       record = record.substring(0, record.length() - 1);
       toString.append(record).append("|");
     }
-    String record = shareList.get(shares.size()-1).toString().replace("\n", ",");
+    String record = shareList.get(shares.size() - 1).toString().replace("\n",
+            ",");
     record = record.substring(0, record.length() - 1);
     toString.append(record);
     return toString.toString();
-  }
-
-  public String getId() {
-    return this.id;
   }
 }

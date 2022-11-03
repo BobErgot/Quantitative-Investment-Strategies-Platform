@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * This interface represents all the I/O operations to be supported by a file database
+ * This interface represents all the I/O operations to be supported by a file database.
  */
 public interface FileInterface {
   /**
