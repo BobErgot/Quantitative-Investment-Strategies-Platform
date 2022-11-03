@@ -14,6 +14,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.zip.DataFormatException;
 
+import static utility.Constants.LINE_BREAKER;
 import static utility.Constants.PORTFOLIO_DIRECTORY;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
 import static utility.Constants.RELATIVE_PATH;
@@ -25,37 +26,27 @@ public class ModelImplementation implements ModelInterface {
   private final Set<Portfolio> portfolios;
   private HashMap<String, Share> shares;
 
+  private FileInterface fileInterface;
+
   public ModelImplementation() {
     this.shares = new HashMap<>();
     this.portfolios = new HashSet<>();
-    List<String> portfolioStrings = this.getPortfolio();
-    FileInterface fileDatabase = new CSVFile();
-    for (String portfolioString : portfolioStrings) {
-      String[] output = portfolioString.split(",");
-      Set<Share> portfolioShare = new HashSet<>();
-      for (String share : fileDatabase.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
-              output[2].substring(3))) {
-        String[] splitShare = share.split(",");
-        portfolioShare.add(new Share(splitShare[0], LocalDate.parse(splitShare[1]),
-                Double.parseDouble(splitShare[2]), Integer.parseInt(splitShare[3])));
-      }
-      portfolios.add(new Portfolio(output[0], portfolioShare, LocalDate.parse(output[1])));
-    }
+    fileInterface = new CSVFile();
+    this.getPortfolio();
   }
 
   @Override
   public void createPortfolio(String portfolioName, LocalDate date) {
     Set<Share> sharesSet = new HashSet<>(shares.values());
     Portfolio portfolioObject = new Portfolio(portfolioName, sharesSet, date);
-    FileInterface fileDatabase = new CSVFile();
-    String formattedString = fileDatabase.convertObjectListIntoString(new ArrayList<>(sharesSet));
+    String formattedString = fileInterface.convertObjectListIntoString(new ArrayList<>(sharesSet));
     String shareFileName = UUID.randomUUID().toString();
     List<String> referenceList = new ArrayList<>();
     referenceList.add(shareFileName);
-    if (fileDatabase.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
+    if (fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
             formattedString.getBytes())) {
-      fileDatabase.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
-              fileDatabase.convertObjectIntoString(portfolioObject.toString(),
+      fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY,
+              fileInterface.convertObjectIntoString(portfolioObject.toString(),
                       referenceList).getBytes());
     }
     shares = new HashMap<>();
@@ -64,8 +55,27 @@ public class ModelImplementation implements ModelInterface {
 
   @Override
   public List<String> getPortfolio() {
-    FileInterface fileDatabase = new CSVFile();
-    return fileDatabase.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_DIRECTORY);
+    List<String> portfolioOutput = new ArrayList<>();
+    List <String> fileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
+            PORTFOLIO_DIRECTORY);
+    for (String portfolio: fileContent){
+      String [] portfolioFields = portfolio.trim().split(",");
+      List <String> stockFileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
+              portfolioFields[2].substring(3));
+      Set<Share> shareList = new HashSet<>();
+      for (String stock: stockFileContent){
+        String [] stockFields = stock.trim().split(",");
+        Share shareObject = new Share(stockFields[0], LocalDate.parse(stockFields[1]),
+                Double.parseDouble(stockFields[2]), Integer.parseInt(stockFields[3]));
+        shareList.add(shareObject);
+      }
+      Portfolio portfolioObject = new Portfolio(portfolioFields[0], shareList,
+              LocalDate.parse(portfolioFields[1]));
+      portfolioOutput.add(portfolioObject.toString());
+      portfolioOutput.add(LINE_BREAKER + "XXXXXXXXXXXXX" + LINE_BREAKER);
+      portfolios.add(portfolioObject);
+    }
+    return portfolioOutput;
   }
 
   private Portfolio getPortfolioObjectById(String id) {
@@ -91,7 +101,6 @@ public class ModelImplementation implements ModelInterface {
 
   @Override
   public <T> double getValuationGivenDate(String id, LocalDate date) {
-    FileAbstract fileDatabase = new CSVFile();
     Portfolio portfolioObject = this.getPortfolioObjectById(id);
     if (id.length() == 0 || portfolioObject == null) {
       throw new IllegalArgumentException("Invalid ID Passed");
@@ -105,7 +114,6 @@ public class ModelImplementation implements ModelInterface {
 
   //  @Override
   private <T> double getValuationGivenFilter(String id, Predicate<T> filter) {
-    FileAbstract fileDatabase = new CSVFile();
     Portfolio portfolioObject = this.getPortfolioObjectById(id);
     if (id.length() == 0 || portfolioObject == null) {
       throw new IllegalArgumentException("Invalid ID Passed");
@@ -185,9 +193,8 @@ public class ModelImplementation implements ModelInterface {
     if (date.isAfter(LocalDate.now())) {
       return -1;
     }
-    FileAbstract fileDatabase = new CSVFile();
     double stockPrice = -1;
-    List<String> stockData = fileDatabase.readFromFile(RELATIVE_PATH, STOCK_DIRECTORY, companyName);
+    List<String> stockData = fileInterface.readFromFile(RELATIVE_PATH, STOCK_DIRECTORY, companyName);
     if (stockData.size() != 0) {
       stockPrice = searchStockDataList(date, stockData);
       if (stockPrice > -1) {
@@ -240,10 +247,9 @@ public class ModelImplementation implements ModelInterface {
   public boolean addPortfolioByUpload(String path, String folderName, String fileName,
                                            String extension)
           throws DataFormatException, FileNotFoundException {
-    FileAbstract fileDatabase = new CSVFile();
     List<String> uploadFileData;
-    if (fileDatabase.exists(path, folderName, fileName, extension)) {
-      uploadFileData = new ArrayList<>(fileDatabase.readFromFile(path, folderName, fileName));
+    if (fileInterface.exists(path, folderName, fileName, extension)) {
+      uploadFileData = new ArrayList<>(fileInterface.readFromFile(path, folderName, fileName));
     } else {
       throw new FileNotFoundException("Error: Invalid path to file");
     }
@@ -254,8 +260,8 @@ public class ModelImplementation implements ModelInterface {
           String file = portfolioFields[2].substring(3);
           String[] fileMetadata = file.split("\\.");
           List<String> stockFileData = new ArrayList<>();
-          if (fileDatabase.exists(path, folderName, fileMetadata[0], fileMetadata[1])) {
-            stockFileData.addAll(fileDatabase.readFromFile(path, folderName, file));
+          if (fileInterface.exists(path, folderName, fileMetadata[0], fileMetadata[1])) {
+            stockFileData.addAll(fileInterface.readFromFile(path, folderName, file));
           } else {
             throw new FileNotFoundException("Error: Invalid path to stock list file");
           }

@@ -1,20 +1,20 @@
 package controller;
 
-import static utility.Constants.FILE_SEPARATOR;
-import static utility.Constants.RELATIVE_PATH;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
+
 import model.ModelImplementation;
 import model.ModelInterface;
 import view.View;
 import view.ViewImpl;
+
+import static utility.Constants.FILE_SEPARATOR;
+import static utility.Constants.RELATIVE_PATH;
 
 public class ControllerImpl implements Controller {
 
@@ -64,7 +64,6 @@ public class ControllerImpl implements Controller {
           }
           break;
         case 3:
-//          modelObject.clearPortfolioList();
           portfolioCompleted = true;
           break;
         default:
@@ -84,14 +83,14 @@ public class ControllerImpl implements Controller {
       viewObject.showAddShareWithApiInputMenu(0);
       String companyName = scanner.next().trim();
       isValidCompany =
-          companyName.length() > 0 && companyName.length() <= 10 && Character.isAlphabetic(
-              companyName.charAt(0)) && modelObject.checkTicker(companyName);
+              companyName.length() > 0 && companyName.length() <= 10 && Character.isAlphabetic(
+                      companyName.charAt(0)) && modelObject.checkTicker(companyName);
       if (isValidCompany) {
         viewObject.showAddShareWithApiInputMenu(1);
         int numShares = scanner.nextInt();
         try {
           boolean companyAddedWithoutChange = modelObject.addShareToModel(companyName,
-              LocalDate.now(), numShares, -1);
+                  LocalDate.now(), numShares, -1);
           if (!companyAddedWithoutChange) {
             viewObject.printCompanyStockUpdated();
           }
@@ -104,9 +103,10 @@ public class ControllerImpl implements Controller {
       }
     } while (!isValidCompany);
   }
+
   @Override
-  public boolean showValuationOfPortfolio(String selectedId){
-    if(!modelObject.idIsPresent(selectedId))
+  public boolean showValuationOfPortfolio(String selectedId) {
+    if (!modelObject.idIsPresent(selectedId))
       return false;
     boolean invalidDate = false;
     LocalDate date;
@@ -116,8 +116,8 @@ public class ControllerImpl implements Controller {
       stockDate = scanner.next();
       invalidDate = !(Pattern.matches("\\d{4}-\\d{2}-\\d{2}", stockDate));
       date = LocalDate.parse(stockDate);
-      invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31)) && date.isBefore(
-          LocalDate.now());
+      invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31))
+              && date.isBefore(LocalDate.now());
       if (invalidDate) {
         viewObject.printInvalidInputMessage();
       }
@@ -125,6 +125,7 @@ public class ControllerImpl implements Controller {
     viewObject.showValuation(modelObject.getValuationGivenDate(selectedId, date));
     return true;
   }
+
   @Override
   public void viewPortfolio() {
     viewObject.showViewPortfolioMenu(modelObject.getPortfolio());
@@ -172,7 +173,7 @@ public class ControllerImpl implements Controller {
           // ex: jo/jo.txt
           try {
             validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
-                file[1]);
+                    file[1]);
           } catch (DataFormatException e) {
             throw new RuntimeException(e);
           } catch (FileNotFoundException e) {
