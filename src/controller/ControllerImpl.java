@@ -29,8 +29,8 @@ public class ControllerImpl implements Controller {
   Scanner scanner;
 
   /**
-   * Construct a controller implementation object that has the provided InputStream, PrintStream
-   * and ModelInterface object.
+   * Construct a controller implementation object that has the provided InputStream, PrintStream and
+   * ModelInterface object.
    *
    * @param in    InputStream object to receive all the inputs
    * @param out   PrintStream to transmit all the outputs to
@@ -182,10 +182,11 @@ public class ControllerImpl implements Controller {
       if (choice == 1 || choice == 2) {
         viewObject.enterPath();
         String str = scanner.next();
-        int idx = str.lastIndexOf(FILE_SEPARATOR);
-        String folderName = str.substring(0, idx);
-        String[] file = str.substring(idx + 1).split("\\.");
         try {
+          int idx = str.lastIndexOf(FILE_SEPARATOR);
+          String folderName = str.substring(0, idx);
+          String[] file = str.substring(idx + 1).split("\\.");
+
           if (choice == 1) {
             idx = folderName.lastIndexOf(FILE_SEPARATOR);
             String root = str.substring(0, idx);
@@ -205,6 +206,8 @@ public class ControllerImpl implements Controller {
           viewObject.printException(exceptionMessage.getMessage());
         } catch (IllegalArgumentException exception) {
           viewObject.printException(exception.getMessage());
+        } catch (StringIndexOutOfBoundsException dateEx) {
+          viewObject.printInvalidInputMessage();
         }
       } else if (choice == 3) {
         return;
@@ -224,6 +227,7 @@ public class ControllerImpl implements Controller {
       haveUserContinue = true;
 
       viewObject.showMainMenu();
+
       int choice = scanner.nextInt();
       switch (choice) {
         case 1:

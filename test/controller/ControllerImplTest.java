@@ -295,14 +295,14 @@ public class ControllerImplTest {
     ModelInterface model = new MockModelShowValuation(log);
     ControllerImpl controller = new ControllerImpl(in, out, model);
     controller.viewPortfolio();
-
+    System.out.println(bytes.toString());
     assertTrue(compareStringContents(
         "Portfolios available:\n"
+            + "-------------------------------------------------------\n"
             + "+id:testing\n"
             + "creationDate:2022-11-03\n"
             + "*shares:+companyName:IBM,purchaseDate:2022-11-03,price:138.485,numShares:20|+companyName:ZZZ,purchaseDate:2022-11-03,price:0.01,numShares:1000\n"
-            + "\n"
-            + "XXXXXXXXXXXXX\n"
+            + "-------------------------------------------------------\n"
             + "\n"
             + "Do you want to see the valuation of this portfolio? (1 for yes)", bytes.toString()));
   }
@@ -339,28 +339,82 @@ public class ControllerImplTest {
     StringBuilder log = new StringBuilder();
     ModelInterface model = new MockModelUpload(log);
     ControllerImpl controller = new ControllerImpl(in, out, model);
-    controller.uploadPortfolio();
+    try {
+      controller.uploadPortfolio();
+    }
+    catch (Exception e){}
     System.out.println(log.toString());
-    assertTrue(compareStringContents("\n"
-        + "Write path to portfolio:\n"
+    assertTrue(compareStringContents("Write path to portfolio:\n"
         + "How do you want to upload this data? (Write your path sperated by \\\n"
         + "1. Absolute Path\n"
         + "2. Relative Path\n"
         + "3. Go back\n"
-        + "Enter path:", bytes.toString()));
-    assertEquals("~,portfoliotest,testingportfoliovalid,csv", log.toString());
-
+        + "Enter path:\n"
+        + "Invalid Input!\n"
+        + "Write path to portfolio:\n"
+        + "How do you want to upload this data? (Write your path sperated by \\\n"
+        + "1. Absolute Path\n"
+        + "2. Relative Path\n"
+        + "3. Go back", bytes.toString()));
+    assertEquals(0, log.toString().length());
   }
-  // upload portfolio which are not unique test
+//  // upload portfolio which are not unique test
+//  @Test
+//  public void uploadNotUniquePortfolio() {
+//  }
+//  // upload portfolio whose shares are invalid
+//  @Test
+//  public void uploadInvalidSharePortfolio() {
+//  }
+  // main function with valid inputs
   @Test
-  public void uploadNotUniquePortfolio() {
+  public void goValid() {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes);
+    InputStream in = new ByteArrayInputStream(("1 3 4").getBytes());
+    // can be any mock model
+    ModelInterface model = new MockModelUpload(new StringBuilder());
+    ControllerImpl controller = new ControllerImpl(in, out, model);
+    controller.go();
+    assertTrue(compareStringContents("Please select an option from 1-x from the main menu\n"
+        + "Main Menu:\n"
+        + "1. Create Portfolio\n"
+        + "2. Upload Portfolio from given path.\n"
+        + "3. View Portfolio\n"
+        + "4. Exit\n"
+        + "Please select an option:\n"
+        + "1. Add Shares\n"
+        + "3. Go back.\n"
+        + "Please select an option from 1-x from the main menu\n"
+        + "Main Menu:\n"
+        + "1. Create Portfolio\n"
+        + "2. Upload Portfolio from given path.\n"
+        + "3. View Portfolio\n"
+        + "4. Exit", bytes.toString()));
   }
-  // upload portfolio whose shares are invalid
+  // main function with invalid inputs
   @Test
-  public void uploadInvalidSharePortfolio() {
-  }
-
-  @Test
-  public void go() {
+  public void goInvalid() {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes);
+    InputStream in = new ByteArrayInputStream(("876 4").getBytes());
+    // can be any mock model
+    ModelInterface model = new MockModelUpload(new StringBuilder());
+    ControllerImpl controller = new ControllerImpl(in, out, model);
+    controller.go();
+    System.out.println(bytes.toString());
+    assertTrue(compareStringContents("Please select an option from 1-x from the main menu\n"
+        + "Main Menu:\n"
+        + "1. Create Portfolio\n"
+        + "2. Upload Portfolio from given path.\n"
+        + "3. View Portfolio\n"
+        + "4. Exit\n"
+        + "Invalid Input!\n"
+        + "Please select an option from 1-x from the main menu\n"
+        + "Main Menu:\n"
+        + "1. Create Portfolio\n"
+        + "2. Upload Portfolio from given path.\n"
+        + "3. View Portfolio\n"
+        + "4. Exit", bytes.toString()));
   }
 }
