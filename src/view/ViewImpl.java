@@ -91,11 +91,6 @@ public class ViewImpl implements View {
   }
 
   @Override
-  public void askIfUserContinues() {
-    this.out.println("Do you want to continue?");
-  }
-
-  @Override
   public void askForPortfolioName() {
     this.out.println("Please write down the unique name of portfolio");
   }

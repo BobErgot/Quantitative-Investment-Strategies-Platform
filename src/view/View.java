@@ -36,31 +36,74 @@ public interface View {
    */
   void showAdditionalPortfolioInformation();
 
+  /**
+   * Shows valuation to the user.
+   *
+   * @param valuation given valuation to show.
+   */
   void showValuation(double valuation);
 
+  /**
+   * Asks user for id to select portfolio.
+   */
   void selectPortfolio();
 
+  /**
+   * Prints a general invalid input message.
+   */
   void printInvalidInputMessage();
 
+  /**
+   * Asks for path to portfolio from the user.
+   */
   void showUploadPortfolioOptions();
 
-  void askIfUserContinues();
-
+  /**
+   * Ask for portfolio name from the user.
+   */
   void askForPortfolioName();
 
+  /**
+   * Generic message asking user to re-enter something missing.
+   *
+   * @param missing missing element.
+   */
   void notPresentError(String missing);
 
+  /**
+   * Asks user for date.
+   */
   void askForDate();
 
+  /**
+   * Notifies if stock has been updated or not.
+   */
   void printCompanyStockUpdated();
 
+  /**
+   * This function will let users know about Future developments given constraints in api.
+   */
   void developmentInProgress();
 
+  /**
+   * Show user option to select portfolio by absolute path or relative path.
+   */
   void uploadPath();
 
+  /**
+   * Asks user to enter path.
+   */
   void enterPath();
 
+  /**
+   * Lets user know about invalid date.
+   */
   void printInvalidDateError();
 
+  /**
+   * Prints a given exception to the user.
+   *
+   * @param message exception to print.
+   */
   void printException(String message);
 }
