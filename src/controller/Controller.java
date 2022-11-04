@@ -37,7 +37,7 @@ public interface Controller {
    * portfolio and navigate to appropriate state flow based on user interaction and model
    * interface output.
    */
-  void go();
+  void start();
 
   /**
    * Sends the path from where the portfolio needs to be uploaded to the model interface object

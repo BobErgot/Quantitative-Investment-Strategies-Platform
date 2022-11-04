@@ -25,8 +25,8 @@ import static utility.Constants.STOCK_COLUMNS_COUNT;
  * format.
  */
 public class CSVFile extends FileAbstract {
-  private final static String EXTENSION = "csv";
-  private final static String RECORD_DELIMITER = "\n";
+  private static final String EXTENSION = "csv";
+  private static final String RECORD_DELIMITER = "\n";
 
   @Override
   public String getFileExtension() {

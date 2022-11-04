@@ -77,7 +77,9 @@ public class WebAPI implements APIInterface {
 
       while (true) {
         try {
-          if ((inputLine = in.readLine()) == null) break;
+          if ((inputLine = in.readLine()) == null) {
+            break;
+          }
         } catch (IOException e) {
           LOGGER.log(Level.SEVERE, "Error occurred during getting result stream");
           return null;

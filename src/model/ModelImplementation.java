@@ -237,7 +237,9 @@ public class ModelImplementation implements ModelInterface {
   @Override
   public boolean addShareToModel(String companyName, LocalDate date, int numShares,
                                  double stockPrice) throws IllegalArgumentException {
-    if (!this.checkTicker(companyName)) throw new IllegalArgumentException("Invalid Ticker");
+    if (!this.checkTicker(companyName)) {
+      throw new IllegalArgumentException("Invalid Ticker");
+    }
 
     if (stockPrice == -1) {
       stockPrice = getStockPrice(companyName, date);
@@ -312,10 +314,12 @@ public class ModelImplementation implements ModelInterface {
       String failedShare = failedShares.toString();
       String failedPortfolio = failedPortfolios.toString();
       String failedMessage = "";
-      if (failedPortfolio.length() > 0)
+      if (failedPortfolio.length() > 0){
         failedMessage += "The following portfolios already exist: " + failedPortfolio + "\n";
-      if (failedShare.length() > 0)
+      }
+      if (failedShare.length() > 0) {
         failedMessage += "The following shares are invalid: " + failedShare;
+      }
       throw new DuplicateFormatFlagsException(failedMessage);
     }
     return (uploadFileData.size() > 0);

@@ -35,7 +35,12 @@ public class ModelImplementationTest {
     for (String company : companies) {
       model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10), -1);
     }
-    model.createPortfolio("port2", LocalDate.now());
+    try {
+      model.createPortfolio("port2", LocalDate.now());
+      fail("Test case passed even though empty Id was given");
+    } catch (IllegalArgumentException e) {
+      // Test passed
+    }
   }
 
   // get correct list of portfolios
@@ -68,9 +73,13 @@ public class ModelImplementationTest {
     for (String company : companies) {
       model.addShareToModel(company, LocalDate.now(), 2, -1);
     }
-    //TODO
-    model.createPortfolio("port3", LocalDate.now());
-    assertEquals("//TODO", model.getPortfolioById("port3"));
+    try {
+      model.createPortfolio("port3", LocalDate.now());
+      model.getPortfolioById("port3");
+      fail("Test case passed even though empty Id was given");
+    } catch (IllegalArgumentException e) {
+      // Test passed
+    }
   }
 
   //Test get invalid portfolio by id

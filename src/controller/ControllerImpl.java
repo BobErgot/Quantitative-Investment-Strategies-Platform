@@ -1,8 +1,5 @@
 package controller;
 
-import static utility.Constants.FILE_SEPARATOR;
-import static utility.Constants.RELATIVE_PATH;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -16,6 +13,9 @@ import java.util.zip.DataFormatException;
 import model.ModelInterface;
 import view.View;
 import view.ViewImpl;
+
+import static utility.Constants.FILE_SEPARATOR;
+import static utility.Constants.RELATIVE_PATH;
 
 /**
  * The controller implementation that receives all its inputs from an InputStream object and
@@ -72,7 +72,8 @@ public class ControllerImpl implements Controller {
               if (invalidPortfolioName) {
                 viewObject.printInvalidInputMessage();
               }
-            } while (invalidPortfolioName);
+            }
+            while (invalidPortfolioName);
           } else {
             invalidInput = true;
           }
@@ -87,7 +88,8 @@ public class ControllerImpl implements Controller {
       if (invalidInput) {
         viewObject.printInvalidInputMessage();
       }
-    } while (invalidInput || !portfolioCompleted);
+    }
+    while (invalidInput || !portfolioCompleted);
   }
 
   @Override
@@ -98,7 +100,8 @@ public class ControllerImpl implements Controller {
       String companyName = scanner.next().trim();
 
       isValidCompany = companyName.length() > 0 && companyName.length() <= 10
-              && Character.isAlphabetic(companyName.charAt(0)) && modelObject.checkTicker(companyName);
+              && Character.isAlphabetic(companyName.charAt(0))
+              && modelObject.checkTicker(companyName);
 
       if (isValidCompany) {
         viewObject.showAddShareWithApiInputMenu(1);
@@ -122,7 +125,8 @@ public class ControllerImpl implements Controller {
       } else {
         viewObject.notPresentError("Company");
       }
-    } while (!isValidCompany);
+    }
+    while (!isValidCompany);
   }
 
   @Override
@@ -151,7 +155,8 @@ public class ControllerImpl implements Controller {
       if (invalidDate) {
         viewObject.printInvalidInputMessage();
       }
-    } while (invalidDate);
+    }
+    while (invalidDate);
     viewObject.showValuation(modelObject.getValuationGivenDate(selectedId, date));
     return true;
   }
@@ -167,7 +172,8 @@ public class ControllerImpl implements Controller {
         viewObject.selectPortfolio();
         String selectedId = scanner.next().trim();
         flag = showValuationOfPortfolio(selectedId);
-      } while (!flag);
+      }
+      while (!flag);
     }
   }
 
@@ -214,20 +220,18 @@ public class ControllerImpl implements Controller {
       } else {
         viewObject.printInvalidInputMessage();
       }
-    } while (!validPath);
+    }
+    while (!validPath);
   }
 
   @Override
-  public void go() {
+  public void start() {
     boolean invalidInput;
     boolean haveUserContinue;
-
     do {
       invalidInput = false;
       haveUserContinue = true;
-
       viewObject.showMainMenu();
-
       int choice = scanner.nextInt();
       switch (choice) {
         case 1:
@@ -249,6 +253,7 @@ public class ControllerImpl implements Controller {
       if (invalidInput) {
         viewObject.printInvalidInputMessage();
       }
-    } while (invalidInput || haveUserContinue);
+    }
+    while (invalidInput || haveUserContinue);
   }
 }

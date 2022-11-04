@@ -121,7 +121,6 @@ public class ControllerImplTest {
         bytes.toString()));
     assertEquals(0, log.toString().length());
   }
-  // create portfolio tests
 
   // choice for create portfolio menu: valid/invalid
   @Test
@@ -313,6 +312,7 @@ public class ControllerImplTest {
     try {
       controller.uploadPortfolio();
     } catch (Exception e) {
+      // Test Passed
     }
     assertTrue(compareStringContents("Write path to portfolio:\n"
         + "How do you want to upload this data? (Write your path sperated by \\\n"
@@ -332,7 +332,7 @@ public class ControllerImplTest {
     // can be any mock model
     ModelInterface model = new MockModelUpload(new StringBuilder());
     ControllerImpl controller = new ControllerImpl(in, out, model);
-    controller.go();
+    controller.start();
     assertTrue(compareStringContents(
         "Please select an option from 1-x from the main menu\n" + "Main Menu:\n"
             + "1. Create Portfolio\n" + "2. Upload Portfolio from given path.\n"
@@ -351,7 +351,7 @@ public class ControllerImplTest {
     // can be any mock model
     ModelInterface model = new MockModelUpload(new StringBuilder());
     ControllerImpl controller = new ControllerImpl(in, out, model);
-    controller.go();
+    controller.start();
     assertTrue(compareStringContents(
         "Please select an option from 1-x from the main menu\n" + "Main Menu:\n"
             + "1. Create Portfolio\n" + "2. Upload Portfolio from given path.\n"

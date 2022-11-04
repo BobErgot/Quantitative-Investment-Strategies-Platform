@@ -1,8 +1,12 @@
 package model;
 
+import org.junit.Test;
+
 import java.io.IOException;
 import java.time.LocalDate;
-import org.junit.Test;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Class to test WebAPI functionality.
@@ -10,8 +14,11 @@ import org.junit.Test;
 public class WebAPITest {
 
   @Test
-  public void getShareValueByGivenDate() throws IOException {
+  public void getShareValueByGivenDate() {
     WebAPI webAPI = new WebAPI();
+    FileInterface fileInterface = new CSVFile();
     String value = webAPI.getData("TSCO.LON", LocalDate.parse("2022-10-28"));
+    List<String> stringList = fileInterface.validateFormat(value);
+    assertTrue(stringList.size() >= 0);
   }
 }
