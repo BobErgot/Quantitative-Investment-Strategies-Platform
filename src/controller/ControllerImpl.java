@@ -201,7 +201,8 @@ public class ControllerImpl implements Controller {
             folder = folder.substring(0, idx);
             validPath = modelObject.addPortfolioByUpload(root, folder, file[0], file[1]);
           } else {
-            validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0], file[1]);
+            validPath = modelObject.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
+                    file[1]);
           }
         } catch (FileNotFoundException e) {
           viewObject.notPresentError("File");

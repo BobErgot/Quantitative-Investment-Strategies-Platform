@@ -314,7 +314,7 @@ public class ModelImplementation implements ModelInterface {
       String failedShare = failedShares.toString();
       String failedPortfolio = failedPortfolios.toString();
       String failedMessage = "";
-      if (failedPortfolio.length() > 0){
+      if (failedPortfolio.length() > 0) {
         failedMessage += "The following portfolios already exist: " + failedPortfolio + "\n";
       }
       if (failedShare.length() > 0) {

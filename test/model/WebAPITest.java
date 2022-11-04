@@ -2,7 +2,6 @@ package model;
 
 import org.junit.Test;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
