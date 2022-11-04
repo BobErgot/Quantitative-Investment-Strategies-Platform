@@ -43,12 +43,38 @@ public class ModelImplementationTest {
     }
   }
 
+  private boolean compareStringContents(String a, String b) {
+    return a.replaceAll("\\s+", "").equalsIgnoreCase(b.replaceAll("\\s+", ""));
+  }
+
   // get correct list of portfolios
   @Test
   public void testGetPortfolio() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("TSCO.LON", LocalDate.now(), new Random().nextInt(10), -1);
-    assertEquals("abc", model.getPortfolio());
+    model.addShareToModel("IBM", LocalDate.now(), 3, -1);
+    assertTrue(compareStringContents(
+        "[-------------------------------------------------------, +id:testing\n"
+            + "creationDate:2022-11-03\n"
+            + "*shares:+companyName:IBM,purchaseDate:2022-11-03,price:138.485,numShares:20|+companyName:ZZZ,purchaseDate:2022-11-03,price:0.01,numShares:1000, -------------------------------------------------------\n"
+            + ", -------------------------------------------------------, +id:port2\n"
+            + "creationDate:2022-11-03\n"
+            + "*shares:+companyName:META,purchaseDate:2022-11-03,price:92.84,numShares:9|+companyName:AMZN,purchaseDate:2022-11-03,price:94.875,numShares:7|+companyName:TSLA,purchaseDate:2022-11-03,price:221.34494999999998,numShares:5|+companyName:AAPL,purchaseDate:2022-11-03,price:148.58499999999998,numShares:1|+companyName:MSFT,purchaseDate:2022-11-03,price:225.67000000000002,numShares:4|+companyName:NFLX,purchaseDate:2022-11-03,price:280.085,numShares:4|+companyName:CTSH,purchaseDate:2022-11-03,price:61.525000000000006,numShares:5|+companyName:CRM,purchaseDate:2022-11-03,price:154.865,numShares:3|+companyName:GOOG,purchaseDate:2022-11-03,price:89.155,numShares:3, -------------------------------------------------------\n"
+            + ", -------------------------------------------------------, +id:port3\n"
+            + "creationDate:2022-11-03\n"
+            + "*shares:+companyName:META,purchaseDate:2022-11-03,price:92.84,numShares:2|+companyName:AMZN,purchaseDate:2022-11-03,price:94.875,numShares:2|+companyName:TSLA,purchaseDate:2022-11-03,price:221.34494999999998,numShares:2|+companyName:AAPL,purchaseDate:2022-11-03,price:148.58499999999998,numShares:2|+companyName:MSFT,purchaseDate:2022-11-03,price:225.67000000000002,numShares:2|+companyName:NFLX,purchaseDate:2022-11-03,price:280.085,numShares:2|+companyName:CTSH,purchaseDate:2022-11-03,price:61.525000000000006,numShares:2|+companyName:CRM,purchaseDate:2022-11-03,price:154.865,numShares:2|+companyName:GOOG,purchaseDate:2022-11-03,price:89.155,numShares:2, -------------------------------------------------------\n"
+            + ", -------------------------------------------------------, +id:Port\n"
+            + "creationDate:2022-11-03\n"
+            + "*shares:+companyName:AADR,purchaseDate:2022-11-03,price:47.0111,numShares:4, -------------------------------------------------------\n"
+            + ", -------------------------------------------------------, +id:testing2022-11-03\n"
+            + "creationDate:2022-11-03\n"
+            + "*shares:+companyName:VALN,purchaseDate:2022-11-03,price:14.16,numShares:5, -------------------------------------------------------\n"
+            + ", -------------------------------------------------------, +id:testing22022-11-03\n"
+            + "creationDate:2022-11-03\n"
+            + "*shares:+companyName:VALN,purchaseDate:2022-11-03,price:14.16,numShares:8, -------------------------------------------------------\n"
+            + ", -------------------------------------------------------, +id:testin2022-11-03\n"
+            + "creationDate:2022-11-03\n"
+            + "*shares:+companyName:VALN,purchaseDate:2022-11-03,price:14.16,numShares:6, -------------------------------------------------------\n"
+            + "]", model.getPortfolio().toString()));
   }
 
   // test correct ticker
@@ -142,7 +168,9 @@ public class ModelImplementationTest {
   public void testValidGetValuation() {
     ModelInterface model = new ModelImplementation();
     model.addShareToModel("VALN", LocalDate.now(), new Random().nextInt(10), -1);
-    assertEquals(200000000, model.getValuationGivenDate("VALN", LocalDate.parse("2021-11-02")), 0);
+    model.createPortfolio("testin" + LocalDate.now(), LocalDate.now());
+    assertEquals(2530.8, model.getValuationGivenDate("testing", LocalDate.parse("2021-11-02")),
+        0.1);
   }
 
   // test blank ID present
@@ -157,7 +185,7 @@ public class ModelImplementationTest {
   @Test
   public void testInvalidIdIsPresent() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("Apple", LocalDate.now(), new Random().nextInt(10), -1);
+    model.addShareToModel("AADR", LocalDate.now(), new Random().nextInt(10), -1);
     assertFalse(model.idIsPresent("notPresent"));
   }
 
@@ -165,15 +193,15 @@ public class ModelImplementationTest {
   @Test
   public void testIdIsPresent() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("AADR", LocalDate.now(), new Random().nextInt(10), -1);
-    assertTrue(model.idIsPresent("AADR"));
+    model.addShareToModel("IBM", LocalDate.now(), 24, -1);
+    model.createPortfolio("Port" + LocalDate.now(), LocalDate.now());
+    assertTrue(model.idIsPresent("Port"));
   }
 
   // test can't create share
   @Test
   public void testCantCreateShare() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("AAL", LocalDate.now(), new Random().nextInt(10), -1);
     assertFalse(model.canCreateShare());
   }
 
@@ -181,7 +209,7 @@ public class ModelImplementationTest {
   @Test
   public void testCanCreateShare() {
     ModelInterface model = new ModelImplementation();
-    model.addShareToModel("EAOR", LocalDate.now(), new Random().nextInt(10), -1);
+    model.addShareToModel("IBM", LocalDate.now(), new Random().nextInt(10), -1);
     assertTrue(model.canCreateShare());
   }
 }
