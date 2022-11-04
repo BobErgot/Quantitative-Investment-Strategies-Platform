@@ -1,3 +1,5 @@
+package Main;
+
 import controller.Controller;
 import controller.ControllerImpl;
 import model.ModelImplementation;
@@ -7,7 +9,7 @@ import model.ModelImplementation;
  */
 public class Main {
   /**
-   * Main function which is called when the program jar is ran and creates object of the
+   * Main.Main function which is called when the program jar is ran and creates object of the
    * controller which takes over.
    * @param args command line arguments passed when the jar is executed
    */

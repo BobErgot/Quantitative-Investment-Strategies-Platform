@@ -8,7 +8,7 @@ import java.util.List;
 public interface View {
 
   /**
-   * Shows Main menu.
+   * Shows Main.Main menu.
    */
   void showMainMenu();
 
