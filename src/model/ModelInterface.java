@@ -42,8 +42,15 @@ public interface ModelInterface {
    * @param date get stock valuation given date
    * @return valuation of portfolio
    */
-  <T> double getValuationGivenDate(String id, LocalDate date);
+  double getValuationGivenDate(String id, LocalDate date);
 
+  /**
+   * Get amount of money invested in portfolio on given date.
+   * @param id id of portfolio to get cost basis of.
+   * @param date date to calculate cost basis of portfolio on and before.
+   * @return cost basis of portfolio.
+   */
+  double getCostBasis(String id, LocalDate date);
   /**
    * Adds share to local set of shares given details of the share.
    *
@@ -89,4 +96,13 @@ public interface ModelInterface {
    * @return true if symbol is a valid and exists
    */
   boolean checkTicker(String symbol);
+
+  /**
+   * Sell stocks given stock symbol
+   * @param id Portfolio ID to sell stocks from
+   * @param symbol Ticker symbol of stock that is to be sold
+   * @param numShares Number of shares to be sold
+   * @return Amount of money sold for.
+   */
+  double sellStocks(String id, String symbol, int numShares);
 }

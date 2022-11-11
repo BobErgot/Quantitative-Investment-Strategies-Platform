@@ -95,4 +95,8 @@ class Portfolio {
     toString.append(record);
     return toString.toString();
   }
+
+  public LocalDate getCreationDate() {
+    return creationDate;
+  }
 }

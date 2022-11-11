@@ -7,22 +7,23 @@ import java.time.LocalDate;
  * the date of purchase and number of stocks bought.
  */
 class Share implements Comparable<Object> {
+
   private final LocalDate purchaseDate;
   private final String companyName;
   private final double price;
   private final int numShares;
 
   /**
-   * Construct a Share object that has the provided company ticker, purchase date, price on
-   * purchase date and number of stocks bought.
+   * Construct a Share object that has the provided company ticker, purchase date, price on purchase
+   * date and number of stocks bought.
    *
-   * @param companyName company ticker/symbol
+   * @param companyName  company ticker/symbol
    * @param purchaseDate date the share was bought
-   * @param price price of each stock on purchase date
-   * @param numShares number of stocks bought
+   * @param price        price of each stock on purchase date
+   * @param numShares    number of stocks bought
    */
   public Share(String companyName, LocalDate purchaseDate, double price, int numShares)
-          throws IllegalArgumentException {
+      throws IllegalArgumentException {
     if (companyName.length() == 0) {
       throw new IllegalArgumentException("Company name cannot be blank!");
     }
@@ -66,6 +67,10 @@ class Share implements Comparable<Object> {
     return this.numShares;
   }
 
+  public LocalDate getPurchaseDate() {
+    return purchaseDate;
+  }
+
   @Override
   public int compareTo(Object object) throws IllegalArgumentException {
     if (object instanceof Share) {
@@ -83,7 +88,7 @@ class Share implements Comparable<Object> {
     }
     Share other = (Share) object;
     return this.companyName.equals(other.companyName) && this.purchaseDate == other.purchaseDate
-            && this.price == other.price && this.numShares == other.numShares;
+        && this.price == other.price && this.numShares == other.numShares;
   }
 
   @Override
@@ -96,7 +101,7 @@ class Share implements Comparable<Object> {
 
   @Override
   public String toString() {
-    return "+companyName:" + this.companyName + "\n" + "purchaseDate:" + this.purchaseDate
-            + "\n" + "price:" + this.price + "\n" + "numShares:" + this.numShares + "\n";
+    return "+companyName:" + this.companyName + "\n" + "purchaseDate:" + this.purchaseDate + "\n"
+        + "price:" + this.price + "\n" + "numShares:" + this.numShares + "\n";
   }
 }
