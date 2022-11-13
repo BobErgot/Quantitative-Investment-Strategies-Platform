@@ -1,4 +1,4 @@
-package main;
+package start;
 
 import controller.Controller;
 import controller.ControllerImpl;

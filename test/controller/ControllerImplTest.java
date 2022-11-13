@@ -338,7 +338,8 @@ public class ControllerImplTest {
             + "1. Create Portfolio\n" + "2. Upload Portfolio from given path.\n"
             + "3. View Portfolio\n" + "4. Exit\n" + "Please select an option:\n" + "1. Add Shares\n"
             + "3. Go back.\n" + "Please select an option from 1-x from the main menu\n"
-            + "Main.Main Menu:\n" + "1. Create Portfolio\n" + "2. Upload Portfolio from given path.\n"
+            + "Main.Main Menu:\n" + "1. Create Portfolio\n"
+                + "2. Upload Portfolio from given path.\n"
             + "3. View Portfolio\n" + "4. Exit", bytes.toString()));
   }
 

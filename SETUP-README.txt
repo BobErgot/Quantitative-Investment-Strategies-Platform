@@ -25,9 +25,9 @@ Ticker Name2, Date of Stock Purchase2, Cost of one stock2, Number of stocks2
 
 3. Run the jar file
 
-4. From main menu select option 2 then select option 2 (Relative Path), provide the path "example\portfolio.csv" or "example/portfolio.csv"
+4. From start menu select option 2 then select option 2 (Relative Path), provide the path "example\portfolio.csv" or "example/portfolio.csv"
 
-5. From main menu select option 3 to view all portfolios
+5. From start menu select option 3 to view all portfolios
 
 5. Select ID of portfolio you want to get valuation of portfolios for
 

@@ -1,5 +1,5 @@
 Model:
-We have 5 main Classes in model:
+We have 5 start Classes in model:
 
 1. ModelInterface : Model interface is the single point the controller interacts with, it contains all the functions that this stock software can have, it creates portfolio objects & share objects while connecting with the File Interface.
 2. Portfolio : Portfolio object that keeps track of portfolio's features. Cannot be changed if instantiated. Can filter, map and reduce the list of shares with various funtions.
