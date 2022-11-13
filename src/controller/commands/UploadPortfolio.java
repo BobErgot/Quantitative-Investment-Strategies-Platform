@@ -25,8 +25,8 @@ public class UploadPortfolio implements StockPortfolioCommand {
       view.showUploadPortfolioOptions();
       // if portfolio successfully uploaded , it will return true.
       view.uploadPath();
-      int choice = scanner.nextInt();
-      if (choice == 1 || choice == 2) {
+      String choice = scanner.next();
+      if (choice.equalsIgnoreCase("1") || choice.equalsIgnoreCase("2")) {
         view.enterPath();
         String str = scanner.next();
         try {
@@ -34,7 +34,7 @@ public class UploadPortfolio implements StockPortfolioCommand {
           String folderName = str.substring(0, idx);
           String[] file = str.substring(idx + 1).split("\\.");
 
-          if (choice == 1) {
+          if (choice.equalsIgnoreCase("1")) {
             idx = folderName.lastIndexOf(FILE_SEPARATOR);
             String root = str.substring(0, idx);
             String folder = str.substring(idx + 1);
@@ -57,7 +57,8 @@ public class UploadPortfolio implements StockPortfolioCommand {
         } catch (StringIndexOutOfBoundsException dateEx) {
           view.printInvalidInputMessage();
         }
-      } else if (choice == 3) {
+      } else if (choice.equalsIgnoreCase("back")) {
+        view.showMainMenu();
         return;
       } else {
         view.printInvalidInputMessage();

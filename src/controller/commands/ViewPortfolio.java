@@ -20,20 +20,35 @@ public class ViewPortfolio implements StockPortfolioCommand {
   public void process(View view, Scanner scanner, ModelInterface model) {
     view.showViewPortfolioMenu(model.getPortfolio());
     view.showAdditionalPortfolioInformation();
-    int choice = scanner.nextInt();
-    if (choice == 1) {
+    String choice = scanner.next();
+    showViewPortfolioMenu(view, scanner, model, choice);
+    view.showMainMenu();
+  }
+
+  @Override
+  public void undo(ModelInterface model) {
+  }
+
+  private void showViewPortfolioMenu(View view, Scanner scanner,
+                                     ModelInterface model, String choice){
+    if (choice.equalsIgnoreCase("y") || choice.equalsIgnoreCase("yes")) {
       boolean flag = false;
       do {
         view.selectPortfolio();
         String selectedId = scanner.next().trim();
         flag = showValuationOfPortfolio(selectedId, view, scanner, model);
+        if(!flag){
+          view.printInvalidInputMessage();
+        }
       }
       while (!flag);
+    } else if (choice.equalsIgnoreCase("n") || choice.equalsIgnoreCase("no")){
+      view.showMainMenu();
+      return;
+    } else {
+      view.printInvalidInputMessage();
+      showViewPortfolioMenu(view, scanner, model, choice);
     }
-  }
-
-  @Override
-  public void undo(ModelInterface model) {
   }
 
   /**

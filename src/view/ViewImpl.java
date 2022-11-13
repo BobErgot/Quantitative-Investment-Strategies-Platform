@@ -40,7 +40,7 @@ public class ViewImpl implements View {
     if (canCreateShare) {
       this.out.println("2. Create Portfolio (Finalize current Portfolio)");
     }
-    this.out.println("3. Go back.");
+    this.out.println("Type 'back' to return to main menu");
   }
 
   @Override
@@ -67,7 +67,7 @@ public class ViewImpl implements View {
 
   @Override
   public void showAdditionalPortfolioInformation() {
-    this.out.println("Do you want to see the valuation of this portfolio? (1 for yes)");
+    this.out.println("Do you want to see the valuation of any portfolio? (y/n)");
   }
 
   @Override
@@ -121,8 +121,7 @@ public class ViewImpl implements View {
         "How do you want to upload this data? (Write your path sperated by " + FILE_SEPARATOR);
     this.out.println("1. Absolute Path");
     this.out.println("2. Relative Path");
-    this.out.println("3. Go back");
-
+    this.out.println("Type 'back' to return to main menu");
   }
 
   @Override

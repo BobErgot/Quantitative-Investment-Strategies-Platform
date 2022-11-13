@@ -23,12 +23,12 @@ public class CreatePortfolio implements StockPortfolioCommand {
       portfolioCompleted = false;
       boolean canCreateShare = model.canCreateShare();
       view.showCreatePortfolioMenu(canCreateShare);
-      int choice = scanner.nextInt();
+      String choice = scanner.next();
       switch (choice) {
-        case 1:
-          this.addShareWithApiInput(view,scanner, model);
+        case "1":
+          this.addShareWithApiInput(view, scanner, model);
           break;
-        case 2:
+        case "2":
           if (canCreateShare) {
             boolean invalidPortfolioName = false;
             do {
@@ -38,20 +38,22 @@ public class CreatePortfolio implements StockPortfolioCommand {
               if (portfolioName.length() > 0 && !model.idIsPresent(portfolioName)) {
                 model.createPortfolio(portfolioName, LocalDate.now());
                 portfolioCompleted = true;
+                view.showMainMenu();
+                break;
               } else {
                 invalidPortfolioName = true;
               }
               if (invalidPortfolioName) {
                 view.printInvalidInputMessage();
               }
-            }
-            while (invalidPortfolioName);
+            } while (invalidPortfolioName);
           } else {
             invalidInput = true;
           }
           break;
-        case 3:
+        case "back":
           portfolioCompleted = true;
+          view.showMainMenu();
           break;
         default:
           invalidInput = true;
@@ -60,13 +62,11 @@ public class CreatePortfolio implements StockPortfolioCommand {
       if (invalidInput) {
         view.printInvalidInputMessage();
       }
-    }
-    while (invalidInput || !portfolioCompleted);
+    } while (invalidInput || !portfolioCompleted);
   }
 
   @Override
   public void undo(ModelInterface model) {
-    return;
   }
 
   /**
@@ -79,32 +79,37 @@ public class CreatePortfolio implements StockPortfolioCommand {
       String companyName = scanner.next().trim();
 
       isValidCompany = companyName.length() > 0 && companyName.length() <= 10
-              && Character.isAlphabetic(companyName.charAt(0))
-              && model.checkTicker(companyName);
+              && Character.isAlphabetic(companyName.charAt(0)) && model.checkTicker(companyName);
 
       if (isValidCompany) {
         view.showAddShareWithApiInputMenu(1);
-        int numShares = scanner.nextInt();
-        if (numShares <= 0) {
+        String numShares = scanner.next();
+
+        try {
+          int shares = Integer.parseInt(numShares);
+          if (shares <= 0) {
+            view.printInvalidInputMessage();
+            isValidCompany = false;
+          } else {
+            try {
+              boolean companyAddedWithoutChange = model.addShareToModel(companyName,
+                      LocalDate.now(), shares, -1);
+              if (!companyAddedWithoutChange) {
+                view.printCompanyStockUpdated();
+              }
+            } catch (IllegalArgumentException illegalArgumentException) {
+              isValidCompany = false;
+              view.developmentInProgress();
+            }
+          }
+        } catch (NumberFormatException exception) {
           view.printInvalidInputMessage();
           isValidCompany = false;
-        } else {
-          try {
-            boolean companyAddedWithoutChange = model.addShareToModel(companyName,
-                    LocalDate.now(), numShares, -1);
-            if (!companyAddedWithoutChange) {
-              view.printCompanyStockUpdated();
-            }
-          } catch (IllegalArgumentException illegalArgumentException) {
-            isValidCompany = false;
-            view.developmentInProgress();
-          }
         }
 
       } else {
         view.notPresentError("Company");
       }
-    }
-    while (!isValidCompany);
+    } while (!isValidCompany);
   }
 }
