@@ -5,7 +5,6 @@ import static controller.MockModelUtil.merge;
 import model.ModelImplementation;
 
 class MockModelUpload extends ModelImplementation {
-
   StringBuilder log;
 
   public MockModelUpload(StringBuilder log) {
@@ -14,11 +13,8 @@ class MockModelUpload extends ModelImplementation {
 
   @Override
   public boolean addPortfolioByUpload(String path, String folderName, String fileName,
-      String extension) {
+                                      String extension) {
     this.log.append(merge(path, folderName, fileName, extension));
     return true;
   }
-
 }
-
-

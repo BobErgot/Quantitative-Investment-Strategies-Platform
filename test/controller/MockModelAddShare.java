@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import model.ModelImplementation;
 
 class MockModelAddShare extends ModelImplementation {
-
   private final StringBuilder log;
 
   public MockModelAddShare(StringBuilder log) {

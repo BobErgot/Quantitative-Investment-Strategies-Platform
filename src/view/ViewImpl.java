@@ -26,11 +26,11 @@ public class ViewImpl implements View {
   @Override
   public void showMainMenu() {
     this.out.println("Please select an option from 1-x from the main menu");
-    this.out.println("Main.Main Menu:");
+    this.out.println("Main Menu:");
     this.out.println("1. Create Portfolio");
     this.out.println("2. Upload Portfolio from given path.");
     this.out.println("3. View Portfolio");
-    this.out.println("4. Exit");
+    this.out.println("Type 'quit' or 'exit' to close the program.");
   }
 
   @Override

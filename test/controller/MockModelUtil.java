@@ -12,6 +12,7 @@ class MockModelUtil {
   }
 
   public static boolean compareStringContents(String a, String b) {
-    return a.replaceAll("\\s+", "").equalsIgnoreCase(b.replaceAll("\\s+", ""));
+    return a.replaceAll("\\s+", "")
+            .equalsIgnoreCase(b.replaceAll("\\s+", ""));
   }
 }
