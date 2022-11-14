@@ -105,4 +105,6 @@ public interface ModelInterface {
    * @return Amount of money sold for.
    */
   double sellStocks(String id, String symbol, int numShares);
+
+  List<Double> getPortfolioPerformance(String id);
 }

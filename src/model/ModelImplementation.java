@@ -11,9 +11,11 @@ import static utility.Constants.TICKER_DIRECTORY;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.DuplicateFormatFlagsException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -147,6 +149,25 @@ public class ModelImplementation implements ModelInterface {
     }
     return portfolioObject.getValuationGivenFilter((Predicate<Share>) filter);
   }
+
+  @Override
+  public List<Double> getPortfolioPerformance(String id) {
+    List<Double> portfolioPerformanceByMonth = new ArrayList<>();
+    Portfolio portfolioObject = this.getPortfolioObjectById(id);
+    if (id.length() == 0 || portfolioObject == null) {
+      throw new IllegalArgumentException("Invalid ID Passed");
+    }
+
+    for (int i = 1; i <= 12; i++) {
+      int month = i;
+      double monthValue = portfolioObject.getValuation(
+          (Share s) -> this.getStockPrice(s.getCompanyName(), LocalDate.from(Month.of(month)))
+              * s.getNumShares());
+      portfolioPerformanceByMonth.add(monthValue);
+    }
+    return portfolioPerformanceByMonth;
+  }
+
 
   private double calculateAveragePrice(int position, List<String> stockData) {
     double high = Double.parseDouble(stockData.get(position).split(",")[2]);
