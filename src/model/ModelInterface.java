@@ -33,7 +33,7 @@ public interface ModelInterface {
    * @param id unique id of portfolio to get
    * @return portfolio as a string
    */
-  String getPortfolioById(String id);
+  String getPortfolioById(String id) throws IllegalArgumentException;
 
   /**
    * Return valuation of entire portfolio on a given date.

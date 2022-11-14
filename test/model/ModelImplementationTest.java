@@ -1,15 +1,14 @@
 package model;
 
-import org.junit.Test;
-
-import java.time.LocalDate;
-import java.util.Random;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
+
+import java.time.LocalDate;
+import java.util.Random;
+import org.junit.Test;
 
 /**
  * Classes to test model in MVC.
@@ -19,7 +18,7 @@ public class ModelImplementationTest {
   // create Empty portfolio
   @Test
   public void testEmptyCreatePortfolios() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     try {
       model.createPortfolio("port1", LocalDate.now());
       fail("On creating empty portfolio model should fail");
@@ -31,10 +30,10 @@ public class ModelImplementationTest {
   // create valid portfolio
   @Test
   public void testCreateValidPortfolios() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     String[] companies = {"AAPL", "MSFT", "GOOG", "AMZN", "NFLX", "META", "CTSH", "CRM", "TSLA"};
     for (String company : companies) {
-      model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10), -1);
+      model.addShareToModel(company, LocalDate.now(), Math.abs(new Random().nextInt(10))+1, -1);
     }
     try {
       model.createPortfolio("port2", LocalDate.now());
@@ -46,27 +45,27 @@ public class ModelImplementationTest {
 
   private boolean compareStringContents(String a, String b) {
     return a.replaceAll("\\s+", "").equalsIgnoreCase(b.replaceAll("\\s+",
-            ""));
+        ""));
   }
 
   // test correct ticker
   @Test
   public void testCheckTickers() {
-    ModelImplementation model = new ModelImplementation();
+    ModelImplementation model = new MockModel();
     assertTrue(model.checkTicker("AAPL"));
   }
 
   // test non-existent ticker
   @Test
   public void testInvalidTickers() {
-    ModelImplementation model = new ModelImplementation();
+    ModelImplementation model = new MockModel();
     assertFalse(model.checkTicker("Apple"));
   }
 
   //Test get valid portfolio by id
   @Test
   public void testGetPortfolioByIds() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     String[] companies = {"AAPL", "MSFT", "GOOG", "AMZN", "NFLX", "META", "CTSH", "CRM", "TSLA"};
     for (String company : companies) {
       model.addShareToModel(company, LocalDate.now(), 2, -1);
@@ -83,23 +82,22 @@ public class ModelImplementationTest {
   //Test get invalid portfolio by id
   @Test
   public void testInvalidGetPortfolioByIds() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     String[] companies = {"AAPL", "MSFT", "GOOG", "AMZN", "NFLX", "META", "CTSH", "CRM", "TSLA"};
     for (String company : companies) {
-      model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10), -1);
+      model.addShareToModel(company, LocalDate.now(), Math.abs(new Random().nextInt(10))+1, -1);
     }
-    model.createPortfolio("port4", LocalDate.now());
+    model.createPortfolio("porttest", LocalDate.now());
     assertEquals(PORTFOLIO_NOT_FOUND, model.getPortfolioById("Yapple"));
-    assertEquals(PORTFOLIO_NOT_FOUND, model.getPortfolioById(""));
   }
 
   // negative id or invalid string
   @Test
   public void testBlankIdPortfolioByIds() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     String[] companies = {"ZD", "ZDGE", "ZDVSV", "ZEAL", "ZECP", "ZEN", "ZENV", "ZEPP"};
     for (String company : companies) {
-      model.addShareToModel(company, LocalDate.now(), new Random().nextInt(10), -1);
+      model.addShareToModel(company, LocalDate.now(), 30, -1);
     }
     try {
       model.getPortfolioById("");
@@ -112,9 +110,9 @@ public class ModelImplementationTest {
   // Check if valuation is correct.
   @Test
   public void testBlankGetValuations() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     model.addShareToModel("WAVC", LocalDate.now(), new Random().nextInt(10),
-            -1);
+        -1);
     try {
       model.getValuationGivenDate("", LocalDate.parse("2021-11-02"));
       fail("Test case passed even though invalid Id was given");
@@ -126,9 +124,9 @@ public class ModelImplementationTest {
   // invalid id/name
   @Test
   public void testInvalidGetValuations() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     model.addShareToModel("YELP", LocalDate.now(), new Random().nextInt(10),
-            -1);
+        20);
     try {
       model.getValuationGivenDate("NOTYELP", LocalDate.parse("2021-11-02"));
       fail("Test case passed even though invalid Id was given");
@@ -140,55 +138,114 @@ public class ModelImplementationTest {
   // valid get valuation
   @Test
   public void testValidGetValuations() {
-    ModelInterface model = new ModelImplementation();
-    model.addShareToModel("VALN", LocalDate.now(), new Random().nextInt(10),
-            -1);
-    model.createPortfolio("testin" + LocalDate.now(), LocalDate.now());
-    assertEquals(2530.8, model.getValuationGivenDate("testing",
-                    LocalDate.parse("2021-11-02")),
-            0.1);
+    ModelInterface model = new MockModel();
+    model.addShareToModel("IBM", LocalDate.parse("2021-11-02"), 22,
+        -1);
+
+
+    model.createPortfolio("blipblop", LocalDate.parse("2021-11-02"));
+    assertEquals(2772.88, model.getValuationGivenDate("blipblop",
+            LocalDate.parse("2021-11-02")),
+        1);
+    assertEquals(0, model.getValuationGivenDate("blipblop",
+            LocalDate.parse("2021-11-01")),
+        0);
+    assertEquals(2579.94, model.getValuationGivenDate("blipblop",
+            LocalDate.parse("2021-12-02")),
+        1);
   }
 
   // test blank ID present
   @Test
   public void testBlankIdIsPresents() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     model.addShareToModel("TAGS", LocalDate.now(), new Random().nextInt(10),
-            -1);
-    assertFalse(model.idIsPresent(""));
+        -1);
+    try {
+      model.idIsPresent("");
+      fail("Test case passed even though blank Id was given");
+    } catch (IllegalArgumentException e) {
+      // Test passed
+    }
   }
 
   // test invalid ID present
   @Test
   public void testInvalidIdIsPresents() {
-    ModelInterface model = new ModelImplementation();
-    model.addShareToModel("AADR", LocalDate.now(), new Random().nextInt(10),
-            -1);
+    ModelInterface model = new MockModel();
+    model.addShareToModel("AADR", LocalDate.now(), Math.abs(new Random().nextInt(10))+1,
+        -1);
     assertFalse(model.idIsPresent("notPresent"));
   }
 
   // test valid ID present
   @Test
   public void testIdIsPresents() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.now(), 24, -1);
-    model.createPortfolio("Port" + LocalDate.now(), LocalDate.now());
-    assertTrue(model.idIsPresent("Port"));
+    model.createPortfolio("Porttest", LocalDate.now());
+    assertTrue(model.idIsPresent("Porttest"));
   }
 
   // test can't create share
   @Test
   public void testCantCreateShares() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     assertFalse(model.canCreateShare());
   }
 
   // test can create share
   @Test
   public void testCanCreateShares() {
-    ModelInterface model = new ModelImplementation();
+    ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.now(), new Random().nextInt(10),
-            -1);
+        -1);
     assertTrue(model.canCreateShare());
   }
+
+  @Test
+  public void testValidSellShares() {
+    ModelInterface model = new MockModel();
+    model.addShareToModel("IBM", LocalDate.now(), 20, 30);
+    String portfolioName = "Porttest";
+    model.createPortfolio(portfolioName, LocalDate.now());
+    model.sellStocks(portfolioName, "IBM", 19);
+    assertEquals("+id:Porttest\n"
+            + "creationDate:2022-11-14\n"
+            + "*shares:+companyName:IBM,purchaseDate:2022-11-14,price:600.0,numShares:1",
+        model.getPortfolioById(portfolioName));
+  }
+  @Test
+  public void testSellAllShares() {
+    ModelInterface model = new MockModel();
+    model.addShareToModel("IBM", LocalDate.now(), 20, 30);
+    String portfolioName = "Porttest";
+    model.createPortfolio(portfolioName, LocalDate.now());
+    model.sellStocks(portfolioName, "IBM", 20);
+  }
+  // To sell share is greater than number of present shares
+  @Test
+  public void testInvalidSellShares() {
+    ModelInterface model = new MockModel();
+    model.addShareToModel("IBM", LocalDate.now(), 20, 30);
+    String portfolioName = "Porttest";
+    model.createPortfolio(portfolioName, LocalDate.now());
+
+    try {
+      model.sellStocks(portfolioName, "IBM", 30);
+      fail("Test case passed even though blank Id was given");
+    } catch (IllegalArgumentException e) {
+      // Test passed
+    }
+  }
+  // test valid get cost basis function
+  @Test
+  public void testValidGetCostBasis(){
+    ModelInterface model = new MockModel();
+    model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20, 30);
+    String portfolioName = "Porttest";
+    model.createPortfolio(portfolioName, LocalDate.now());
+    assertEquals(600.0,model.getCostBasis(portfolioName,LocalDate.parse("2021-11-02")),1);
+  }
+
 }

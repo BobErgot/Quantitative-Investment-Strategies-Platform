@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -57,6 +58,10 @@ class Portfolio {
     return shares.stream().filter(predicate).collect(Collectors.<T>toList());
   }
 
+  private <T> T reduce(List<T> shares, BinaryOperator<T> fold) {
+    return (T) shares.stream().reduce(fold);
+  }
+
   private <T, R> List<R> map(List<T> shares, Function<T, R> converter) {
     return shares.stream().map(converter).collect(Collectors.<R>toList());
   }
@@ -79,18 +84,24 @@ class Portfolio {
     return mappedShares.stream().reduce(0.0, Double::sum);
   }
 
+  protected double getValuationGivenFilterAndMap(Predicate<Share> predicate,
+      Function<Share, Double> converter) {
+    List<Share> eligibleShares = this.filter(new ArrayList<>(shares), predicate);
+    List<Double> mappedShares = this.map(eligibleShares, converter);
+    return mappedShares.stream().reduce(0.0, Double::sum);
+  }
+
   @Override
   public String toString() {
-    StringBuilder toString = new StringBuilder("+id:" + this.id + "\ncreationDate:" + creationDate
-            + "\n*shares:");
+    StringBuilder toString = new StringBuilder(
+        "+id:" + this.id + "\ncreationDate:" + creationDate + "\n*shares:");
     List<Share> shareList = new ArrayList<>(shares);
     for (int i = 0; i < shares.size() - 1; i++) {
       String record = shareList.get(i).toString().replace("\n", ",");
       record = record.substring(0, record.length() - 1);
       toString.append(record).append("|");
     }
-    String record = shareList.get(shares.size() - 1).toString().replace("\n",
-            ",");
+    String record = shareList.get(shares.size() - 1).toString().replace("\n", ",");
     record = record.substring(0, record.length() - 1);
     toString.append(record);
     return toString.toString();

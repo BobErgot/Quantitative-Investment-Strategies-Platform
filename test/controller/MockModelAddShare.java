@@ -3,9 +3,9 @@ package controller;
 import static controller.MockModelUtil.merge;
 
 import java.time.LocalDate;
-import model.ModelImplementation;
 
-class MockModelAddShare extends ModelImplementation {
+import model.ModelImplementation;
+class MockModelAddShare extends MockModel {
   private final StringBuilder log;
 
   public MockModelAddShare(StringBuilder log) {

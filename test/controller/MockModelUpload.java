@@ -4,7 +4,7 @@ import static controller.MockModelUtil.merge;
 
 import model.ModelImplementation;
 
-class MockModelUpload extends ModelImplementation {
+class MockModelUpload extends MockModel {
   StringBuilder log;
 
   public MockModelUpload(StringBuilder log) {

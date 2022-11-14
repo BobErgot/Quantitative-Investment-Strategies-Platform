@@ -15,7 +15,6 @@ import java.time.Month;
 import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.DuplicateFormatFlagsException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,6 +46,15 @@ public class ModelImplementation implements ModelInterface {
     this.fileInterface = new CSVFile();
     this.webAPi = new WebAPI();
     this.getPortfolio();
+  }
+
+  protected ModelImplementation(FileInterface fileInterface) {
+    this.shares = new HashMap<>();
+    this.portfolios = new HashSet<>();
+    this.fileInterface = fileInterface;
+    this.webAPi = new WebAPI();
+    this.getPortfolio();
+
   }
 
   @Override
@@ -88,9 +96,9 @@ public class ModelImplementation implements ModelInterface {
       }
       Portfolio portfolioObject = new Portfolio(portfolioFields[0], shareList,
           LocalDate.parse(portfolioFields[1]));
-      String serialNumber = portfolioOutput.size()+".";
+      String serialNumber = portfolioOutput.size() + ".";
       String portfolioHeaderString = String.format("||%-18s||%-40s||%-18s||", serialNumber,
-              portfolioFields[0],  LocalDate.parse(portfolioFields[1]));
+          portfolioFields[0], LocalDate.parse(portfolioFields[1]));
       portfolioOutput.add(portfolioHeaderString);
       portfolios.add(portfolioObject);
     }
@@ -109,7 +117,10 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public String getPortfolioById(String id) {
+  public String getPortfolioById(String id) throws IllegalArgumentException {
+    if (id.length() == 0) {
+      throw new IllegalArgumentException("Portfolio cannot be blank!");
+    }
     Portfolio portfolio = this.getPortfolioObjectById(id);
     return portfolio == null ? PORTFOLIO_NOT_FOUND : portfolio.toString();
   }
@@ -120,6 +131,8 @@ public class ModelImplementation implements ModelInterface {
     if (id.length() == 0 || portfolioObject == null) {
       throw new IllegalArgumentException("Invalid ID Passed");
     }
+    if(portfolioObject.getCreationDate().compareTo(date)>0)
+      return 0;
     return portfolioObject.getValuation((share) -> this.mapShareGivenDate(share, date));
   }
 
@@ -287,8 +300,13 @@ public class ModelImplementation implements ModelInterface {
     }
   }
 
+  protected boolean addShareToModel(Share share) {
+    return this.addShareToModel(share.getCompanyName(), share.getPurchaseDate(),
+        share.getNumShares(), share.getShareValue());
+  }
+
   @Override
-  public boolean idIsPresent(String selectedId) {
+  public boolean idIsPresent(String selectedId) throws IllegalArgumentException {
     return !(this.getPortfolioById(selectedId).equals(PORTFOLIO_NOT_FOUND));
   }
 
@@ -366,15 +384,16 @@ public class ModelImplementation implements ModelInterface {
   public double sellStocks(String id, String symbol, int numShares) {
     // Checking if numShares is less than the currently less than bought shares
     Portfolio portfolioToModify = this.getPortfolioObjectById(id);
-    List<Share> newShares = (List<Share>) portfolioToModify.getListOfShares();
-    if (checkValidNumStocks(symbol, numShares, newShares)) {
+    Set<Share> newShares = new HashSet<>(portfolioToModify.getListOfShares());
+    if (!checkValidNumStocks(symbol, numShares, newShares)) {
       throw new IllegalArgumentException(
           "Ticker is incorrect or number of shares is less than shares bought in this portfolio!");
     }
     double stockSellingPrice = 0.0;
 
-    for (int i = 0; i < newShares.size(); i++) {
-      Share share = newShares.get(i);
+//    for (int i = 0; i < newShares.size(); i++) {
+    for (Share share : newShares) {
+//      Share share = newShares.get(i);
       if (share.getCompanyName().equals(symbol)) {
         double currentShareSellingPrice = this.getStockPrice(share.getCompanyName(),
             LocalDate.now());
@@ -391,12 +410,15 @@ public class ModelImplementation implements ModelInterface {
         }
       }
     }
+    for (Share share : newShares) {
+      this.addShareToModel(share);
+    }
     portfolios.remove(portfolioToModify);
     this.createPortfolio(portfolioToModify.getId(), portfolioToModify.getCreationDate());
     return stockSellingPrice;
   }
 
-  private boolean checkValidNumStocks(String symbol, int numStocks, List<Share> newShares) {
+  private boolean checkValidNumStocks(String symbol, int numStocks, Set<Share> newShares) {
     int companyShares = 0;
     for (Share share : newShares) {
       if (share.getCompanyName().equals(symbol)) {
