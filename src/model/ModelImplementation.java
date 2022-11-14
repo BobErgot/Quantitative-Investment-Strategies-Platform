@@ -86,9 +86,10 @@ public class ModelImplementation implements ModelInterface {
       }
       Portfolio portfolioObject = new Portfolio(portfolioFields[0], shareList,
           LocalDate.parse(portfolioFields[1]));
-      portfolioOutput.add("-------------------------------------------------------");
-      portfolioOutput.add(portfolioObject.toString());
-      portfolioOutput.add("-------------------------------------------------------" + LINE_BREAKER);
+      String serialNumber = portfolioOutput.size()+".";
+      String portfolioHeaderString = String.format("||%-18s||%-40s||%-18s||", serialNumber,
+              portfolioFields[0],  LocalDate.parse(portfolioFields[1]));
+      portfolioOutput.add(portfolioHeaderString);
       portfolios.add(portfolioObject);
     }
     return portfolioOutput;

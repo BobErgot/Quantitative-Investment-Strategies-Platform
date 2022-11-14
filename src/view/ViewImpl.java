@@ -1,8 +1,10 @@
 package view;
 
 import static utility.Constants.FILE_SEPARATOR;
+import static utility.Constants.LINE_BREAKER;
 
 import java.io.PrintStream;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -60,8 +62,15 @@ public class ViewImpl implements View {
   @Override
   public void showViewPortfolioMenu(List<String> portfolioList) {
     this.out.println("Portfolios available:");
+    String portfolioHeaderString = String.format("||%-18s||%-40s||%-18s||", "Serial Number",
+            "Portfolio Name", "Creation Date");
+    this.out.println(portfolioHeaderString);
+    this.out.println("||------------------||----------------------------------------" +
+            "||------------------||");
     for (String portfolio : portfolioList) {
       this.out.println(portfolio);
+      this.out.println("||------------------||----------------------------------------" +
+              "||------------------||");
     }
   }
 
@@ -77,7 +86,7 @@ public class ViewImpl implements View {
 
   @Override
   public void selectPortfolio() {
-    this.out.println("Select an ID from above list");
+    this.out.println("Select a 'Portfolio Name' from above list");
   }
 
   @Override
