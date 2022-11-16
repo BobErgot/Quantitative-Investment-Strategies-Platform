@@ -19,9 +19,8 @@ public class PortfolioTest {
   @Before
   public void createShareList() {
     shareList = new HashSet<>();
-    String[] companies = {"Apple", "Microsoft", "Google", "Amazon", "Netflix", "Meta", "Cognizant",
-        "Salesforce", "Tesla", "Mathworks"};
-    for (int i = 0; i < 10; i++) {
+    String[] companies = {"APPL", "IBM", "GOOGL"};
+    for (int i = 0; i < 3; i++) {
       Share s = new Share(companies[i], LocalDate.now(), 2, 3);
       shareList.add(s);
     }
@@ -54,5 +53,20 @@ public class PortfolioTest {
   public void getListOfShares() {
     Portfolio p = new Portfolio("0", shareList, LocalDate.now());
     assertEquals(shareList, p.getListOfShares());
+  }
+  // test get range of portfolio stocks
+  @Test
+  public void testGetDateRangeOfStockData(){
+    shareList = new HashSet<>();
+    shareList.add(new Share("APPL", LocalDate.of(2012,12,12), 2, 3));
+    shareList.add(new Share("IBM", LocalDate.of(2000,12,12), 2, 3));
+    shareList.add(new Share("CRM", LocalDate.of(1978,12,11), 2, 3));
+    shareList.add(new Share("MSFT", LocalDate.of(1978,12,12), 2, 3));
+    shareList.add(new Share("GOOGL", LocalDate.of(2022,12,12), 2, 3));
+    Portfolio p = new Portfolio("0", shareList, LocalDate.now());
+    LocalDate[] answer = {LocalDate.of(1978,12,11), LocalDate.of(2022,12,12)};
+    LocalDate[] actual = p.getDateRangeOfStockData();
+    for(int i=0; i<2; i++)
+      assertEquals(answer[i],actual[i]);
   }
 }

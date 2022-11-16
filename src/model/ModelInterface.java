@@ -97,14 +97,6 @@ public interface ModelInterface {
    */
   boolean checkTicker(String symbol);
 
-  /**
-   * Sell stocks given stock symbol
-   * @param id Portfolio ID to sell stocks from
-   * @param symbol Ticker symbol of stock that is to be sold
-   * @param numShares Number of shares to be sold
-   * @return Amount of money sold for.
-   */
-  double sellStocks(String id, String symbol, int numShares);
 
-  List<Double> getPortfolioPerformance(String id);
+  List<Double> getPortfolioPerformance(String id, LocalDate from, LocalDate to, Periodicity group);
 }

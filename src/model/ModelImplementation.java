@@ -11,7 +11,6 @@ import static utility.Constants.TICKER_DIRECTORY;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -30,10 +29,10 @@ import java.util.zip.DataFormatException;
  */
 public class ModelImplementation implements ModelInterface {
 
-  private final Set<Portfolio> portfolios;
-  private final FileInterface fileInterface;
-  private final APIInterface webAPi;
-  private HashMap<String, Share> shares;
+  protected final Set<Portfolio> portfolios;
+  protected final FileInterface fileInterface;
+  protected final APIInterface webAPi;
+  protected HashMap<String, Share> shares;
 
   /**
    * Construct a model implementation object and initialises the local set of shares and portfolios
@@ -105,7 +104,7 @@ public class ModelImplementation implements ModelInterface {
     return portfolioOutput;
   }
 
-  private Portfolio getPortfolioObjectById(String id) {
+  protected Portfolio getPortfolioObjectById(String id) {
     if (id.length() > 0) {
       for (Portfolio portfolio : portfolios) {
         if (portfolio.getId().equals(id)) {
@@ -131,9 +130,16 @@ public class ModelImplementation implements ModelInterface {
     if (id.length() == 0 || portfolioObject == null) {
       throw new IllegalArgumentException("Invalid ID Passed");
     }
-    if(portfolioObject.getCreationDate().compareTo(date)>0)
+    if (portfolioObject.getCreationDate().compareTo(date) > 0) {
       return 0;
-    return portfolioObject.getValuation((share) -> this.mapShareGivenDate(share, date));
+    }
+    return portfolioObject.getValuation((share) -> {
+      if (share.getPurchaseDate().compareTo(date) <= 0) {
+        return this.mapShareGivenDate(share, date);
+      } else {
+        return 0.0;
+      }
+    });
   }
 
   @Override
@@ -164,21 +170,39 @@ public class ModelImplementation implements ModelInterface {
   }
 
   @Override
-  public List<Double> getPortfolioPerformance(String id) {
-    List<Double> portfolioPerformanceByMonth = new ArrayList<>();
+  public List<Double> getPortfolioPerformance(String id, LocalDate from, LocalDate to, Periodicity group) {
+    List<Double> portfolioPerformanceByPeriodicity = new ArrayList<>();
+    List<Double> temporaryList = new ArrayList<>();
     Portfolio portfolioObject = this.getPortfolioObjectById(id);
     if (id.length() == 0 || portfolioObject == null) {
       throw new IllegalArgumentException("Invalid ID Passed");
     }
+    LocalDate[] range = portfolioObject.getDateRangeOfStockData();
+    range[0] = from.compareTo(range[0])>0 ? from:range[0];
+    range[1] = to;
+    LocalDate previousDate = range[0];
+    for (LocalDate date = range[0]; date.isBefore(range[1]) || date.equals(range[1]);
+        date = date.plusDays(1)) {
+      temporaryList.add(this.getValuationGivenDate(portfolioObject.getId(), date));
 
-    for (int i = 1; i <= 12; i++) {
-      int month = i;
-      double monthValue = portfolioObject.getValuation(
-          (Share s) -> this.getStockPrice(s.getCompanyName(), LocalDate.from(Month.of(month)))
-              * s.getNumShares());
-      portfolioPerformanceByMonth.add(monthValue);
+      if (previousDate.getMonth().compareTo(date.getMonth()) != 0 && group == Periodicity.Month) {
+        portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0, Double::sum));
+        temporaryList = new ArrayList<>();
+      }
+
+      if (previousDate.getYear() < date.getYear() && group == Periodicity.Year) {
+        portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0, Double::sum));
+        temporaryList = new ArrayList<>();
+      }
+      previousDate = date;
     }
-    return portfolioPerformanceByMonth;
+    if (group == Periodicity.Day) {
+      return temporaryList;
+    }
+    if (temporaryList.size() > 0) {
+      portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0, Double::sum));
+    }
+    return portfolioPerformanceByPeriodicity;
   }
 
 
@@ -248,7 +272,7 @@ public class ModelImplementation implements ModelInterface {
     return stockPrice;
   }
 
-  private double getStockPrice(String companyName, LocalDate date) {
+  protected double getStockPrice(String companyName, LocalDate date) {
     double stockPrice = -1;
     List<String> stockData = fileInterface.readFromFile(RELATIVE_PATH, STOCK_DIRECTORY,
         companyName);
@@ -380,45 +404,7 @@ public class ModelImplementation implements ModelInterface {
     return stockData.contains(symbol);
   }
 
-  @Override
-  public double sellStocks(String id, String symbol, int numShares) {
-    // Checking if numShares is less than the currently less than bought shares
-    Portfolio portfolioToModify = this.getPortfolioObjectById(id);
-    Set<Share> newShares = new HashSet<>(portfolioToModify.getListOfShares());
-    if (!checkValidNumStocks(symbol, numShares, newShares)) {
-      throw new IllegalArgumentException(
-          "Ticker is incorrect or number of shares is less than shares bought in this portfolio!");
-    }
-    double stockSellingPrice = 0.0;
-
-//    for (int i = 0; i < newShares.size(); i++) {
-    for (Share share : newShares) {
-//      Share share = newShares.get(i);
-      if (share.getCompanyName().equals(symbol)) {
-        double currentShareSellingPrice = this.getStockPrice(share.getCompanyName(),
-            LocalDate.now());
-        newShares.remove(share);
-        if (share.getNumShares() > numShares) {
-          stockSellingPrice += (share.getNumShares() - numShares) * currentShareSellingPrice;
-          newShares.add(
-              new Share(share.getCompanyName(), share.getPurchaseDate(), share.getShareValue(),
-                  share.getNumShares() - numShares));
-          break;
-        } else {
-          numShares -= share.getNumShares();
-          stockSellingPrice += share.getNumShares() * currentShareSellingPrice;
-        }
-      }
-    }
-    for (Share share : newShares) {
-      this.addShareToModel(share);
-    }
-    portfolios.remove(portfolioToModify);
-    this.createPortfolio(portfolioToModify.getId(), portfolioToModify.getCreationDate());
-    return stockSellingPrice;
-  }
-
-  private boolean checkValidNumStocks(String symbol, int numStocks, Set<Share> newShares) {
+  protected boolean checkValidNumStocks(String symbol, int numStocks, Set<Share> newShares) {
     int companyShares = 0;
     for (Share share : newShares) {
       if (share.getCompanyName().equals(symbol)) {

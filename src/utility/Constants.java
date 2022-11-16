@@ -20,7 +20,7 @@ public final class Constants {
   public static final String DATE_FORMAT = "YYYY-MM-DD";
   public static final String PORTFOLIO_NOT_FOUND = "Portfolio was not found!";
   public static final int STOCK_COLUMNS_COUNT = 6;
-
+  // Purchase = cost_per_share + broker_fees/num_shares , Sell = cost_per_share * num_shares - broker_fees
   public static final float BROKER_FEES = 20;
   /**
    * Constructor is explicitly defined and made private to restrict access to the object of this

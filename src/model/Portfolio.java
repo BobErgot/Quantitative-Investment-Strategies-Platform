@@ -110,4 +110,15 @@ class Portfolio {
   public LocalDate getCreationDate() {
     return creationDate;
   }
+
+  public LocalDate[] getDateRangeOfStockData() {
+    LocalDate[] range = {LocalDate.MAX, LocalDate.MIN};
+    for(Share share : shares){
+      if(share.getPurchaseDate().compareTo(range[0])<0)
+        range[0] =  share.getPurchaseDate();
+      else  if(share.getPurchaseDate().compareTo(range[1])>=0)
+        range[1] =  share.getPurchaseDate();
+    }
+    return range;
+  }
 }
