@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 import controller.StockPortfolioCommand;
+import model.FlexibleModelImplementation;
+import model.ModelImplementation;
 import model.ModelInterface;
 import view.View;
 
@@ -18,6 +20,21 @@ public class CreatePortfolio implements StockPortfolioCommand {
   public void process(View view, Scanner scanner, ModelInterface model) {
     boolean invalidInput;
     boolean portfolioCompleted;
+    invalidInput = false;
+    do{
+      view.askPortfolioType();
+      String choice = scanner.next();
+      if (choice.equals("1")){
+        invalidInput = true;
+        break;
+      } else if (choice.equals("2")) {
+        model = new FlexibleModelImplementation();
+        invalidInput = true;
+        break;
+      } else {
+        view.printInvalidInputMessage();
+      }
+    } while (!invalidInput);
     do {
       invalidInput = false;
       portfolioCompleted = false;
