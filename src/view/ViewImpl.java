@@ -90,10 +90,9 @@ public class ViewImpl implements View {
     this.out.println("* View Portfolio Menu:");
     this.out.println("1. Valuation of Portfolio on a specific date");
     this.out.println("2. Cost basis of a portfolio till a specific date");
-    this.out.println("3. Performance of portfolio over time");
-    this.out.println("4. Purchase a share and add to portfolio");
-    this.out.println("5. Sell a share from portfolio");
-    this.out.println("6. Performance of portfolio over time");
+    this.out.println("3. Purchase a share and add to portfolio");
+    this.out.println("4. Sell a share from portfolio");
+    this.out.println("5. Performance of portfolio over time");
     this.out.println("Type 'back' to return to Home Menu");
     this.out.println("Please select an option from 1-x from above: ");
   }
@@ -169,5 +168,12 @@ public class ViewImpl implements View {
   @Override
   public void printException(String message) {
     this.out.println(message);
+  }
+
+  @Override
+  public void askPortfolioType() {
+    this.out.println("Which type of portfolio do you want to create?");
+    this.out.println("1. Fixed Portfolio");
+    this.out.println("2. Flexible Portfolio");
   }
 }

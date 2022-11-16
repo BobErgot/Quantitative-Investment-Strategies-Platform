@@ -28,11 +28,10 @@ public class ViewPortfolio implements StockPortfolioCommand {
       Map<String, Function<Scanner, StockPortfolioCommand>> knownCommands = new HashMap<>();
       knownCommands.put("1", s -> new Valuation());
       knownCommands.put("2", s -> new CostBasis());
-      knownCommands.put("3", s -> new ViewPortfolio());
-//      this.out.println("4. Performance of portfolio over time");
-//      this.out.println("5. Purchase a share and add to portfolio");
-//      this.out.println("6. Sell a share from portfolio");
-//      this.out.println("7. Performance of portfolio over time");
+//      knownCommands.put("3", s -> new PurchaseShare());
+//      this.out.println("3. Purchase shares and add to portfolio");
+//      this.out.println("4. Sell shares from portfolio");
+//      this.out.println("5. Performance of portfolio over time");
 
       view.showAdditionalPortfolioInformation();
       while (scanner.hasNext()) {

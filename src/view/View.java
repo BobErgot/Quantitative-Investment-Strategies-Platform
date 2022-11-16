@@ -119,4 +119,10 @@ public interface View {
    * @param costBasis given cost basis valuation to show.
    */
   void showCostBasis(double costBasis);
+
+  /**
+   * Asks the user about their choice of portfolio.
+   *
+   */
+  void askPortfolioType();
 }
