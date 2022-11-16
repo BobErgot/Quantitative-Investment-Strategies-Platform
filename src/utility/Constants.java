@@ -24,6 +24,8 @@ public final class Constants {
   // Purchase = cost_per_share + broker_fees/num_shares , Sell = cost_per_share * num_shares - broker_fees
   public static final float BROKER_FEES = 20;
 
+  public static final String MUTABLE = ",mutable";
+
   /**
    * Constructor is explicitly defined and made private to restrict access to the object of this
    * class.

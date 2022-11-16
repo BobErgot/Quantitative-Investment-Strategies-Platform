@@ -246,8 +246,9 @@ public class ModelImplementationTest {
     model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20, -1);
     model.addShareToModel("AAPL", LocalDate.parse("2021-11-02"), 20, -1);
     model.addShareToModel("MSFT", LocalDate.parse("2021-11-03"), 20, -1);
-    String portfolioName = "Porttest";
+    String portfolioName = "Porttest2";
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
+    System.out.println(model.getPortfolio());
     double[] answer = {200.0, 400.0, 600.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
         LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"), Periodicity.Day);
