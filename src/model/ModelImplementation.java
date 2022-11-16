@@ -1,5 +1,6 @@
 package model;
 
+import static utility.Constants.BROKER_FEES;
 import static utility.Constants.LINE_BREAKER;
 import static utility.Constants.PORTFOLIO_DIRECTORY;
 import static utility.Constants.PORTFOLIO_FILENAME;
@@ -314,6 +315,8 @@ public class ModelImplementation implements ModelInterface {
     if (stockPrice == -1) {
       throw new IllegalArgumentException("Data not available");
     }
+    // Add broker's fees onto price
+    stockPrice = stockPrice + BROKER_FEES/numShares;
     Share shareObject = new Share(companyName, date, stockPrice, numShares);
     if (this.shares.get(companyName) == null) {
       this.shares.put(companyName, shareObject);

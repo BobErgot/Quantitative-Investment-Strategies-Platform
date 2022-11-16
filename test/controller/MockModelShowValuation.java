@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 import model.ModelImplementation;
 
-class MockModelShowValuation extends MockModel {
+class MockModelShowValuation extends ModelImplementation {
   StringBuilder log;
 
   public MockModelShowValuation(StringBuilder log) {

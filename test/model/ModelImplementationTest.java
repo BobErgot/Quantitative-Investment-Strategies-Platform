@@ -8,6 +8,7 @@ import static utility.Constants.PORTFOLIO_NOT_FOUND;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import org.junit.Test;
 
@@ -38,9 +39,8 @@ public class ModelImplementationTest {
     }
     try {
       model.createPortfolio("port2", LocalDate.now());
-      fail("Test case passed even though empty Id was given");
     } catch (IllegalArgumentException e) {
-      // Test passed
+      fail("Test case passed even though empty Id was given");
     }
   }
 
@@ -51,14 +51,14 @@ public class ModelImplementationTest {
   // test correct ticker
   @Test
   public void testCheckTickers() {
-    ModelImplementation model = new MockModel();
+    ModelInterface model = new MockModel();
     assertTrue(model.checkTicker("AAPL"));
   }
 
   // test non-existent ticker
   @Test
   public void testInvalidTickers() {
-    ModelImplementation model = new MockModel();
+    ModelInterface model = new MockModel();
     assertFalse(model.checkTicker("Apple"));
   }
 
@@ -66,17 +66,17 @@ public class ModelImplementationTest {
   @Test
   public void testGetPortfolioByIds() {
     ModelInterface model = new MockModel();
-    String[] companies = {"AAPL", "MSFT", "GOOG", "AMZN", "NFLX", "META", "CTSH", "CRM", "TSLA"};
+    String[] companies = {"AAPL", "MSFT", "GOOG"};
     for (String company : companies) {
       model.addShareToModel(company, LocalDate.now(), 2, -1);
     }
-    try {
-      model.createPortfolio("port3", LocalDate.now());
-      model.getPortfolioById("port3");
-      fail("Test case passed even though empty Id was given");
-    } catch (IllegalArgumentException e) {
-      // Test passed
-    }
+    model.createPortfolio("port3", LocalDate.now());
+    assertEquals("+id:port3\n" + "creationDate:2022-11-16\n"
+            + "*shares:+companyName:AAPL,purchaseDate:2022-11-16,price:20.0,numShares:2|"
+            + "+companyName:MSFT,purchaseDate:2022-11-16,price:20.0,numShares:2|"
+            + "+companyName:GOOG,purchaseDate:2022-11-16,price:20.0,numShares:2",
+        model.getPortfolioById("port3"));
+
   }
 
   //Test get invalid portfolio by id
@@ -195,9 +195,12 @@ public class ModelImplementationTest {
     model.addShareToModel("IBM", LocalDate.of(2022, 11, 14), 20, 30);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.of(2020, 12, 12));
-    model.sellStocks(portfolioName, "IBM", 19);
     assertEquals("+id:Porttest\n" + "creationDate:2020-12-12\n"
-            + "*shares:+companyName:IBM,purchaseDate:2022-11-14,price:600.0,numShares:1",
+            + "*shares:+companyName:IBM,purchaseDate:2022-11-14,price:31.0,numShares:20",
+        model.getPortfolioById(portfolioName));
+    assertEquals(170.0, model.sellStocks(portfolioName, "IBM", 19), 0.0);
+    assertEquals("+id:Porttest\n" + "creationDate:2020-12-12\n"
+            + "*shares:+companyName:IBM,purchaseDate:2022-11-14,price:31.0,numShares:1",
         model.getPortfolioById(portfolioName));
   }
 
@@ -233,7 +236,7 @@ public class ModelImplementationTest {
     model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20, 30);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.now());
-    assertEquals(600.0, model.getCostBasis(portfolioName, LocalDate.parse("2021-11-02")), 1);
+    assertEquals(620.0, model.getCostBasis(portfolioName, LocalDate.parse("2021-11-01")), 1);
   }
 
 
@@ -247,7 +250,7 @@ public class ModelImplementationTest {
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
     double[] answer = {200.0, 400.0, 600.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
-        LocalDate.parse("2021-11-01"), LocalDate.parse("2021-12-04"), Periodicity.Day);
+        LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"), Periodicity.Day);
     assertEquals(3, actual.size());
     for (int i = 0; i <= 2; i++) {
       assertEquals(answer[i], actual.get(i), 0.0);
@@ -265,7 +268,7 @@ public class ModelImplementationTest {
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
     double[] answer = {400.0, 400.0, 600.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
-        LocalDate.parse("2021-11-01"), LocalDate.parse("2021-12-04"), Periodicity.Day);
+        LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"), Periodicity.Day);
     assertEquals(3, actual.size());
     for (int i = 0; i <= 2; i++) {
       assertEquals(answer[i], actual.get(i), 0.0);
@@ -289,6 +292,42 @@ public class ModelImplementationTest {
       assertEquals(answer[i], actual.get(i), 0.0);
     }
 
+  }
+
+  @Test
+  public void testValidAppendPortfolio() {
+    FlexibleModelInterface model = new MockModel();
+    model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20, -1);
+    model.addShareToModel("AAPL", LocalDate.parse("2021-11-01"), 20, -1);
+    String portfolioName = "Porttest";
+    model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
+    assertEquals("+id:Porttest\n" + "creationDate:2020-11-02\n"
+            + "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:11.0,numShares:20|"
+            + "+companyName:AAPL,purchaseDate:2021-11-01,price:11.0,numShares:20",
+        model.getPortfolioById(portfolioName));
+    model.addShareToModel("MSFT", LocalDate.parse("2021-12-03"), 20, -1);
+    model.appendPortfolio(portfolioName);
+    assertEquals("+id:Porttest\n" + "creationDate:2020-11-02\n"
+            + "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:201.0,numShares:20|"
+            + "+companyName:AAPL,purchaseDate:2021-11-01,price:201.0,numShares:20|"
+            + "+companyName:MSFT,purchaseDate:2021-12-03,price:11.0,numShares:20",
+        model.getPortfolioById(portfolioName));
+
+  }
+
+  @Test
+  public void testInvalidAppendPortfolio() {
+    FlexibleModelInterface model = new MockModel();
+    model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20, -1);
+    model.addShareToModel("AAPL", LocalDate.parse("2021-11-01"), 20, -1);
+    String portfolioName = "Porttest";
+    model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
+    try {
+      model.appendPortfolio(portfolioName);
+      fail("Invalid appending operation & function did not throw any error");
+    } catch (NoSuchElementException e) {
+      // accepted
+    }
   }
 
 }

@@ -39,6 +39,9 @@ public class Share implements Comparable<Object> {
     this.numShares = numShares;
   }
 
+  public double getPrice() {
+    return price;
+  }
 
   /**
    * Return the ticker/symbol of this share's stock.

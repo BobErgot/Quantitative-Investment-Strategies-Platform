@@ -80,6 +80,8 @@ class Portfolio {
 
   protected double getValuationGivenFilter(Predicate<Share> predicate) {
     List<Share> eligibleShares = this.filter(new ArrayList<>(shares), predicate);
+    System.out.println(eligibleShares);
+
     List<Double> mappedShares = this.map(eligibleShares, Share::getShareValue);
     return mappedShares.stream().reduce(0.0, Double::sum);
   }
@@ -105,6 +107,18 @@ class Portfolio {
     record = record.substring(0, record.length() - 1);
     toString.append(record);
     return toString.toString();
+  }
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof Portfolio)) {
+      return false;
+    }
+    Portfolio other = (Portfolio) o;
+    return id.equals(other.id);
+  }
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 
   public LocalDate getCreationDate() {

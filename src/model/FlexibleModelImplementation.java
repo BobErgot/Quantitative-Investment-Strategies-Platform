@@ -1,18 +1,23 @@
 package model;
 
+import static utility.Constants.BROKER_FEES;
+
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class FlexibleModelImplementation extends ModelImplementation implements
     FlexibleModelInterface {
 
-  public FlexibleModelImplementation(){
+  public FlexibleModelImplementation() {
     super();
   }
-  protected FlexibleModelImplementation(FileInterface fileInterface){
+
+  protected FlexibleModelImplementation(FileInterface fileInterface) {
     super(fileInterface);
   }
+
   @Override
   public double sellStocks(String id, String symbol, int numShares) {
     // Checking if numShares is less than the currently less than bought shares
@@ -30,10 +35,9 @@ public class FlexibleModelImplementation extends ModelImplementation implements
             LocalDate.now());
         newShares.remove(share);
         if (share.getNumShares() > numShares) {
-          stockSellingPrice += (share.getNumShares() - numShares) * currentShareSellingPrice;
-          newShares.add(
-              new Share(share.getCompanyName(), share.getPurchaseDate(), share.getShareValue(),
-                  share.getNumShares() - numShares));
+          stockSellingPrice += numShares * currentShareSellingPrice;
+          newShares.add(new Share(share.getCompanyName(), share.getPurchaseDate(), share.getPrice(),
+              share.getNumShares() - numShares));
           break;
         } else {
           numShares -= share.getNumShares();
@@ -41,19 +45,27 @@ public class FlexibleModelImplementation extends ModelImplementation implements
         }
       }
     }
-    for (Share share : newShares) {
-      this.addShareToModel(share);
+    this.modifyPortfolio(portfolioToModify.getId(), newShares, portfolioToModify.getCreationDate());
+    return stockSellingPrice - BROKER_FEES;
+  }
+
+  protected void modifyPortfolio(String id, Set<Share> sharesToModify, LocalDate creationDate) {
+    for (Share share : sharesToModify) {
+      Share finalShare = new Share(share.getCompanyName(), share.getPurchaseDate(),
+          share.getPrice() - BROKER_FEES / share.getNumShares(), share.getNumShares());
+      this.addShareToModel(finalShare);
     }
-    portfolios.remove(portfolioToModify);
-    this.createPortfolio(portfolioToModify.getId(), portfolioToModify.getCreationDate());
-    return stockSellingPrice;
+    portfolios.remove(new Portfolio(id, sharesToModify, creationDate));
+    this.createPortfolio(id, creationDate);
   }
 
   @Override
-  public boolean addStockToExistingPortfolio(String portfolioId, String companyName, LocalDate date,
-      int numShares, double stockPrice) {
-    // Use existing methods to finish this function.
-    return false;
+  public void appendPortfolio(String portfolioName) throws NoSuchElementException{
+    if(this.shares.size()==0)
+      throw new NoSuchElementException("No new shares to append!");
+    Portfolio portfolioToModify = this.getPortfolioObjectById(portfolioName);
+    Set<Share> sharesToModify = new HashSet<>(portfolioToModify.getListOfShares());
+    this.modifyPortfolio(portfolioName, sharesToModify, portfolioToModify.getCreationDate());
   }
 
 }
