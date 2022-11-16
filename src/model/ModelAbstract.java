@@ -19,6 +19,7 @@ import java.util.DuplicateFormatFlagsException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -405,6 +406,8 @@ abstract class ModelAbstract implements ModelInterface {
 
   protected boolean checkValidNumStocks(String symbol, int numStocks, Set<Share> newShares) {
     int companyShares = 0;
+    if(this.checkTicker(symbol))
+      throw new NoSuchElementException("Ticker does not exist");
     for (Share share : newShares) {
       if (share.getCompanyName().equals(symbol)) {
         companyShares += share.getNumShares();

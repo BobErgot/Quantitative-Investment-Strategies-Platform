@@ -32,7 +32,7 @@ public class FlexibleModelImplementation extends ModelAbstract {
     Set<Share> newShares = new HashSet<>(portfolioToModify.getListOfShares());
     if (!checkValidNumStocks(symbol, numShares, newShares)) {
       throw new IllegalArgumentException(
-          "Ticker is incorrect or number of shares is less than shares bought in this portfolio!");
+          "Number of shares is less than shares bought in this portfolio!");
     }
     double stockSellingPrice = 0.0;
 
