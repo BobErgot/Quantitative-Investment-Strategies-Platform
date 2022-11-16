@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.logging.Level;
@@ -19,7 +20,7 @@ import static utility.Constants.STOCK_ENDPOINT;
  * This class represents web API and its operations when it's data is comma-separated values(csv)
  * format.
  */
-public class WebAPI implements APIInterface {
+class WebAPI implements APIInterface {
   protected final Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
   @Override
@@ -27,9 +28,9 @@ public class WebAPI implements APIInterface {
     String url = STOCK_ENDPOINT;
     String charset = "UTF-8";
 
-    String query = null;
+    String query;
     try {
-      query = String.format("function=%s", URLEncoder.encode("TIME_SERIES_DAILY", charset));
+      query = String.format("function=%s", URLEncoder.encode("TIME_SERIES_DAILY_ADJUSTED", charset));
       query = query + "&" + String.format("symbol=%s", URLEncoder.encode(stockSymbol, charset));
       query = query + "&" + String.format("apikey=%s", URLEncoder.encode(STOCK_API_KEY, charset));
       query = query + "&" + String.format("datatype=%s", URLEncoder.encode("csv", charset));
@@ -38,7 +39,7 @@ public class WebAPI implements APIInterface {
       LOGGER.log(Level.SEVERE, "Error occurred while querying: ", exception);
       return null;
     }
-    java.net.URLConnection connection = null;
+    URLConnection connection;
     try {
       LOGGER.log(Level.FINE, url + "?" + query);
       connection = new URL(url + "?" + query).openConnection();
@@ -47,7 +48,7 @@ public class WebAPI implements APIInterface {
       LOGGER.log(Level.SEVERE, "Error occurred while querying: ", ioException);
       return null;
     }
-    int responseCode = 0;
+    int responseCode;
     String responseMessage;
     if (connection instanceof HttpURLConnection) {
       try {
@@ -65,7 +66,7 @@ public class WebAPI implements APIInterface {
     }
     if (responseCode == HttpURLConnection.HTTP_OK) {
       HttpURLConnection httpConnection = (HttpURLConnection) connection;
-      BufferedReader in = null;
+      BufferedReader in;
       try {
         in = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
       } catch (IOException e) {

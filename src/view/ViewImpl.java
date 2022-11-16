@@ -1,11 +1,9 @@
 package view;
 
-import static utility.Constants.FILE_SEPARATOR;
-import static utility.Constants.LINE_BREAKER;
-
 import java.io.PrintStream;
-import java.time.LocalDate;
 import java.util.List;
+
+import static utility.Constants.FILE_SEPARATOR;
 
 /**
  * The controller implementation that receives all its inputs from an InputStream object and
@@ -81,7 +79,7 @@ public class ViewImpl implements View {
 
   @Override
   public void showValuation(double valuation) {
-    this.out.println("Valuation of Portfolio is:\t" + valuation);
+    this.out.println("Valuation of Portfolio is:\t$" + valuation);
   }
 
   @Override
@@ -126,8 +124,8 @@ public class ViewImpl implements View {
 
   @Override
   public void uploadPath() {
-    this.out.println(
-        "How do you want to upload this data? (Write your path sperated by " + FILE_SEPARATOR);
+    this.out.println("How do you want to upload this data? (Write your path sperated by "
+            + FILE_SEPARATOR);
     this.out.println("1. Absolute Path");
     this.out.println("2. Relative Path");
     this.out.println("Type 'back' to return to main menu");

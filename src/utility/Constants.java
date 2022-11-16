@@ -19,7 +19,7 @@ public final class Constants {
   public static final String STOCK_API_KEY = "T5770I9RBI1FTSXJ";
   public static final String DATE_FORMAT = "YYYY-MM-DD";
   public static final String PORTFOLIO_NOT_FOUND = "Portfolio was not found!";
-  public static final int STOCK_COLUMNS_COUNT = 6;
+  public static final int STOCK_COLUMNS_COUNT = 9;
 
   /**
    * Constructor is explicitly defined and made private to restrict access to the object of this

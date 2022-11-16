@@ -5,7 +5,7 @@ import java.time.LocalDate;
 /**
  * This interface represents all the API operations to be supported by the concrete implementation.
  */
-public interface APIInterface {
+interface APIInterface {
 
   /**
    * Make a GET API call to the stock data endpoint set in the Constants class.

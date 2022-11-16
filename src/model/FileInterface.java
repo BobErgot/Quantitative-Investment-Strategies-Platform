@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * This interface represents all the I/O operations to be supported by a file database.
  */
-public interface FileInterface {
+interface FileInterface {
   /**
    * Creates a new file at the specified path passed to it as parameter.
    *

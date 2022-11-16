@@ -24,7 +24,7 @@ import static utility.Constants.STOCK_COLUMNS_COUNT;
  * This class represents files and its operations when it's data is comma-separated values(csv)
  * format.
  */
-public class CSVFile extends FileAbstract {
+class CSVFile extends FileAbstract {
   private static final String EXTENSION = "csv";
   private static final String RECORD_DELIMITER = "\n";
 
