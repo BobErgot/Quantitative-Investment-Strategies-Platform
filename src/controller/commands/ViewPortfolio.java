@@ -28,10 +28,9 @@ public class ViewPortfolio implements StockPortfolioCommand {
       Map<String, Function<Scanner, StockPortfolioCommand>> knownCommands = new HashMap<>();
       knownCommands.put("1", s -> new Valuation());
       knownCommands.put("2", s -> new CostBasis());
-//      knownCommands.put("3", s -> new PurchaseShare());
-//      this.out.println("3. Purchase shares and add to portfolio");
-//      this.out.println("4. Sell shares from portfolio");
-//      this.out.println("5. Performance of portfolio over time");
+      //knownCommands.put("3", s -> new PurchaseShare());
+      knownCommands.put("4", s -> new SellShare());
+      //knownCommands.put("5", s -> new GeneratePerformanceGraph());
 
       view.showAdditionalPortfolioInformation();
       while (scanner.hasNext()) {

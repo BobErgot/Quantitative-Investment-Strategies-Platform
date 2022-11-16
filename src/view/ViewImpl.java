@@ -176,4 +176,10 @@ public class ViewImpl implements View {
     this.out.println("1. Fixed Portfolio");
     this.out.println("2. Flexible Portfolio");
   }
+
+  public void alertShareInvalid() {
+    this.out.println("Which type of portfolio do you want to create?");
+    this.out.println("1. Fixed Portfolio");
+    this.out.println("2. Flexible Portfolio");
+  }
 }
