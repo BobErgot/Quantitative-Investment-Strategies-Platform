@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.List;
 
 import static utility.Constants.FILE_SEPARATOR;
+import static utility.Constants.LINE_BREAKER;
 
 /**
  * The controller implementation that receives all its inputs from an InputStream object and
@@ -25,22 +26,23 @@ public class ViewImpl implements View {
 
   @Override
   public void showMainMenu() {
-    this.out.println("Please select an option from 1-x from the main menu");
-    this.out.println("Main Menu:");
+    this.out.println("* Home Menu:");
     this.out.println("1. Create Portfolio");
-    this.out.println("2. Upload Portfolio from given path.");
+    this.out.println("2. Upload Portfolio from given path");
     this.out.println("3. View Portfolio");
-    this.out.println("Type 'quit' or 'exit' to close the program.");
+    this.out.println("Type 'quit' or 'exit' to close the program");
+    this.out.println("Please select an option from 1-x from above: ");
   }
 
   @Override
   public void showCreatePortfolioMenu(boolean canCreateShare) {
-    this.out.println("Please select an option:");
+    this.out.println("* Create Portfolio Menu:");
     this.out.println("1. Add Shares");
     if (canCreateShare) {
       this.out.println("2. Create Portfolio (Finalize current Portfolio)");
     }
-    this.out.println("Type 'back' to return to main menu");
+    this.out.println("Type 'back' to return to Home Menu");
+    this.out.println("Please select an option from 1-x from above: ");
   }
 
   @Override
@@ -60,26 +62,45 @@ public class ViewImpl implements View {
   @Override
   public void showViewPortfolioMenu(List<String> portfolioList) {
     this.out.println("Portfolios available:");
+    this.out.println("--------------------------------------------------------------"
+            + "----------------------");
     String portfolioHeaderString = String.format("||%-18s||%-40s||%-18s||", "Serial Number",
             "Portfolio Name", "Creation Date");
     this.out.println(portfolioHeaderString);
     this.out.println("||------------------||----------------------------------------" +
             "||------------------||");
-    for (String portfolio : portfolioList) {
-      this.out.println(portfolio);
+    for (int i = 0; i < portfolioList.size() - 1; i++) {
+      this.out.println(portfolioList.get(i));
       this.out.println("||------------------||----------------------------------------" +
               "||------------------||");
     }
+    this.out.println(portfolioList.get(portfolioList.size() - 1));
+    this.out.println("--------------------------------------------------------------" +
+            "----------------------");
+    this.out.println(LINE_BREAKER);
+  }
+
+  public void alertNoPortfolioMessage() {
+    this.out.println("ALERT: There are no portfolios added yet. Please create portfolios to view."
+            + LINE_BREAKER);
   }
 
   @Override
   public void showAdditionalPortfolioInformation() {
-    this.out.println("Do you want to see the valuation of any portfolio? (y/n)");
+    this.out.println("* View Portfolio Menu:");
+    this.out.println("1. Valuation of Portfolio on a specific date");
+    this.out.println("2. Cost basis of a portfolio till a specific date");
+    this.out.println("3. Performance of portfolio over time");
+    this.out.println("4. Purchase a share and add to portfolio");
+    this.out.println("5. Sell a share from portfolio");
+    this.out.println("6. Performance of portfolio over time");
+    this.out.println("Type 'back' to return to Home Menu");
+    this.out.println("Please select an option from 1-x from above: ");
   }
 
   @Override
   public void showValuation(double valuation) {
-    this.out.println("Valuation of Portfolio is:\t$" + valuation);
+    this.out.println("Valuation of Portfolio is:\t$" + valuation + LINE_BREAKER);
   }
 
   @Override
@@ -124,11 +145,11 @@ public class ViewImpl implements View {
 
   @Override
   public void uploadPath() {
-    this.out.println("How do you want to upload this data? (Write your path sperated by "
+    this.out.println("How do you want to upload the data? (Write your path seperated by "
             + FILE_SEPARATOR);
     this.out.println("1. Absolute Path");
     this.out.println("2. Relative Path");
-    this.out.println("Type 'back' to return to main menu");
+    this.out.println("Type 'back' to return to Home Menu");
   }
 
   @Override

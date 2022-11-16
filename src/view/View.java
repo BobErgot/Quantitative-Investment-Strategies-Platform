@@ -106,4 +106,10 @@ public interface View {
    * @param message exception to print.
    */
   void printException(String message);
+
+  /**
+   * Prints no portfolio alert to the user.
+   *
+   */
+  void alertNoPortfolioMessage();
 }
