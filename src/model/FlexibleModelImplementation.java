@@ -7,8 +7,7 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-public class FlexibleModelImplementation extends ModelImplementation implements
-    FlexibleModelInterface {
+public class FlexibleModelImplementation extends ModelAbstract{
 
   public FlexibleModelImplementation() {
     super();

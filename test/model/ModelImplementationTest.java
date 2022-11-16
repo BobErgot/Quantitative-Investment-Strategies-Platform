@@ -191,7 +191,7 @@ public class ModelImplementationTest {
 
   @Test
   public void testValidSellShares() {
-    FlexibleModelInterface model = new MockModel();
+    ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.of(2022, 11, 14), 20, 30);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.of(2020, 12, 12));
@@ -206,7 +206,7 @@ public class ModelImplementationTest {
 
   @Test
   public void testSellAllShares() {
-    FlexibleModelInterface model = new MockModel();
+    ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.now(), 20, 30);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.now());
@@ -216,7 +216,7 @@ public class ModelImplementationTest {
   // To sell share is greater than number of present shares
   @Test
   public void testInvalidSellShares() {
-    FlexibleModelInterface model = new MockModel();
+    ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.now(), 20, 30);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.now());
@@ -296,7 +296,7 @@ public class ModelImplementationTest {
 
   @Test
   public void testValidAppendPortfolio() {
-    FlexibleModelInterface model = new MockModel();
+    ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20, -1);
     model.addShareToModel("AAPL", LocalDate.parse("2021-11-01"), 20, -1);
     String portfolioName = "Porttest";
@@ -317,7 +317,7 @@ public class ModelImplementationTest {
 
   @Test
   public void testInvalidAppendPortfolio() {
-    FlexibleModelInterface model = new MockModel();
+    ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20, -1);
     model.addShareToModel("AAPL", LocalDate.parse("2021-11-01"), 20, -1);
     String portfolioName = "Porttest";
