@@ -5,7 +5,7 @@ import static controller.MockModelUtil.merge;
 import java.time.LocalDate;
 import model.ModelImplementation;
 
-class MockModelCreatePortfolio extends ModelImplementation {
+class MockModelCreatePortfolio extends MockModel {
   private final StringBuilder log;
 
   public MockModelCreatePortfolio(StringBuilder log) {

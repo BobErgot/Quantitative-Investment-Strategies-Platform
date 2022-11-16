@@ -6,7 +6,7 @@ import java.time.LocalDate;
  * This class represents a share. A share has a date of purchase, company symbol/ticker, price on
  * the date of purchase and number of stocks bought.
  */
-class Share implements Comparable<Object> {
+public class Share implements Comparable<Object> {
 
   private final LocalDate purchaseDate;
   private final String companyName;
