@@ -80,8 +80,6 @@ class Portfolio {
 
   protected double getValuationGivenFilter(Predicate<Share> predicate) {
     List<Share> eligibleShares = this.filter(new ArrayList<>(shares), predicate);
-    System.out.println(eligibleShares);
-
     List<Double> mappedShares = this.map(eligibleShares, Share::getShareValue);
     return mappedShares.stream().reduce(0.0, Double::sum);
   }

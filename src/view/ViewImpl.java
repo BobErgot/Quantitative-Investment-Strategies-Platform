@@ -103,6 +103,10 @@ public class ViewImpl implements View {
     this.out.println("Valuation of Portfolio is:\t$" + valuation + LINE_BREAKER);
   }
 
+  public void showCostBasis(double valuation) {
+    this.out.println("Cost Basis of Portfolio is:\t$" + valuation + LINE_BREAKER);
+  }
+
   @Override
   public void selectPortfolio() {
     this.out.println("Select a 'Portfolio Name' from above list");

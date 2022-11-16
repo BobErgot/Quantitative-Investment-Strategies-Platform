@@ -112,4 +112,11 @@ public interface View {
    *
    */
   void alertNoPortfolioMessage();
+
+  /**
+   * Shows cost basis of a portfolio to the user.
+   *
+   * @param costBasis given cost basis valuation to show.
+   */
+  void showCostBasis(double costBasis);
 }

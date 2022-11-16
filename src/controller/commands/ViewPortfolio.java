@@ -27,16 +27,12 @@ public class ViewPortfolio implements StockPortfolioCommand {
       Stack<StockPortfolioCommand> commands = new Stack<>();
       Map<String, Function<Scanner, StockPortfolioCommand>> knownCommands = new HashMap<>();
       knownCommands.put("1", s -> new Valuation());
-      knownCommands.put("2", s -> new UploadPortfolio());
+      knownCommands.put("2", s -> new CostBasis());
       knownCommands.put("3", s -> new ViewPortfolio());
-
-//      this.out.println("2. Valuation of Portfolio on a specific date");
-//      this.out.println("3. Cost basis of a portfolio till a specific date");
 //      this.out.println("4. Performance of portfolio over time");
 //      this.out.println("5. Purchase a share and add to portfolio");
 //      this.out.println("6. Sell a share from portfolio");
 //      this.out.println("7. Performance of portfolio over time");
-//      this.out.println("Type 'back' to return to main menu");
 
       view.showAdditionalPortfolioInformation();
       while (scanner.hasNext()) {
