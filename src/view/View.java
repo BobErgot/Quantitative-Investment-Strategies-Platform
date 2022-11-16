@@ -125,4 +125,27 @@ public interface View {
    *
    */
   void askPortfolioType();
+
+  /**
+   * Prints stock ticker is invalid alert to the user.
+   *
+   */
+  void alertStockInvalid();
+
+  /**
+   * Prints share numbers in stock in portfolio is invalid alert to the user.
+   *
+   */
+  void alertShareNumberInvalid();
+
+  /**
+   * Prints valuation at what share is sold to the user.
+   *
+   */
+  void showSoldValuation(double soldPrice);
+
+  /**
+   * Prints message
+   */
+  void printMessage(String message);
 }

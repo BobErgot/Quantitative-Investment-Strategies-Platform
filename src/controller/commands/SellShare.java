@@ -2,6 +2,7 @@ package controller.commands;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import controller.StockPortfolioCommand;
@@ -53,10 +54,15 @@ public class SellShare implements StockPortfolioCommand {
           } else {
             try {
               double soldPrice = model.sellStocks(portfolioId, companyName, shares);
+              view.showSoldValuation(soldPrice);
               view.printCompanyStockUpdated();
+              view.showAdditionalPortfolioInformation();
+            } catch (NoSuchElementException noSuchElementException) {
+              isValidCompany = false;
+              view.alertStockInvalid();
             } catch (IllegalArgumentException illegalArgumentException) {
               isValidCompany = false;
-              view.developmentInProgress();
+              view.alertShareNumberInvalid();
             }
           }
         } catch (NumberFormatException exception) {

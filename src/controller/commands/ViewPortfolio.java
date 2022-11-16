@@ -26,11 +26,12 @@ public class ViewPortfolio implements StockPortfolioCommand {
 
       Stack<StockPortfolioCommand> commands = new Stack<>();
       Map<String, Function<Scanner, StockPortfolioCommand>> knownCommands = new HashMap<>();
-      knownCommands.put("1", s -> new Valuation());
-      knownCommands.put("2", s -> new CostBasis());
-      //knownCommands.put("3", s -> new PurchaseShare());
-      knownCommands.put("4", s -> new SellShare());
-      //knownCommands.put("5", s -> new GeneratePerformanceGraph());
+      knownCommands.put("1", s -> new Composition());
+      knownCommands.put("2", s -> new Valuation());
+      knownCommands.put("3", s -> new CostBasis());
+      //knownCommands.put("4", s -> new PurchaseShare());
+      knownCommands.put("5", s -> new SellShare());
+      //knownCommands.put("6", s -> new GeneratePerformanceGraph());
 
       view.showAdditionalPortfolioInformation();
       while (scanner.hasNext()) {
