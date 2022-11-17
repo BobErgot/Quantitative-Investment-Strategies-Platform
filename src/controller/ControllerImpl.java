@@ -22,9 +22,9 @@ import view.ViewImpl;
  */
 public class ControllerImpl implements Controller {
 
-  View viewObject;
-  ModelInterface modelObject;
-  Scanner scanner;
+  private final View viewObject;
+  private final ModelInterface modelObject;
+  private final Scanner scanner;
 
   /**
    * Construct a controller implementation object that has the provided InputStream, PrintStream and

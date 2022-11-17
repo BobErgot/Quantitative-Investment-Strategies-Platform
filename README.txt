@@ -5,3 +5,5 @@ List of completed features:
 3. Can Upload a Portfolio & its given shares based on absolute path & relative path.
 4. Can view composition of all present portfolios
 5. Can get valuation on a specific date for a single portfolio.
+
+The Program

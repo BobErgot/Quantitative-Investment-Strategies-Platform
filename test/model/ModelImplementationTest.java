@@ -350,14 +350,9 @@ public class ModelImplementationTest {
   @Test
   public void testInvalidAppendPortfolio() {
     ModelInterface model = new MockModel();
-    model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20,
-            -1);
-    model.addShareToModel("AAPL", LocalDate.parse("2021-11-01"), 20,
-            -1);
     String portfolioName = "Porttest";
-    model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
     try {
-      //model.appendPortfolio(portfolioName); TODO
+      model.appendPortfolio(portfolioName, "AZDESS", 10 );
       fail("Invalid appending operation & function did not throw any error");
     } catch (NoSuchElementException e) {
       // accepted

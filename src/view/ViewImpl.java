@@ -17,7 +17,7 @@ import static utility.Constants.LINE_BREAKER;
  */
 public class ViewImpl implements View {
 
-  PrintStream out;
+  private PrintStream out;
 
   /**
    * Construct a view implementation object that has the provided PrintStream object.

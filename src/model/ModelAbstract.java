@@ -10,6 +10,7 @@ import java.util.DuplicateFormatFlagsException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
@@ -30,7 +31,7 @@ abstract class ModelAbstract implements ModelInterface {
   protected final Set<Portfolio> portfolios;
   protected final FileInterface fileInterface;
   protected final APIInterface webAPi;
-  protected HashMap<String, Share> shares;
+  protected Map<String, Share> shares;
 
   /**
    * Construct a model implementation object and initialises the local set of shares and portfolios
@@ -420,10 +421,10 @@ abstract class ModelAbstract implements ModelInterface {
     for (Share share : newShares) {
       if (share.getCompanyName().equals(symbol)) {
         companyShares += share.getNumShares();
+        if (companyShares >= numStocks) {
+          return true;
+        }
       }
-    }
-    if (companyShares >= numStocks) {
-      return true;
     }
     if (companyShares == 0)
       throw new NoSuchElementException("Ticker does not exist in this portfolio");

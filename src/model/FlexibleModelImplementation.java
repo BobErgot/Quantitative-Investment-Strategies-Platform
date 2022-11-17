@@ -95,9 +95,10 @@ public class FlexibleModelImplementation extends ModelAbstract {
   @Override
   public double appendPortfolio(String portfolioName, String symbol, int numShares)
           throws NoSuchElementException {
+    if (!checkTicker(symbol) && numShares <= 0){
+      throw new NoSuchElementException("Entered ticker symbol or share numbers is invalid");
+    }
     String stockFileName = null;
-    Portfolio portfolioToModify = this.getPortfolioObjectById(portfolioName);
-    Set<Share> newShares = new HashSet<>(portfolioToModify.getListOfShares());
     double currentShareBuyingPrice = this.getStockPrice(symbol, LocalDate.now());
     stockFileName = getSharesFile(portfolioName);
     Share addShare = new Share(symbol, LocalDate.now(),

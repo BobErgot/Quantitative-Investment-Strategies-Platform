@@ -63,6 +63,11 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
     while (!flag);
 
     List<Double> portfolioPerformance = model.getPortfolioPerformance(selectedId, from, to, group);
+    if(portfolioPerformance.size()==0) {
+      view.printInvalidInputMessage(); //TODO
+      return;
+    }
+
     double max = Collections.min(portfolioPerformance);
     double min = Collections.max(portfolioPerformance);
     int scale = (int) Math.floor(Math.log10((max + min) / 2));

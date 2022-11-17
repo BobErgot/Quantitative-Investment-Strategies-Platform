@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
  */
 class Portfolio {
 
-  final String id;
-  final LocalDate creationDate;
-  final Set<Share> shares;
+  private final String id;
+  private final LocalDate creationDate;
+  private final Set<Share> shares;
 
   /**
    * Construct a Portfolio object that has the provided unique id for one user, creation date of
