@@ -31,7 +31,7 @@ public class ViewPortfolio implements StockPortfolioCommand {
       knownCommands.put("3", s -> new CostBasis());
       //knownCommands.put("4", s -> new PurchaseShare());
       knownCommands.put("5", s -> new SellShare());
-      knownCommands.put("5", s -> new GeneratePerformanceGraph());
+      knownCommands.put("6", s -> new GeneratePerformanceGraph());
 
       view.showAdditionalPortfolioInformation();
       while (scanner.hasNext()) {
