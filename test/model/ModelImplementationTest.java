@@ -40,9 +40,10 @@ public class ModelImplementationTest {
               .nextInt(10)) + 1, -1);
     }
     try {
-      model.createPortfolio("port2", LocalDate.now());
-    } catch (IllegalArgumentException e) {
+      model.createPortfolio("", LocalDate.now());
       fail("Test case passed even though empty Id was given");
+    } catch (IllegalArgumentException e) {
+      // Test passed
     }
   }
 
@@ -73,12 +74,12 @@ public class ModelImplementationTest {
     for (String company : companies) {
       model.addShareToModel(company, LocalDate.now(), 2, -1);
     }
-    model.createPortfolio("port3", LocalDate.now());
-    assertEquals("+id:port3\ncreationDate:2022-11-16\n"
-            + "*shares:+companyName:AAPL,purchaseDate:2022-11-16,price:20.0,numShares:2|"
-            + "+companyName:MSFT,purchaseDate:2022-11-16,price:20.0,numShares:2|"
-            + "+companyName:GOOG,purchaseDate:2022-11-16,price:20.0,numShares:2"
-            , model.getPortfolioById("port3"));
+    model.createPortfolio("port1", LocalDate.now());
+    assertEquals("+id:port1\ncreationDate:2022-11-17\n"
+            + "*shares:+companyName:AAPL,purchaseDate:2022-11-17,price:20.0,numShares:2|"
+            + "+companyName:MSFT,purchaseDate:2022-11-17,price:20.0,numShares:2|"
+            + "+companyName:GOOG,purchaseDate:2022-11-17,price:20.0,numShares:2"
+            , model.getPortfolioById("port1"));
 
   }
 
