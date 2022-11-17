@@ -1,5 +1,7 @@
 package model;
 
+import static utility.Constants.LINE_BREAKER;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +30,6 @@ class Portfolio {
    * @param creationDate date when this portfolio was created
    */
   public Portfolio(String id, Set<Share> shares, LocalDate creationDate) {
-    if (shares.size() == 0) {
-      throw new IllegalArgumentException("The size of list of shares must be greater than zero!");
-    }
     this.id = id;
     this.shares = shares;
     this.creationDate = creationDate;
@@ -93,9 +92,11 @@ class Portfolio {
 
   @Override
   public String toString() {
-    StringBuilder toString = new StringBuilder("+id:" + this.id + "\ncreationDate:" + creationDate
-            + "\n*shares:");
+    StringBuilder toString = new StringBuilder("+id:" + this.id + LINE_BREAKER+"creationDate:" + creationDate
+            + LINE_BREAKER+"*shares:");
     List<Share> shareList = new ArrayList<>(shares);
+    if(shareList.size()==0)
+      return toString.append("").toString();
     for (int i = 0; i < shares.size() - 1; i++) {
       String record = shareList.get(i).toString().replace("\n", ",");
       record = record.substring(0, record.length() - 1);

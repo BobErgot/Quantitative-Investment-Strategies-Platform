@@ -86,7 +86,7 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
       }
       previousDate = date;
     }
-    System.out.println("SCALE:\t * ≈ " + (int) Math.pow(10, scale) + "$");
+    view.printMessage("SCALE:\t * ≈ " + (int) Math.pow(10, scale) + "$");
   }
 
   @Override

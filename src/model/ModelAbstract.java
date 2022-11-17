@@ -92,11 +92,13 @@ abstract class ModelAbstract implements ModelInterface {
       List<String> stockFileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
               portfolioFields[2].substring(3));
       Set<Share> shareList = new HashSet<>();
-      for (String stock : stockFileContent) {
-        String[] stockFields = stock.trim().split(",");
-        Share shareObject = new Share(stockFields[0], LocalDate.parse(stockFields[1]),
-                Double.parseDouble(stockFields[2]), Integer.parseInt(stockFields[3]));
-        shareList.add(shareObject);
+      if(stockFileContent.size()>0) {
+        for (String stock : stockFileContent) {
+          String[] stockFields = stock.trim().split(",");
+          Share shareObject = new Share(stockFields[0], LocalDate.parse(stockFields[1]),
+              Double.parseDouble(stockFields[2]), Integer.parseInt(stockFields[3]));
+          shareList.add(shareObject);
+        }
       }
       Portfolio portfolioObject = new Portfolio(portfolioFields[0], shareList,
               LocalDate.parse(portfolioFields[1]));

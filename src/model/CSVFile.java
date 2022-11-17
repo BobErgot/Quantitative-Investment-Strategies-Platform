@@ -1,5 +1,11 @@
 package model;
 
+import static utility.Constants.FILE_SEPARATOR;
+import static utility.Constants.HOME;
+import static utility.Constants.LINE_BREAKER;
+import static utility.Constants.RELATIVE_PATH;
+import static utility.Constants.STOCK_COLUMNS_COUNT;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
@@ -14,17 +20,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 
-import static utility.Constants.FILE_SEPARATOR;
-import static utility.Constants.HOME;
-import static utility.Constants.LINE_BREAKER;
-import static utility.Constants.RELATIVE_PATH;
-import static utility.Constants.STOCK_COLUMNS_COUNT;
-
 /**
  * This class represents files and its operations when it's data is comma-separated values(csv)
  * format.
  */
 class CSVFile extends FileAbstract {
+
   private static final String EXTENSION = "csv";
   private static final String RECORD_DELIMITER = "\n";
 
@@ -52,7 +53,7 @@ class CSVFile extends FileAbstract {
     try {
       Files.createDirectories(directoryPath);
       Optional<Path> file = Files.list(directoryPath).filter(filepath -> filepath.getFileName()
-              .toFile().getName().startsWith(filePrefix)).findFirst();
+          .toFile().getName().startsWith(filePrefix)).findFirst();
       if (file.isPresent()) {
         filePath = file.get();
       }
@@ -63,13 +64,15 @@ class CSVFile extends FileAbstract {
 
     if (filePath != null) {
       try (AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(filePath,
-              StandardOpenOption.READ)) {
+          StandardOpenOption.READ)) {
         ByteBuffer buffer = ByteBuffer.allocate((int) fileChannel.size());
         Future<Integer> operation = fileChannel.read(buffer, 0);
         operation.get();
         String fileContent = new String(buffer.array()).trim();
         for (String lineData : fileContent.split("\n")) {
-          fileData.add(lineData.trim());
+          if (lineData.trim().length() > 0) {
+            fileData.add(lineData.trim());
+          }
         }
         buffer.clear();
       } catch (IOException | ExecutionException | InterruptedException exception) {

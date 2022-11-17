@@ -17,7 +17,7 @@ import model.Periodicity;
  */
 public class ViewImpl implements View {
 
-  private PrintStream out;
+  private final PrintStream out;
 
   /**
    * Construct a view implementation object that has the provided PrintStream object.
@@ -117,7 +117,7 @@ public class ViewImpl implements View {
 
   @Override
   public void selectPortfolio() {
-    this.out.append(LINE_BREAKER + "Select a 'Portfolio Name' from above list");
+    this.out.append(LINE_BREAKER + "Select a 'Portfolio Name' from above list:\t");
   }
 
   @Override
@@ -211,7 +211,7 @@ public class ViewImpl implements View {
 
   @Override
   public void printMessage(String message) {
-    this.out.append(message);
+    this.out.append(LINE_BREAKER + message);
   }
 
   public void askForEnum(Class<Periodicity> e) {
