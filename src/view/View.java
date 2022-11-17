@@ -147,7 +147,7 @@ public interface View {
   void showSoldValuation(double soldPrice);
 
   /**
-   * Prints message
+   * Prints message.
    */
   void printMessage(String message);
    /** Prints all options for enum.
@@ -163,4 +163,10 @@ public interface View {
    * @param scale Scale to reduce value of
    */
   void printStars(LocalDate date, Periodicity periodicity, Double value, int scale);
+
+  /**
+   * Alerts the user that the portfolio is fixed and cannot be mutated.
+   *
+   */
+  void alertFixedPortfolio();
 }

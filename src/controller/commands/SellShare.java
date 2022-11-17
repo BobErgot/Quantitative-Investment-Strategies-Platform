@@ -1,6 +1,5 @@
 package controller.commands;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -9,8 +8,6 @@ import controller.StockPortfolioCommand;
 import model.FlexibleModelImplementation;
 import model.ModelInterface;
 import view.View;
-
-import static utility.Constants.LINE_BREAKER;
 
 public class SellShare implements StockPortfolioCommand {
 
@@ -28,6 +25,12 @@ public class SellShare implements StockPortfolioCommand {
       flag = model.idIsPresent(selectedId);
       if (!flag) {
         view.printInvalidInputMessage();
+      }
+      if (flag) {
+        flag = checkIfPortfolioMutable(selectedId, model);
+      }
+      if (!flag) {
+        view.alertFixedPortfolio();
       } else {
         callPortfolio(view, scanner, model, selectedId);
       }
@@ -35,6 +38,7 @@ public class SellShare implements StockPortfolioCommand {
   }
 
   private void callPortfolio(View view, Scanner scanner, ModelInterface model, String portfolioId) {
+    model = new FlexibleModelImplementation();
     boolean isValidCompany;
     do {
       view.showAddShareWithApiInputMenu(0);
@@ -56,7 +60,6 @@ public class SellShare implements StockPortfolioCommand {
               double soldPrice = model.sellStocks(portfolioId, companyName, shares);
               view.showSoldValuation(soldPrice);
               view.printCompanyStockUpdated();
-              view.showAdditionalPortfolioInformation();
             } catch (NoSuchElementException noSuchElementException) {
               isValidCompany = false;
               view.alertStockInvalid();
@@ -73,6 +76,24 @@ public class SellShare implements StockPortfolioCommand {
         view.notPresentError("Company");
       }
     } while (!isValidCompany);
+  }
+
+  private boolean checkIfPortfolioMutable(String portfolioId, ModelInterface model) {
+    model = new FlexibleModelImplementation();
+    List<String> portfolioList = model.getPortfolio();
+    if (portfolioList.size() == 0) {
+      return false;
+    } else {
+      for (String portfolio : portfolioList) {
+        String[] portfolioRecords = portfolio.split("\\|\\|");
+        if (portfolioId.equals(portfolioRecords[2].trim())) {
+          if (portfolioRecords.length == 5) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   @Override

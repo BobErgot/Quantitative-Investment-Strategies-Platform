@@ -236,4 +236,9 @@ public class ViewImpl implements View {
     this.out.println("1. Fixed Portfolio");
     this.out.println("2. Flexible Portfolio");
   }
+  @Override
+  public void alertFixedPortfolio () {
+    this.out.println("This is a fixed portfolio. Cannot sell or add shares to this.");
+  }
+
 }

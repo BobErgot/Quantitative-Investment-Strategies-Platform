@@ -407,7 +407,7 @@ abstract class ModelAbstract implements ModelInterface {
   protected boolean checkValidNumStocks(String symbol, int numStocks, Set<Share> newShares) {
     int companyShares = 0;
     if(!this.checkTicker(symbol))
-      throw new NoSuchElementException("");
+      throw new NoSuchElementException("Ticker does not exist");
     for (Share share : newShares) {
       if (share.getCompanyName().equals(symbol)) {
         companyShares += share.getNumShares();
@@ -416,6 +416,8 @@ abstract class ModelAbstract implements ModelInterface {
         }
       }
     }
+    if(companyShares==0)
+      throw new NoSuchElementException("Ticker does not exist in this portfolio");
     return false;
   }
 
