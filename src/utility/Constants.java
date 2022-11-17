@@ -16,10 +16,10 @@ public final class Constants {
   public static final String PORTFOLIO_FILENAME = "portfolio";
   public static final String TICKER_DIRECTORY = "stocker" + FILE_SEPARATOR + "ticker";
   public static final String STOCK_ENDPOINT = "https://www.alphavantage.co/query";
-  public static final String STOCK_API_KEY = "T5770I9RBI1FTSXJ";
+  public static final String STOCK_API_KEY = "3OZTHOQNEJNYPMC5";
   public static final String DATE_FORMAT = "YYYY-MM-DD";
   public static final String PORTFOLIO_NOT_FOUND = "Portfolio was not found!";
-  public static final int STOCK_COLUMNS_COUNT = 9;
+  public static final int STOCK_COLUMNS_COUNT = 6;
 
   // Purchase = cost_per_share + broker_fees/num_shares
   // Sell = cost_per_share * num_shares - broker_fees

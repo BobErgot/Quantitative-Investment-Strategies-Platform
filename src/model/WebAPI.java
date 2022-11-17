@@ -30,7 +30,7 @@ class WebAPI implements APIInterface {
 
     String query;
     try {
-      query = String.format("function=%s", URLEncoder.encode("TIME_SERIES_DAILY_ADJUSTED",
+      query = String.format("function=%s", URLEncoder.encode("TIME_SERIES_DAILY",
               charset));
       query = query + "&" + String.format("symbol=%s", URLEncoder.encode(stockSymbol, charset));
       query = query + "&" + String.format("apikey=%s", URLEncoder.encode(STOCK_API_KEY, charset));

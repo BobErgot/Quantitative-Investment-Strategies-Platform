@@ -215,9 +215,7 @@ abstract class ModelAbstract implements ModelInterface {
 
 
   private double calculateAveragePrice(int position, List<String> stockData) {
-    double high = Double.parseDouble(stockData.get(position).split(",")[2]);
-    double low = Double.parseDouble(stockData.get(position).split(",")[3]);
-    return low + (high - low) / 2;
+    return Double.parseDouble(stockData.get(position).split(",")[4]);
   }
 
   private double searchStockDataList(LocalDate date, List<String> stockData) {
