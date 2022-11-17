@@ -119,7 +119,7 @@ public class FlexibleModelImplementation extends ModelAbstract {
       String portfolioHeaderString;
       if (portfolioFields.length == 4) {
         portfolioHeaderString = String.format("||%-18s||%-40s||%-18s||%-40s||", serialNumber,
-            portfolioFields[0], LocalDate.parse(portfolioFields[1]),portfolioFields[3]);
+            portfolioFields[0], LocalDate.parse(portfolioFields[1]), portfolioFields[3]);
       } else {
         portfolioHeaderString = String.format("||%-18s||%-40s||%-18s||", serialNumber,
             portfolioFields[0], LocalDate.parse(portfolioFields[1]));

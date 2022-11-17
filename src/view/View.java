@@ -1,6 +1,8 @@
 package view;
 
+import java.time.LocalDate;
 import java.util.List;
+import model.Periodicity;
 
 /**
  * This interface represents all the operations to be supported by a view implementation.
@@ -148,4 +150,17 @@ public interface View {
    * Prints message
    */
   void printMessage(String message);
+   /** Prints all options for enum.
+   * @param e Enum to Print.
+   */
+  void askForEnum(Class<Periodicity> e);
+
+  /**
+   * Prints one line of performance graph of stocks.
+   * @param date Date to print
+   * @param periodicity Periodicity to print
+   * @param value Value of portfolio performance to print
+   * @param scale Scale to reduce value of
+   */
+  void printStars(LocalDate date, Periodicity periodicity, Double value, int scale);
 }
