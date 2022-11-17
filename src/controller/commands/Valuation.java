@@ -2,12 +2,7 @@ package controller.commands;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.Stack;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import controller.StockPortfolioCommand;
@@ -27,7 +22,7 @@ public class Valuation implements StockPortfolioCommand {
       view.selectPortfolio();
       String selectedId = scanner.next().trim();
       flag = showValuationOfPortfolio(selectedId, view, scanner, model);
-      if(!flag){
+      if (!flag) {
         view.printInvalidInputMessage();
       } else {
         break;
@@ -43,12 +38,13 @@ public class Valuation implements StockPortfolioCommand {
   /**
    * Returns the valuation of the portfolio which the user has entered and returns false if the
    * portfolio with the given id does not exist.
+   *
    * @param selectedId unique id of the portfolio for which the valuation is required on a
    *                   particular date
    * @return "true" if valuation exists else return "false"
    */
   private boolean showValuationOfPortfolio(String selectedId, View view, Scanner scanner,
-                                          ModelInterface model) {
+                                           ModelInterface model) {
     if (!model.idIsPresent(selectedId)) {
       return false;
     }

@@ -1,10 +1,11 @@
 package controller;
 
-import static controller.MockModelUtil.merge;
-
 import java.time.LocalDate;
 
 import model.ModelImplementation;
+
+import static controller.MockModelUtil.merge;
+
 class MockModelAddShare extends ModelImplementation {
   private final StringBuilder log;
 
@@ -14,9 +15,9 @@ class MockModelAddShare extends ModelImplementation {
 
   @Override
   public boolean addShareToModel(String companyName, LocalDate date, int numShares,
-      double stockPrice) {
+                                 double stockPrice) {
     log.append(merge(companyName, date.toString(), Integer.toString(numShares),
-        Double.toString(stockPrice)));
+            Double.toString(stockPrice)));
     return true;
   }
 }

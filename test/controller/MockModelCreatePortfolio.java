@@ -1,9 +1,10 @@
 package controller;
 
-import static controller.MockModelUtil.merge;
-
 import java.time.LocalDate;
+
 import model.ModelImplementation;
+
+import static controller.MockModelUtil.merge;
 
 class MockModelCreatePortfolio extends ModelImplementation {
   private final StringBuilder log;

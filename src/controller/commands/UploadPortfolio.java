@@ -42,8 +42,7 @@ public class UploadPortfolio implements StockPortfolioCommand {
             folder = folder.substring(0, idx);
             validPath = model.addPortfolioByUpload(root, folder, file[0], file[1]);
           } else {
-            validPath = model.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0],
-                    file[1]);
+            validPath = model.addPortfolioByUpload(RELATIVE_PATH, folderName, file[0], file[1]);
           }
         } catch (FileNotFoundException e) {
           view.notPresentError("File");
@@ -63,8 +62,7 @@ public class UploadPortfolio implements StockPortfolioCommand {
       } else {
         view.printInvalidInputMessage();
       }
-    }
-    while (!validPath);
+    } while (!validPath);
   }
 
   @Override

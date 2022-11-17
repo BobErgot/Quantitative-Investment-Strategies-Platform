@@ -2,6 +2,7 @@ package view;
 
 import java.time.LocalDate;
 import java.util.List;
+
 import model.Periodicity;
 
 /**
@@ -111,7 +112,6 @@ public interface View {
 
   /**
    * Prints no portfolio alert to the user.
-   *
    */
   void alertNoPortfolioMessage();
 
@@ -124,25 +124,21 @@ public interface View {
 
   /**
    * Asks the user about their choice of portfolio.
-   *
    */
   void askPortfolioType();
 
   /**
    * Prints stock ticker is invalid alert to the user.
-   *
    */
   void alertStockInvalid();
 
   /**
    * Prints share numbers in stock in portfolio is invalid alert to the user.
-   *
    */
   void alertShareNumberInvalid();
 
   /**
    * Prints valuation at what share is sold to the user.
-   *
    */
   void showSoldValuation(double soldPrice);
 
@@ -150,23 +146,26 @@ public interface View {
    * Prints message.
    */
   void printMessage(String message);
-   /** Prints all options for enum.
+
+  /**
+   * Prints all options for enum.
+   *
    * @param e Enum to Print.
    */
   void askForEnum(Class<Periodicity> e);
 
   /**
    * Prints one line of performance graph of stocks.
-   * @param date Date to print
+   *
+   * @param date        Date to print
    * @param periodicity Periodicity to print
-   * @param value Value of portfolio performance to print
-   * @param scale Scale to reduce value of
+   * @param value       Value of portfolio performance to print
+   * @param scale       Scale to reduce value of
    */
   void printStars(LocalDate date, Periodicity periodicity, Double value, int scale);
 
   /**
    * Alerts the user that the portfolio is fixed and cannot be mutated.
-   *
    */
   void alertFixedPortfolio();
 }

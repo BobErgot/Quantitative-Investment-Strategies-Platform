@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import controller.StockPortfolioCommand;
 import model.FlexibleModelImplementation;
-import model.ModelImplementation;
 import model.ModelInterface;
 import view.View;
 
@@ -21,10 +20,10 @@ public class CreatePortfolio implements StockPortfolioCommand {
     boolean invalidInput;
     boolean portfolioCompleted;
     invalidInput = false;
-    do{
+    do {
       view.askPortfolioType();
       String choice = scanner.next();
-      if (choice.equals("1")){
+      if (choice.equals("1")) {
         invalidInput = true;
         break;
       } else if (choice.equals("2")) {

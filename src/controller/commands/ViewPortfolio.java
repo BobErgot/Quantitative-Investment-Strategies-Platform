@@ -41,7 +41,8 @@ public class ViewPortfolio implements StockPortfolioCommand {
           view.showMainMenu();
           return;
         }
-        Function<Scanner, StockPortfolioCommand> cmd = knownCommands.getOrDefault(input, null);
+        Function<Scanner, StockPortfolioCommand> cmd = knownCommands.getOrDefault(input,
+                null);
         if (cmd == null) {
           view.printInvalidInputMessage();
         } else {

@@ -62,7 +62,8 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
 
     LocalDate previousDate = to;
     int index = 0;
-    for (LocalDate date = to; index<portfolioPerformance.size() && (date.isAfter(from) || date.equals(from)); date = date.plusDays(-1)) {
+    for (LocalDate date = to; index<portfolioPerformance.size() && (date.isAfter(from) ||
+            date.equals(from)); date = date.plusDays(-1)) {
       if (previousDate.getYear() != (date.getYear()) && group == Periodicity.Year) {
         view.printStars(date, group, portfolioPerformance.get(index++), scale);
       } else if (previousDate.getMonth().compareTo(date.getMonth()) != 0

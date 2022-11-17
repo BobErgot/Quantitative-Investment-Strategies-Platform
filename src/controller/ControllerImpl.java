@@ -53,8 +53,11 @@ public class ControllerImpl implements Controller {
       StockPortfolioCommand command;
       String input = this.scanner.next();
       if (input.equalsIgnoreCase("quit") || input.equalsIgnoreCase("exit"))
+      {
         return;
-      Function<Scanner, StockPortfolioCommand> cmd = knownCommands.getOrDefault(input, null);
+      }
+      Function<Scanner, StockPortfolioCommand> cmd = knownCommands.getOrDefault(input,
+              null);
       if (cmd == null) {
         viewObject.printInvalidInputMessage();
       } else {

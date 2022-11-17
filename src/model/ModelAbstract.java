@@ -1,14 +1,5 @@
 package model;
 
-import static utility.Constants.BROKER_FEES;
-import static utility.Constants.LINE_BREAKER;
-import static utility.Constants.PORTFOLIO_DIRECTORY;
-import static utility.Constants.PORTFOLIO_FILENAME;
-import static utility.Constants.PORTFOLIO_NOT_FOUND;
-import static utility.Constants.RELATIVE_PATH;
-import static utility.Constants.STOCK_DIRECTORY;
-import static utility.Constants.TICKER_DIRECTORY;
-
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +15,15 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.zip.DataFormatException;
+
+import static utility.Constants.BROKER_FEES;
+import static utility.Constants.LINE_BREAKER;
+import static utility.Constants.PORTFOLIO_DIRECTORY;
+import static utility.Constants.PORTFOLIO_FILENAME;
+import static utility.Constants.PORTFOLIO_NOT_FOUND;
+import static utility.Constants.RELATIVE_PATH;
+import static utility.Constants.STOCK_DIRECTORY;
+import static utility.Constants.TICKER_DIRECTORY;
 
 abstract class ModelAbstract implements ModelInterface {
 
@@ -66,10 +66,10 @@ abstract class ModelAbstract implements ModelInterface {
     List<String> referenceList = new ArrayList<>();
     referenceList.add(shareFileName);
     if (fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
-        formattedString.getBytes())) {
+            formattedString.getBytes())) {
       fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_FILENAME,
-          fileInterface.convertObjectIntoString(portfolioObject.toString(), referenceList)
-              .getBytes());
+              fileInterface.convertObjectIntoString(portfolioObject.toString(), referenceList)
+                      .getBytes());
     }
     shares = new HashMap<>();
     portfolios.add(portfolioObject);
@@ -79,23 +79,23 @@ abstract class ModelAbstract implements ModelInterface {
   public List<String> getPortfolio() {
     List<String> portfolioOutput = new ArrayList<>();
     List<String> fileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
-        PORTFOLIO_FILENAME);
+            PORTFOLIO_FILENAME);
     for (String portfolio : fileContent) {
       String[] portfolioFields = portfolio.trim().split(",");
       List<String> stockFileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
-          portfolioFields[2].substring(3));
+              portfolioFields[2].substring(3));
       Set<Share> shareList = new HashSet<>();
       for (String stock : stockFileContent) {
         String[] stockFields = stock.trim().split(",");
         Share shareObject = new Share(stockFields[0], LocalDate.parse(stockFields[1]),
-            Double.parseDouble(stockFields[2]), Integer.parseInt(stockFields[3]));
+                Double.parseDouble(stockFields[2]), Integer.parseInt(stockFields[3]));
         shareList.add(shareObject);
       }
       Portfolio portfolioObject = new Portfolio(portfolioFields[0], shareList,
-          LocalDate.parse(portfolioFields[1]));
+              LocalDate.parse(portfolioFields[1]));
       String serialNumber = portfolioOutput.size() + ".";
       String portfolioHeaderString = String.format("||%-18s||%-40s||%-18s||", serialNumber,
-          portfolioFields[0], LocalDate.parse(portfolioFields[1]));
+              portfolioFields[0], LocalDate.parse(portfolioFields[1]));
       portfolioOutput.add(portfolioHeaderString);
       portfolios.add(portfolioObject);
     }
@@ -147,14 +147,14 @@ abstract class ModelAbstract implements ModelInterface {
       throw new IllegalArgumentException("Invalid ID Passed");
     }
     return portfolioObject.getValuationGivenFilter(
-        share -> share.getPurchaseDate().compareTo(date) <= 0);
+            share -> share.getPurchaseDate().compareTo(date) <= 0);
   }
 
   private double mapShareGivenDate(Share share, LocalDate date) {
     double stockPrice = this.getStockPrice(share.getCompanyName(), date);
     if (stockPrice == -1) {
       throw new IllegalArgumentException(
-          "Data not available for this date. Try again after some " + "time");
+              "Data not available for this date. Try again after some " + "time");
     }
     return this.getStockPrice(share.getCompanyName(), date) * share.getNumShares();
   }
@@ -168,7 +168,8 @@ abstract class ModelAbstract implements ModelInterface {
   }
 
   @Override
-  public List<Double> getPortfolioPerformance(String id, LocalDate from, LocalDate to, Periodicity group) {
+  public List<Double> getPortfolioPerformance(String id, LocalDate from, LocalDate to,
+                                              Periodicity group) {
     List<Double> portfolioPerformanceByPeriodicity = new ArrayList<>();
     List<Double> temporaryList = new ArrayList<>();
     Portfolio portfolioObject = this.getPortfolioObjectById(id);
@@ -176,20 +177,22 @@ abstract class ModelAbstract implements ModelInterface {
       throw new IllegalArgumentException("Invalid ID Passed");
     }
     LocalDate[] range = portfolioObject.getDateRangeOfStockData();
-    range[0] = from.compareTo(range[0])>0 ? from:range[0];
+    range[0] = from.compareTo(range[0]) > 0 ? from : range[0];
     range[1] = to;
     LocalDate previousDate = range[0];
     for (LocalDate date = range[0]; date.isBefore(range[1]) || date.equals(range[1]);
-        date = date.plusDays(1)) {
+         date = date.plusDays(1)) {
       temporaryList.add(this.getValuationGivenDate(portfolioObject.getId(), date));
 
       if (previousDate.getMonth().compareTo(date.getMonth()) != 0 && group == Periodicity.Month) {
-        portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0, Double::sum));
+        portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0,
+                Double::sum));
         temporaryList = new ArrayList<>();
       }
 
       if (previousDate.getYear() < date.getYear() && group == Periodicity.Year) {
-        portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0, Double::sum));
+        portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0,
+                Double::sum));
         temporaryList = new ArrayList<>();
       }
       previousDate = date;
@@ -198,7 +201,8 @@ abstract class ModelAbstract implements ModelInterface {
       return temporaryList;
     }
     if (temporaryList.size() > 0) {
-      portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0, Double::sum));
+      portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0,
+              Double::sum));
     }
     return portfolioPerformanceByPeriodicity;
   }
@@ -216,9 +220,9 @@ abstract class ModelAbstract implements ModelInterface {
     int footer = stockData.size() - 1;
     LocalDateTime dateTime = date.atStartOfDay();
     LocalDateTime headerDate = LocalDate.parse(stockData.get(header).split(",", 2)[0])
-        .atStartOfDay();
+            .atStartOfDay();
     LocalDateTime footerDate = LocalDate.parse(stockData.get(footer).split(",", 2)[0])
-        .atStartOfDay();
+            .atStartOfDay();
     if (date.isAfter(ChronoLocalDate.from(headerDate))) {
       return calculateAveragePrice(header, stockData);
     }
@@ -237,11 +241,12 @@ abstract class ModelAbstract implements ModelInterface {
       if (headerDistance > footerDistance) {
         if (header < footer - footerDistance) {
           header = (int) (footer - footerDistance);
-          headerDate = LocalDate.parse(stockData.get(header).split(",", 2)[0]).atStartOfDay();
+          headerDate = LocalDate.parse(stockData.get(header).split(",", 2)[0])
+                  .atStartOfDay();
         } else {
           int mid = header + (footer - header) / 2;
           LocalDateTime midDate = LocalDate.parse(stockData.get(mid).split(",", 2)[0])
-              .atStartOfDay();
+                  .atStartOfDay();
           if (midDate.isAfter(dateTime)) {
             header = mid;
           } else {
@@ -255,7 +260,7 @@ abstract class ModelAbstract implements ModelInterface {
         } else {
           int mid = footer - (footer - header) / 2;
           LocalDateTime midDate = LocalDate.parse(stockData.get(mid).split(",", 2)[0])
-              .atStartOfDay();
+                  .atStartOfDay();
           if (midDate.isBefore(dateTime)) {
             footer = mid;
           } else {
@@ -273,7 +278,7 @@ abstract class ModelAbstract implements ModelInterface {
   protected double getStockPrice(String companyName, LocalDate date) {
     double stockPrice = -1;
     List<String> stockData = fileInterface.readFromFile(RELATIVE_PATH, STOCK_DIRECTORY,
-        companyName);
+            companyName);
     if (stockData.size() != 0) {
       stockPrice = searchStockDataList(date, stockData);
       if (stockPrice > -1) {
@@ -289,7 +294,7 @@ abstract class ModelAbstract implements ModelInterface {
           fileData.append(stock).append(LINE_BREAKER);
         }
         fileInterface.writeToFile(RELATIVE_PATH, STOCK_DIRECTORY, companyName,
-            fileData.toString().getBytes());
+                fileData.toString().getBytes());
         stockPrice = searchStockDataList(date, stockData);
         if (stockPrice > -1) {
           return stockPrice;
@@ -301,7 +306,7 @@ abstract class ModelAbstract implements ModelInterface {
 
   @Override
   public boolean addShareToModel(String companyName, LocalDate date, int numShares,
-      double stockPrice) throws IllegalArgumentException {
+                                 double stockPrice) throws IllegalArgumentException {
     if (!this.checkTicker(companyName)) {
       throw new IllegalArgumentException("Invalid Ticker");
     }
@@ -313,7 +318,7 @@ abstract class ModelAbstract implements ModelInterface {
       throw new IllegalArgumentException("Data not available");
     }
     // Add broker's fees onto price
-    stockPrice = stockPrice + BROKER_FEES/numShares;
+    stockPrice = stockPrice + BROKER_FEES / numShares;
     Share shareObject = new Share(companyName, date, stockPrice, numShares);
     if (this.shares.get(companyName) == null) {
       this.shares.put(companyName, shareObject);
@@ -326,7 +331,7 @@ abstract class ModelAbstract implements ModelInterface {
 
   protected boolean addShareToModel(Share share) {
     return this.addShareToModel(share.getCompanyName(), share.getPurchaseDate(),
-        share.getNumShares(), share.getShareValue());
+            share.getNumShares(), share.getShareValue());
   }
 
   @Override
@@ -341,8 +346,8 @@ abstract class ModelAbstract implements ModelInterface {
 
   @Override
   public boolean addPortfolioByUpload(String path, String folderName, String fileName,
-      String extension)
-      throws DataFormatException, FileNotFoundException, DuplicateFormatFlagsException {
+                                      String extension)
+          throws DataFormatException, FileNotFoundException, DuplicateFormatFlagsException {
     List<String> uploadFileData;
     if (fileInterface.exists(path, folderName, fileName, extension)) {
       uploadFileData = new ArrayList<>(fileInterface.readFromFile(path, folderName, fileName));
@@ -367,7 +372,7 @@ abstract class ModelAbstract implements ModelInterface {
             String[] stockDataField = stockData.split(",");
             try {
               addShareToModel(stockDataField[0], LocalDate.parse(stockDataField[1]),
-                  Integer.parseInt(stockDataField[3]), Double.parseDouble(stockDataField[2]));
+                      Integer.parseInt(stockDataField[3]), Double.parseDouble(stockDataField[2]));
             } catch (IllegalArgumentException ie) {
               failedShares.add(stockDataField[0]);
             }
@@ -400,13 +405,13 @@ abstract class ModelAbstract implements ModelInterface {
   @Override
   public boolean checkTicker(String symbol) {
     List<String> stockData = fileInterface.readFromFile(RELATIVE_PATH, TICKER_DIRECTORY,
-        String.valueOf(Character.toUpperCase(symbol.charAt(0))));
+            String.valueOf(Character.toUpperCase(symbol.charAt(0))));
     return stockData.contains(symbol);
   }
 
   protected boolean checkValidNumStocks(String symbol, int numStocks, Set<Share> newShares) {
     int companyShares = 0;
-    if(!this.checkTicker(symbol))
+    if (!this.checkTicker(symbol))
       throw new NoSuchElementException("Ticker does not exist");
     for (Share share : newShares) {
       if (share.getCompanyName().equals(symbol)) {
@@ -416,18 +421,18 @@ abstract class ModelAbstract implements ModelInterface {
         }
       }
     }
-    if(companyShares==0)
+    if (companyShares == 0)
       throw new NoSuchElementException("Ticker does not exist in this portfolio");
     return false;
   }
 
   @Override
-  public double sellStocks(String id, String symbol, int numShares){
+  public double sellStocks(String id, String symbol, int numShares) {
     throw new IllegalStateException("Cannot access this function!");
   }
 
   @Override
-  public void appendPortfolio(String portfolioName)  {
+  public void appendPortfolio(String portfolioName) {
     throw new IllegalStateException("Cannot access this function!");
   }
 }

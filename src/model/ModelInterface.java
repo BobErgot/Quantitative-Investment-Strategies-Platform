@@ -16,7 +16,7 @@ public interface ModelInterface {
    * Creates final portfolio after adding all the shares.
    *
    * @param portfolioName unique id name of the portfolio to be created
-   * @param date creation date of the portfolio to be added
+   * @param date          creation date of the portfolio to be added
    */
   void createPortfolio(String portfolioName, LocalDate date);
 
@@ -46,18 +46,20 @@ public interface ModelInterface {
 
   /**
    * Get amount of money invested in portfolio on given date.
-   * @param id id of portfolio to get cost basis of.
+   *
+   * @param id   id of portfolio to get cost basis of.
    * @param date date to calculate cost basis of portfolio on and before.
    * @return cost basis of portfolio.
    */
   double getCostBasis(String id, LocalDate date);
+
   /**
    * Adds share to local set of shares given details of the share.
    *
    * @param companyName company ticker/symbol of the share
-   * @param date purchase date of share
-   * @param numShares number of shares purchased
-   * @param stockPrice -1, if price is not known or value of each stock
+   * @param date        purchase date of share
+   * @param numShares   number of shares purchased
+   * @param stockPrice  -1, if price is not known or value of each stock
    * @return true if successfully added or false is not
    */
   boolean addShareToModel(String companyName, LocalDate date, int numShares, double stockPrice);
@@ -65,16 +67,16 @@ public interface ModelInterface {
   /**
    * Read and persist portfolio data to local software database from the path specified.
    *
-   * @param path "~", if file to be read is relative to directory else pass absolute path
+   * @param path       "~", if file to be read is relative to directory else pass absolute path
    * @param folderName directory where the file is
-   * @param fileName name of the file
-   * @param extension file extension
+   * @param fileName   name of the file
+   * @param extension  file extension
    * @return "true" if uploading portfolio to local storage is successful else "false"
-   * @throws DataFormatException if content of the file is not in proper format
+   * @throws DataFormatException   if content of the file is not in proper format
    * @throws FileNotFoundException if file is not found at given destination
    */
-  boolean addPortfolioByUpload(String path, String folderName, String fileName,
-                               String extension) throws DataFormatException, FileNotFoundException;
+  boolean addPortfolioByUpload(String path, String folderName, String fileName, String extension)
+          throws DataFormatException, FileNotFoundException;
 
   /**
    * Check if portfolio with particular id is already saved in the local file.
@@ -86,12 +88,14 @@ public interface ModelInterface {
 
   /**
    * Check if size of share is larger than zero.
+   *
    * @return "true" if it is, else "false"
    */
   boolean canCreateShare();
 
   /**
    * Check if the company ticker/symbol is valid and exists.
+   *
    * @param symbol company listed stock ticker or symbol
    * @return true if symbol is a valid and exists
    */
@@ -102,8 +106,9 @@ public interface ModelInterface {
 
   /**
    * Sell stocks given stock symbol
-   * @param id Portfolio ID to sell stocks from
-   * @param symbol Ticker symbol of stock that is to be sold
+   *
+   * @param id        Portfolio ID to sell stocks from
+   * @param symbol    Ticker symbol of stock that is to be sold
    * @param numShares Number of shares to be sold
    * @return Amount of money sold for.
    */
@@ -111,8 +116,8 @@ public interface ModelInterface {
 
   /**
    * Appends all stocks to an existing portfolio.
+   *
    * @param portfolioName Portfolio stock needs to be added to.
    */
   void appendPortfolio(String portfolioName);
-
 }

@@ -1,10 +1,5 @@
 package model;
 
-import static java.nio.file.StandardOpenOption.WRITE;
-import static utility.Constants.FILE_SEPARATOR;
-import static utility.Constants.HOME;
-import static utility.Constants.RELATIVE_PATH;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -15,14 +10,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.nio.file.StandardOpenOption.WRITE;
+import static utility.Constants.FILE_SEPARATOR;
+import static utility.Constants.HOME;
+import static utility.Constants.RELATIVE_PATH;
 
 /**
  * Abstract base class for implementations of {@link FileInterface}. This clas contains all the

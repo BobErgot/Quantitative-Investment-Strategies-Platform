@@ -110,14 +110,16 @@ interface FileInterface {
 
   /**
    * Check data content that needs to be checked against file interface implementation.
+   *
    * @param content data content in string format
-   * @param <T> Custom object whose list is passed as parameter
+   * @param <T>     Custom object whose list is passed as parameter
    * @return list of individual reports
    */
   <T> List<T> validateFormat(String content);
 
   /**
    * Clear the file content in the specified path
+   *
    * @param path       specify absolute path or relative path by passing ~
    * @param folderName directory of file structure where the file needs to be stored
    * @param filePrefix Prefix name of the file to be searched

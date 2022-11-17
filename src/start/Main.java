@@ -10,6 +10,7 @@ import model.ModelImplementation;
 public class Main {
   /**
    * Called when the program jar is ran and creates object of the controller which takes over.
+   *
    * @param args command line arguments passed when the jar is executed
    */
   public static void main(String[] args) {

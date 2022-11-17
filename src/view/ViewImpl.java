@@ -1,13 +1,14 @@
 package view;
 
-import static utility.Constants.FILE_SEPARATOR;
-import static utility.Constants.LINE_BREAKER;
-
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.EnumSet;
 import java.util.List;
+
 import model.Periodicity;
+
+import static utility.Constants.FILE_SEPARATOR;
+import static utility.Constants.LINE_BREAKER;
 
 /**
  * The controller implementation that receives all its inputs from an InputStream object and
@@ -66,27 +67,27 @@ public class ViewImpl implements View {
   public void showViewPortfolioMenu(List<String> portfolioList) {
     this.out.println("Portfolios available:");
     this.out.println("--------------------------------------------------------------"
-        + "----------------------");
+            + "----------------------");
     String portfolioHeaderString = String.format("||%-18s||%-40s||%-18s||", "Serial Number",
-        "Portfolio Name", "Creation Date");
+            "Portfolio Name", "Creation Date");
     this.out.println(portfolioHeaderString);
     this.out.println("||------------------||----------------------------------------"
-        + "||------------------||");
+            + "||------------------||");
     for (int i = 0; i < portfolioList.size() - 1; i++) {
       this.out.println(portfolioList.get(i));
       this.out.println("||------------------||----------------------------------------"
-          + "||------------------||");
+              + "||------------------||");
     }
     this.out.println(portfolioList.get(portfolioList.size() - 1));
     this.out.println("--------------------------------------------------------------"
-        + "----------------------");
+            + "----------------------");
     this.out.println(LINE_BREAKER);
   }
 
   @Override
   public void alertNoPortfolioMessage() {
     this.out.println("ALERT: There are no portfolios added yet. Please create portfolios to view."
-        + LINE_BREAKER);
+            + LINE_BREAKER);
   }
 
   @Override
@@ -155,7 +156,7 @@ public class ViewImpl implements View {
   @Override
   public void uploadPath() {
     this.out.println(
-        "How do you want to upload the data? (Write your path seperated by " + FILE_SEPARATOR);
+            "How do you want to upload the data? (Write your path seperated by " + FILE_SEPARATOR);
     this.out.println("1. Absolute Path");
     this.out.println("2. Relative Path");
     this.out.println("Type 'back' to return to Home Menu");
@@ -236,9 +237,9 @@ public class ViewImpl implements View {
     this.out.println("1. Fixed Portfolio");
     this.out.println("2. Flexible Portfolio");
   }
+
   @Override
-  public void alertFixedPortfolio () {
+  public void alertFixedPortfolio() {
     this.out.println("This is a fixed portfolio. Cannot sell or add shares to this.");
   }
-
 }

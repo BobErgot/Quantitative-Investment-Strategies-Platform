@@ -84,8 +84,8 @@ class Portfolio {
     return mappedShares.stream().reduce(0.0, Double::sum);
   }
 
-  protected double getValuationGivenFilterAndMap(Predicate<Share> predicate,
-      Function<Share, Double> converter) {
+  protected double getValuationGivenFilterAndMap(Predicate<Share> predicate, Function<Share,
+          Double> converter) {
     List<Share> eligibleShares = this.filter(new ArrayList<>(shares), predicate);
     List<Double> mappedShares = this.map(eligibleShares, converter);
     return mappedShares.stream().reduce(0.0, Double::sum);
@@ -93,19 +93,21 @@ class Portfolio {
 
   @Override
   public String toString() {
-    StringBuilder toString = new StringBuilder(
-        "+id:" + this.id + "\ncreationDate:" + creationDate + "\n*shares:");
+    StringBuilder toString = new StringBuilder("+id:" + this.id + "\ncreationDate:" + creationDate
+            + "\n*shares:");
     List<Share> shareList = new ArrayList<>(shares);
     for (int i = 0; i < shares.size() - 1; i++) {
       String record = shareList.get(i).toString().replace("\n", ",");
       record = record.substring(0, record.length() - 1);
       toString.append(record).append("|");
     }
-    String record = shareList.get(shares.size() - 1).toString().replace("\n", ",");
+    String record = shareList.get(shares.size() - 1).toString().replace("\n",
+            ",");
     record = record.substring(0, record.length() - 1);
     toString.append(record);
     return toString.toString();
   }
+
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof Portfolio)) {
@@ -114,6 +116,7 @@ class Portfolio {
     Portfolio other = (Portfolio) o;
     return id.equals(other.id);
   }
+
   @Override
   public int hashCode() {
     return id.hashCode();
@@ -125,11 +128,9 @@ class Portfolio {
 
   public LocalDate[] getDateRangeOfStockData() {
     LocalDate[] range = {LocalDate.MAX, LocalDate.MIN};
-    for(Share share : shares){
-      if(share.getPurchaseDate().compareTo(range[0])<0)
-        range[0] =  share.getPurchaseDate();
-      else  if(share.getPurchaseDate().compareTo(range[1])>=0)
-        range[1] =  share.getPurchaseDate();
+    for (Share share : shares) {
+      if (share.getPurchaseDate().compareTo(range[0]) < 0) range[0] = share.getPurchaseDate();
+      else if (share.getPurchaseDate().compareTo(range[1]) >= 0) range[1] = share.getPurchaseDate();
     }
     return range;
   }

@@ -11,5 +11,4 @@ class MockModel extends FlexibleModelImplementation {
   protected double getStockPrice(String companyName, LocalDate date){
     return 10;
   }
-
 }

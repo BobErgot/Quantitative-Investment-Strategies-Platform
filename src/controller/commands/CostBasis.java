@@ -22,13 +22,12 @@ public class CostBasis implements StockPortfolioCommand {
       view.selectPortfolio();
       String selectedId = scanner.next().trim();
       flag = showCostBasisOfPortfolio(selectedId, view, scanner, model);
-      if(!flag){
+      if (!flag) {
         view.printInvalidInputMessage();
       } else {
         break;
       }
-    }
-    while (!flag);
+    } while (!flag);
   }
 
   @Override
@@ -38,12 +37,13 @@ public class CostBasis implements StockPortfolioCommand {
   /**
    * Returns the cost basis of the portfolio which the user has entered and returns false if the
    * portfolio with the given id does not exist.
+   *
    * @param selectedId unique id of the portfolio for which the valuation is required on a
    *                   particular date
    * @return "true" if cost basis exists else return "false"
    */
   private boolean showCostBasisOfPortfolio(String selectedId, View view, Scanner scanner,
-                                          ModelInterface model) {
+                                           ModelInterface model) {
     if (!model.idIsPresent(selectedId)) {
       return false;
     }
@@ -68,8 +68,7 @@ public class CostBasis implements StockPortfolioCommand {
       if (invalidDate) {
         view.printInvalidInputMessage();
       }
-    }
-    while (invalidDate);
+    } while (invalidDate);
     view.showCostBasis(model.getCostBasis(selectedId, date));
     return true;
   }

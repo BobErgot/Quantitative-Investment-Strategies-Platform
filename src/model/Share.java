@@ -23,7 +23,7 @@ public class Share implements Comparable<Object> {
    * @param numShares    number of stocks bought
    */
   public Share(String companyName, LocalDate purchaseDate, double price, int numShares)
-      throws IllegalArgumentException {
+          throws IllegalArgumentException {
     if (companyName.length() == 0) {
       throw new IllegalArgumentException("Company name cannot be blank!");
     }
@@ -91,7 +91,7 @@ public class Share implements Comparable<Object> {
     }
     Share other = (Share) object;
     return this.companyName.equals(other.companyName) && this.purchaseDate == other.purchaseDate
-        && this.price == other.price && this.numShares == other.numShares;
+            && this.price == other.price && this.numShares == other.numShares;
   }
 
   @Override
@@ -105,6 +105,6 @@ public class Share implements Comparable<Object> {
   @Override
   public String toString() {
     return "+companyName:" + this.companyName + "\n" + "purchaseDate:" + this.purchaseDate + "\n"
-        + "price:" + this.price + "\n" + "numShares:" + this.numShares + "\n";
+            + "price:" + this.price + "\n" + "numShares:" + this.numShares + "\n";
   }
 }

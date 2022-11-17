@@ -30,7 +30,8 @@ class WebAPI implements APIInterface {
 
     String query;
     try {
-      query = String.format("function=%s", URLEncoder.encode("TIME_SERIES_DAILY_ADJUSTED", charset));
+      query = String.format("function=%s", URLEncoder.encode("TIME_SERIES_DAILY_ADJUSTED",
+              charset));
       query = query + "&" + String.format("symbol=%s", URLEncoder.encode(stockSymbol, charset));
       query = query + "&" + String.format("apikey=%s", URLEncoder.encode(STOCK_API_KEY, charset));
       query = query + "&" + String.format("datatype=%s", URLEncoder.encode("csv", charset));
@@ -55,7 +56,7 @@ class WebAPI implements APIInterface {
         HttpURLConnection httpConnection = (HttpURLConnection) connection;
         responseCode = httpConnection.getResponseCode();
         responseMessage = httpConnection.getResponseMessage();
-        LOGGER.log(Level.FINE,"API response: " + responseMessage);
+        LOGGER.log(Level.FINE, "API response: " + responseMessage);
       } catch (IOException ioException) {
         LOGGER.log(Level.SEVERE, "Error occurred during connection: ", ioException);
         return null;

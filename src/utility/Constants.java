@@ -21,7 +21,8 @@ public final class Constants {
   public static final String PORTFOLIO_NOT_FOUND = "Portfolio was not found!";
   public static final int STOCK_COLUMNS_COUNT = 9;
 
-  // Purchase = cost_per_share + broker_fees/num_shares , Sell = cost_per_share * num_shares - broker_fees
+  // Purchase = cost_per_share + broker_fees/num_shares
+  // Sell = cost_per_share * num_shares - broker_fees
   public static final float BROKER_FEES = 20;
 
   public static final String MUTABLE = ",mutable";
