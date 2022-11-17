@@ -111,7 +111,7 @@ public class ModelImplementationTest {
   @Test
   public void testBlankGetValuations() {
     ModelInterface model = new MockModel();
-    model.addShareToModel("WAVC", LocalDate.now(), new Random().nextInt(10), -1);
+    model.addShareToModel("WAVC", LocalDate.now(), Math.abs(new Random().nextInt(10)) + 1, -1);
     try {
       model.getValuationGivenDate("", LocalDate.parse("2021-11-02"));
       fail("Test case passed even though invalid Id was given");
@@ -148,7 +148,7 @@ public class ModelImplementationTest {
   @Test
   public void testBlankIdIsPresents() {
     ModelInterface model = new MockModel();
-    model.addShareToModel("TAGS", LocalDate.now(), new Random().nextInt(10), -1);
+    model.addShareToModel("TAGS", LocalDate.now(), Math.abs(new Random().nextInt(10)) + 1, -1);
     try {
       model.idIsPresent("");
       fail("Test case passed even though blank Id was given");
@@ -185,7 +185,7 @@ public class ModelImplementationTest {
   @Test
   public void testCanCreateShares() {
     ModelInterface model = new MockModel();
-    model.addShareToModel("IBM", LocalDate.now(), new Random().nextInt(10), -1);
+    model.addShareToModel("IBM", LocalDate.now(), Math.abs(new Random().nextInt(10)) + 1, -1);
     assertTrue(model.canCreateShare());
   }
 
