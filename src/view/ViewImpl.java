@@ -11,9 +11,10 @@ import java.util.List;
 import model.Periodicity;
 
 /**
- * The controller implementation that receives all its inputs from an InputStream object and
- * transmits all outputs to a PrintStream object. It also interacts with the model based on the
- * received input from the user.
+ * The view implementation that simply shows appropriate message to the user based on the method
+ * call from the controller. It has absolutely no visibility of controller or model
+ * implementation or working and simply behaves based on the arguments received from the
+ * controller.
  */
 public class ViewImpl implements View {
 

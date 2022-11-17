@@ -1,9 +1,20 @@
-List of completed features:
+The Program has the following features:
+1. Create Portfolio - Gives the option to user to create two type of portfolios
+    a. Fixed Portfolio - This is the old feature where portfolio cannot be modified
+    b. Flexible Portfolio -  This is the new feature where portfolio can be modified even
+                             after creation
 
-1. Supports text interface with MVC.
-2. Can add new portfolio manually by searching the database (Currently support 34 stocks), if it's not present in the database, an API call is made, as long as the ticker name is correct. Please look at the ticker folder inside of stocker after extracting the jar file, it contains all valid ticker files in alphabetic order.
-3. Can Upload a Portfolio & its given shares based on absolute path & relative path.
-4. Can view composition of all present portfolios
-5. Can get valuation on a specific date for a single portfolio.
+2. Upload Portfolio from given path - Gives the user the option to upload his own portfolio
+    a. Absolute Path - The user can specify the absolute path in their system from where file needs
+                       to be uploaded
+    b. Relative Path - The user can specify the path relative to the jar from where the file needs
+                       to be uploaded
 
-The Program
+3. View Portfolio - Shows all the portfolios to the user as well as gives him options to select
+                    other portfolio based features
+    a. View composition of a particular portfolio
+    b. Valuation of Portfolio on a specific date
+    c. Cost basis of a portfolio till a specific date
+    d. Purchase a share and add to portfolio
+    e. Sell a share from portfolio
+    f. Performance of portfolio over time

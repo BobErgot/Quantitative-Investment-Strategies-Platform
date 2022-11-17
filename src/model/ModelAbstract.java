@@ -26,6 +26,12 @@ import static utility.Constants.RELATIVE_PATH;
 import static utility.Constants.STOCK_DIRECTORY;
 import static utility.Constants.TICKER_DIRECTORY;
 
+/**
+ * Abstract base class for implementations of {@link ModelInterface}. This clas contains all the
+ * method definitions that are common to the concrete implementations of the {@link ModelInterface}
+ * interface. A new implementation of the interface has the option of extending this class, or
+ * directly implementing all the methods.
+ */
 abstract class ModelAbstract implements ModelInterface {
 
   protected final Set<Portfolio> portfolios;
@@ -439,7 +445,8 @@ abstract class ModelAbstract implements ModelInterface {
   }
 
   @Override
-  public double appendPortfolio(String portfolioName, String symbol, int numShares) {
+  public double appendPortfolio(String portfolioName, String symbol, int numShares,
+                                LocalDate date) {
     throw new IllegalStateException("Cannot access this function!");
   }
 }

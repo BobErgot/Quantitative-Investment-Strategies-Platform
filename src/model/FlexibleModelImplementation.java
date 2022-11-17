@@ -15,6 +15,12 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * This class behaves as a gateway between model objects and operations and the controller and
+ * provides all model level functionalities to the controller interface from higher level. It
+ * also provides additional features creating flexible portfolio, adding and removing stocks from
+ * the flexible portfolio.
+ */
 public class FlexibleModelImplementation extends ModelAbstract {
 
   public FlexibleModelImplementation() {
@@ -93,15 +99,15 @@ public class FlexibleModelImplementation extends ModelAbstract {
   }
 
   @Override
-  public double appendPortfolio(String portfolioName, String symbol, int numShares)
+  public double appendPortfolio(String portfolioName, String symbol, int numShares, LocalDate date)
       throws NoSuchElementException {
     if (!checkTicker(symbol) && numShares <= 0) {
       throw new NoSuchElementException("Entered ticker symbol or share numbers is invalid");
     }
     String stockFileName = null;
-    double currentShareBuyingPrice = this.getStockPrice(symbol, LocalDate.now());
+    double currentShareBuyingPrice = this.getStockPrice(symbol, date);
     stockFileName = getSharesFile(portfolioName);
-    Share addShare = new Share(symbol, LocalDate.now(),
+    Share addShare = new Share(symbol, date,
         currentShareBuyingPrice + ((BROKER_FEES * 1.00) / numShares), numShares);
     if (null != stockFileName && !stockFileName.isEmpty()) {
       String formattedString = fileInterface.convertObjectIntoString(addShare.toString(),

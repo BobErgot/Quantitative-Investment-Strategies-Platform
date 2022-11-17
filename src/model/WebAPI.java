@@ -17,8 +17,7 @@ import static utility.Constants.STOCK_API_KEY;
 import static utility.Constants.STOCK_ENDPOINT;
 
 /**
- * This class represents web API and its operations when it's data is comma-separated values(csv)
- * format.
+ * This class represents web API and its operations.
  */
 class WebAPI implements APIInterface {
   protected final Logger LOGGER = Logger.getLogger(this.getClass().getName());
