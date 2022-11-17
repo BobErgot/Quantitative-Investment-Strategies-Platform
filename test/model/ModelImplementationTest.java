@@ -268,7 +268,8 @@ public class ModelImplementationTest {
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
     double[] answer = {200.0, 400.0, 600.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
-            LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"), Periodicity.Day);
+            LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"),
+            Periodicity.DAY);
     assertEquals(3, actual.size());
     for (int i = 0; i <= 2; i++) {
       assertEquals(answer[i], actual.get(i), 0.0);
@@ -290,7 +291,7 @@ public class ModelImplementationTest {
     double[] answer = {400.0, 400.0, 600.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
             LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"),
-            Periodicity.Day);
+            Periodicity.DAY);
     assertEquals(3, actual.size());
     for (int i = 0; i <= 2; i++) {
       assertEquals(answer[i], actual.get(i), 0.0);
@@ -312,7 +313,7 @@ public class ModelImplementationTest {
     double[] answer = {12400.0, 18400.0, 1000.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
             LocalDate.parse("2020-11-01"), LocalDate.parse("2022-01-01"),
-            Periodicity.Month);
+            Periodicity.MONTH);
     assertEquals(2, actual.size());
     for (int i = 0; i <= 1; i++) {
       assertEquals(answer[i], actual.get(i), 0.0);

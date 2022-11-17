@@ -118,7 +118,7 @@ interface FileInterface {
   <T> List<T> validateFormat(String content);
 
   /**
-   * Clear the file content in the specified path
+   * Clear the file content in the specified path.
    *
    * @param path       specify absolute path or relative path by passing ~
    * @param folderName directory of file structure where the file needs to be stored

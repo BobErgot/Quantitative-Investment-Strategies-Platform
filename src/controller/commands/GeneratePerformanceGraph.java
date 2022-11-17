@@ -47,13 +47,13 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
         view.askForEnum(Periodicity.class);
         String groupString = scanner.next().trim();
         if (groupString.equalsIgnoreCase("day")) {
-          group = Periodicity.Day;
+          group = Periodicity.DAY;
         }
         if (groupString.equalsIgnoreCase("month")) {
-          group = Periodicity.Month;
+          group = Periodicity.MONTH;
         }
         if (groupString.equalsIgnoreCase("year")) {
-          group = Periodicity.Year;
+          group = Periodicity.YEAR;
         }
         flag = true;
       } catch (DateTimeParseException invalidDate) {
@@ -71,12 +71,12 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
     int index = 0;
     for (LocalDate date = to; index<portfolioPerformance.size() && (date.isAfter(from) ||
             date.equals(from)); date = date.plusDays(-1)) {
-      if (previousDate.getYear() != (date.getYear()) && group == Periodicity.Year) {
+      if (previousDate.getYear() != (date.getYear()) && group == Periodicity.YEAR) {
         view.printStars(date, group, portfolioPerformance.get(index++), scale);
       } else if (previousDate.getMonth().compareTo(date.getMonth()) != 0
-          && group == Periodicity.Month) {
+          && group == Periodicity.MONTH) {
         view.printStars(date, group, portfolioPerformance.get(index++), scale);
-      } else if (group == Periodicity.Day) {
+      } else if (group == Periodicity.DAY) {
         view.printStars(date, group, portfolioPerformance.get(index++), scale);
       }
       previousDate = date;

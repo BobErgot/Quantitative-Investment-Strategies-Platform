@@ -190,20 +190,20 @@ abstract class ModelAbstract implements ModelInterface {
          date = date.plusDays(1)) {
       temporaryList.add(this.getValuationGivenDate(portfolioObject.getId(), date));
 
-      if (previousDate.getMonth().compareTo(date.getMonth()) != 0 && group == Periodicity.Month) {
+      if (previousDate.getMonth().compareTo(date.getMonth()) != 0 && group == Periodicity.MONTH) {
         portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0,
                 Double::sum));
         temporaryList = new ArrayList<>();
       }
 
-      if (previousDate.getYear() < date.getYear() && group == Periodicity.Year) {
+      if (previousDate.getYear() < date.getYear() && group == Periodicity.YEAR) {
         portfolioPerformanceByPeriodicity.add(temporaryList.stream().reduce(0.0,
                 Double::sum));
         temporaryList = new ArrayList<>();
       }
       previousDate = date;
     }
-    if (group == Periodicity.Day) {
+    if (group == Periodicity.DAY) {
       return temporaryList;
     }
     if (temporaryList.size() > 0) {

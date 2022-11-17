@@ -9,9 +9,9 @@ import model.ModelInterface;
 import view.View;
 
 /**
- * Asks the user for input like if he wants to add shares, once a share is added the user get
- * the option to create the portfolio. On receiving confirmation from the user the function
- * interacts with the model interface object to transmit the portfolio information to be created.
+ * Asks the user for input like if he wants to add shares, once a share is added the user get the
+ * option to create the portfolio. On receiving confirmation from the user the function interacts
+ * with the model interface object to transmit the portfolio information to be created.
  */
 public class CreatePortfolio implements StockPortfolioCommand {
 

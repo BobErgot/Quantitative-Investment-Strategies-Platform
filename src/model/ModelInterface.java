@@ -102,12 +102,13 @@ public interface ModelInterface {
   boolean checkTicker(String symbol);
 
   /**
-   *
-   * @param id
-   * @param from
-   * @param to
-   * @param group
-   * @return
+   * Takes portfolio name/id, start date and end date, and time filter category as a parameter
+   * and generates data points to be plotted.
+   * @param id portfolio name
+   * @param from the start date
+   * @param to the end date
+   * @param group time filter category
+   * @return a list of data points that can be used by the view to plot the bar graph
    */
   List<Double> getPortfolioPerformance(String id, LocalDate from, LocalDate to, Periodicity group);
 

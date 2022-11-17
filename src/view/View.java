@@ -11,7 +11,7 @@ import model.Periodicity;
 public interface View {
 
   /**
-   * Shows Main.Main menu.
+   * Shows Main menu.
    */
   void showMainMenu();
 

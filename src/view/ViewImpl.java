@@ -214,9 +214,9 @@ public class ViewImpl implements View {
   @Override
   public void printStars(LocalDate date, Periodicity periodicity, Double value, int scale) {
     int numStars = (int) Math.ceil(value / Math.pow(10, scale));
-    if (periodicity == Periodicity.Day) {
+    if (periodicity == Periodicity.DAY) {
       this.out.print(date + ":\t");
-    } else if (periodicity == Periodicity.Month) {
+    } else if (periodicity == Periodicity.MONTH) {
       String day = date.getMonth() + "-" + date.getYear();
 
       this.out.printf("%-20s :", day);
