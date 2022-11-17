@@ -145,7 +145,7 @@ public class ViewImpl implements View {
 
   @Override
   public void printCompanyStockUpdated() {
-    this.out.println("This company's number of stocks have been updated!");
+    this.out.println("This company's number of stocks have been updated!" + LINE_BREAKER);
   }
 
   @Override
@@ -196,7 +196,12 @@ public class ViewImpl implements View {
 
   @Override
   public void showSoldValuation(double valuation) {
-    this.out.println("Earning from selling of Portfolio is:\t$" + valuation + LINE_BREAKER);
+    this.out.println("Earning from selling of Portfolio is:\t$" + valuation);
+  }
+
+  @Override
+  public void showAmountPaid(double valuation) {
+    this.out.println("Paid amount from buying of Portfolio is:\t$" + valuation);
   }
 
   @Override

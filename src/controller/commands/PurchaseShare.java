@@ -10,11 +10,11 @@ import model.ModelInterface;
 import view.View;
 
 /**
- * Asks the user for input of fields namely portfolio, share to be sold from that portfolio and
- * the number of shares to be sold. Based on the information collected, it interacts with model
- * interface to calculate the total selling value of shares based on the present stock share price.
+ * Asks the user for input of fields namely portfolio, share to be bought and the number of
+ * shares to buy. Based on the information collected, it interacts with model interface to get
+ * the value of the shares and store it in the specified portfolio.
  */
-public class SellShare implements StockPortfolioCommand {
+public class PurchaseShare implements StockPortfolioCommand {
 
   @Override
   public void process(View view, Scanner scanner, ModelInterface model) {
@@ -61,8 +61,8 @@ public class SellShare implements StockPortfolioCommand {
             isValidCompany = false;
           } else {
             try {
-              double soldPrice = model.sellStocks(portfolioId, companyName, shares);
-              view.showSoldValuation(soldPrice);
+              double soldPrice = model.appendPortfolio(portfolioId, companyName, shares);
+              view.showAmountPaid(soldPrice);
               view.printCompanyStockUpdated();
             } catch (NoSuchElementException noSuchElementException) {
               isValidCompany = false;

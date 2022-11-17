@@ -115,17 +115,20 @@ public interface ModelInterface {
   /**
    * Sell stocks given stock symbol.
    *
-   * @param id        Portfolio ID to sell stocks from
-   * @param symbol    Ticker symbol of stock that is to be sold
+   * @param portfolioName Portfolio ID to sell stocks from
+   * @param symbol Ticker symbol of stock that is to be sold
    * @param numShares Number of shares to be sold
    * @return Amount of money sold for.
    */
-  double sellStocks(String id, String symbol, int numShares);
+  double sellStocks(String portfolioName, String symbol, int numShares);
 
   /**
    * Appends all stocks to an existing portfolio.
    *
-   * @param portfolioName Portfolio stock needs to be added to
+   * @param portfolioName Portfolio ID to sell stocks from
+   * @param symbol Ticker symbol of stock that is to be sold
+   * @param numShares Number of shares to be sold
+   * @return Amount of money paid to buy the shares
    */
-  void appendPortfolio(String portfolioName);
+  double appendPortfolio(String portfolioName, String symbol, int numShares);
 }

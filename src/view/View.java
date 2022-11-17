@@ -143,6 +143,11 @@ public interface View {
   void showSoldValuation(double soldPrice);
 
   /**
+   * Prints amount paid to buy shares to the user.
+   */
+  void showAmountPaid(double boughtPrice);
+
+  /**
    * Prints message.
    */
   void printMessage(String message);

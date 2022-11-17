@@ -3,6 +3,8 @@ package model;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -336,7 +338,7 @@ public class ModelImplementationTest {
             model.getPortfolioById(portfolioName));
     model.addShareToModel("MSFT", LocalDate.parse("2021-12-03"), 20,
             -1);
-    model.appendPortfolio(portfolioName);
+    //model.appendPortfolio(portfolioName); TODO
     assertEquals("+id:Porttest\n" + "creationDate:2020-11-02\n" +
             "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:11.0,numShares:20|" +
             "+companyName:AAPL,purchaseDate:2021-11-01,price:11.0,numShares:20|" +
@@ -355,7 +357,7 @@ public class ModelImplementationTest {
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
     try {
-      model.appendPortfolio(portfolioName);
+      //model.appendPortfolio(portfolioName); TODO
       fail("Invalid appending operation & function did not throw any error");
     } catch (NoSuchElementException e) {
       // accepted

@@ -26,9 +26,9 @@ public class FlexibleModelImplementation extends ModelAbstract {
   }
 
   @Override
-  public double sellStocks(String id, String symbol, int numShares) {
+  public double sellStocks(String portfolioName, String symbol, int numShares) {
     // Checking if numShares is less than the currently less than bought shares
-    Portfolio portfolioToModify = this.getPortfolioObjectById(id);
+    Portfolio portfolioToModify = this.getPortfolioObjectById(portfolioName);
     Set<Share> newShares = new HashSet<>(portfolioToModify.getListOfShares());
     if (!checkValidNumStocks(symbol, numShares, newShares)) {
       throw new IllegalArgumentException("Number of shares is less than shares bought in " +
@@ -56,7 +56,8 @@ public class FlexibleModelImplementation extends ModelAbstract {
     return stockSellingPrice - BROKER_FEES;
   }
 
-  protected boolean modifyPortfolio(String id, Set<Share> sharesToModify, LocalDate creationDate) {
+  protected void modifyPortfolio(String portfolioName, Set<Share> sharesToModify,
+                                 LocalDate creationDate) {
     Set<Share> processedShare = new HashSet<>();
     String stockFileName = null;
     for (Share share : sharesToModify) {
@@ -64,36 +65,50 @@ public class FlexibleModelImplementation extends ModelAbstract {
               share.getPrice(), share.getNumShares());
       processedShare.add(finalShare);
     }
-    portfolios.remove(new Portfolio(id, sharesToModify, creationDate));
-    portfolios.add(new Portfolio(id, processedShare, creationDate));
+    portfolios.remove(new Portfolio(portfolioName, sharesToModify, creationDate));
+    portfolios.add(new Portfolio(portfolioName, processedShare, creationDate));
+    stockFileName = getSharesFile(portfolioName);
+    if (null != stockFileName && !stockFileName.isEmpty()) {
+      fileInterface.clearFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, stockFileName, "csv");
+      String formattedString = fileInterface
+              .convertObjectListIntoString(new ArrayList<>(processedShare));
+      fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, stockFileName,
+              formattedString.getBytes());
+    }
+  }
+
+  private String getSharesFile(String portfolioName){
+    String stockFileName = null;
     List<String> fileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
             PORTFOLIO_FILENAME);
     for (String portfolio : fileContent) {
       String[] portfolioRecord = portfolio.split(",");
       if (portfolioRecord.length == 4) {
-        if (id.equals(portfolioRecord[0])) {
+        if (portfolioName.equals(portfolioRecord[0])) {
           stockFileName = portfolioRecord[2].substring(3);
         }
       }
     }
-    if (null != stockFileName && !stockFileName.isEmpty()) {
-      fileInterface.clearFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, stockFileName, "csv");
-      String formattedString = fileInterface
-              .convertObjectListIntoString(new ArrayList<>(processedShare));
-      return fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, stockFileName,
-              formattedString.getBytes());
-    }
-    return false;
+    return stockFileName;
   }
 
   @Override
-  public void appendPortfolio(String portfolioName) throws NoSuchElementException {
-    if (this.shares.size() == 0) {
-      throw new NoSuchElementException("No new shares to append!");
-    }
+  public double appendPortfolio(String portfolioName, String symbol, int numShares)
+          throws NoSuchElementException {
+    String stockFileName = null;
     Portfolio portfolioToModify = this.getPortfolioObjectById(portfolioName);
-    Set<Share> sharesToModify = new HashSet<>(portfolioToModify.getListOfShares());
-    this.modifyPortfolio(portfolioName, sharesToModify, portfolioToModify.getCreationDate());
+    Set<Share> newShares = new HashSet<>(portfolioToModify.getListOfShares());
+    double currentShareBuyingPrice = this.getStockPrice(symbol, LocalDate.now());
+    stockFileName = getSharesFile(portfolioName);
+    Share addShare = new Share(symbol, LocalDate.now(),
+            currentShareBuyingPrice + ((BROKER_FEES*1.00)/numShares), numShares);
+    if (null != stockFileName && !stockFileName.isEmpty()) {
+      String formattedString = fileInterface.convertObjectIntoString(addShare.toString(),
+              null);
+      fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, stockFileName,
+              formattedString.getBytes());
+    }
+    return (numShares * currentShareBuyingPrice) + BROKER_FEES;
   }
 
   @Override

@@ -420,10 +420,10 @@ abstract class ModelAbstract implements ModelInterface {
     for (Share share : newShares) {
       if (share.getCompanyName().equals(symbol)) {
         companyShares += share.getNumShares();
-        if (companyShares >= numStocks) {
-          return true;
-        }
       }
+    }
+    if (companyShares >= numStocks) {
+      return true;
     }
     if (companyShares == 0)
       throw new NoSuchElementException("Ticker does not exist in this portfolio");
@@ -431,12 +431,12 @@ abstract class ModelAbstract implements ModelInterface {
   }
 
   @Override
-  public double sellStocks(String id, String symbol, int numShares) {
+  public double sellStocks(String portfolioName, String symbol, int numShares) {
     throw new IllegalStateException("Cannot access this function!");
   }
 
   @Override
-  public void appendPortfolio(String portfolioName) {
+  public double appendPortfolio(String portfolioName, String symbol, int numShares) {
     throw new IllegalStateException("Cannot access this function!");
   }
 }
