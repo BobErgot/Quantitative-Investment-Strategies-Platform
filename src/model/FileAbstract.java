@@ -5,6 +5,7 @@ import static utility.Constants.FILE_SEPARATOR;
 import static utility.Constants.HOME;
 import static utility.Constants.RELATIVE_PATH;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
@@ -12,9 +13,13 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -124,5 +129,39 @@ abstract class FileAbstract implements FileInterface {
       return true;
     }
     return false;
+  }
+
+  @Override
+  public boolean clearFile(String path, String folderName, String filePrefix, String extension) {
+    String directory = "";
+    if (path.equals(RELATIVE_PATH)) {
+      directory = HOME + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
+    } else {
+      directory = path + FILE_SEPARATOR + folderName + FILE_SEPARATOR;
+    }
+    Path directoryPath = Paths.get(directory);
+    Path filePath = null;
+    try {
+      Files.createDirectories(directoryPath);
+      Optional<Path> file = Files.list(directoryPath).filter(filepath -> filepath.getFileName()
+              .toFile().getName().startsWith(filePrefix)).findFirst();
+      if (file.isPresent()) {
+        filePath = file.get();
+      }
+    } catch (IOException ioException) {
+      LOGGER.log(Level.SEVERE, "Error occurred in finding file: ", ioException);
+      return false;
+    }
+
+    if (filePath != null) {
+      try (BufferedWriter bufferedWriter =
+                   Files.newBufferedWriter(filePath, StandardOpenOption.TRUNCATE_EXISTING)) {
+        return true;
+      } catch (IOException exception) {
+        LOGGER.log(Level.SEVERE, "Error occurred in reading file: ", exception);
+        return false;
+      }
+    }
+    return true;
   }
 }

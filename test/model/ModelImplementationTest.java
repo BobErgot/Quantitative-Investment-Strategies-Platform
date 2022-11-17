@@ -248,7 +248,6 @@ public class ModelImplementationTest {
     model.addShareToModel("MSFT", LocalDate.parse("2021-11-03"), 20, -1);
     String portfolioName = "Porttest2";
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
-    System.out.println(model.getPortfolio());
     double[] answer = {200.0, 400.0, 600.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
         LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"), Periodicity.Day);
@@ -309,8 +308,8 @@ public class ModelImplementationTest {
     model.addShareToModel("MSFT", LocalDate.parse("2021-12-03"), 20, -1);
     model.appendPortfolio(portfolioName);
     assertEquals("+id:Porttest\n" + "creationDate:2020-11-02\n"
-            + "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:201.0,numShares:20|"
-            + "+companyName:AAPL,purchaseDate:2021-11-01,price:201.0,numShares:20|"
+            + "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:11.0,numShares:20|"
+            + "+companyName:AAPL,purchaseDate:2021-11-01,price:11.0,numShares:20|"
             + "+companyName:MSFT,purchaseDate:2021-12-03,price:11.0,numShares:20",
         model.getPortfolioById(portfolioName));
 

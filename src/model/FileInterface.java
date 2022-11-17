@@ -115,4 +115,14 @@ interface FileInterface {
    * @return list of individual reports
    */
   <T> List<T> validateFormat(String content);
+
+  /**
+   * Clear the file content in the specified path
+   * @param path       specify absolute path or relative path by passing ~
+   * @param folderName directory of file structure where the file needs to be stored
+   * @param filePrefix Prefix name of the file to be searched
+   * @param extension  extension of the file to be read
+   * @return boolean value if file is cleared successfully
+   */
+  boolean clearFile(String path, String folderName, String filePrefix, String extension);
 }

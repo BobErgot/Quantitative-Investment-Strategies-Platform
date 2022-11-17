@@ -145,7 +145,13 @@ public interface View {
   void showSoldValuation(double soldPrice);
 
   /**
-   * Prints message
+   * Prints message.
    */
   void printMessage(String message);
+
+  /**
+   * Alerts the user that the portfolio is fixed and cannot be mutated.
+   *
+   */
+  void alertFixedPortfolio();
 }

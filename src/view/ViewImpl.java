@@ -199,4 +199,10 @@ public class ViewImpl implements View {
   public void printMessage(String message) {
     this.out.println(message);
   }
+
+  @Override
+  public void alertFixedPortfolio () {
+    this.out.println("This is a fixed portfolio. Cannot sell or add shares to this.");
+  }
+
 }
