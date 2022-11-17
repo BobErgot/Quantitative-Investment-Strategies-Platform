@@ -8,12 +8,12 @@ import view.View;
 
 import static utility.Constants.LINE_BREAKER;
 
+/**
+ * Interacts with the model interface object to get composition of a specific portfolio and returns
+ * to the user as string output.
+ */
 public class Composition implements StockPortfolioCommand {
 
-  /**
-   * Interacts with the model interface object to get valuation of a specific portfolio and returns
-   * to the user as string output.
-   */
   @Override
   public void process(View view, Scanner scanner, ModelInterface model) {
     boolean flag;

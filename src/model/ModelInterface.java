@@ -7,8 +7,8 @@ import java.util.zip.DataFormatException;
 
 /**
  * This interface represents all the Model operations to be supported by the concrete
- * implementation and hides low level operations from whoever is trying to access
- * information from file system or web api.
+ * implementation and hides low level operations from whoever is trying to access information
+ * from file system or web api.
  */
 public interface ModelInterface {
 
@@ -101,11 +101,18 @@ public interface ModelInterface {
    */
   boolean checkTicker(String symbol);
 
-
+  /**
+   *
+   * @param id
+   * @param from
+   * @param to
+   * @param group
+   * @return
+   */
   List<Double> getPortfolioPerformance(String id, LocalDate from, LocalDate to, Periodicity group);
 
   /**
-   * Sell stocks given stock symbol
+   * Sell stocks given stock symbol.
    *
    * @param id        Portfolio ID to sell stocks from
    * @param symbol    Ticker symbol of stock that is to be sold
@@ -117,7 +124,7 @@ public interface ModelInterface {
   /**
    * Appends all stocks to an existing portfolio.
    *
-   * @param portfolioName Portfolio stock needs to be added to.
+   * @param portfolioName Portfolio stock needs to be added to
    */
   void appendPortfolio(String portfolioName);
 }

@@ -9,12 +9,12 @@ import controller.StockPortfolioCommand;
 import model.ModelInterface;
 import view.View;
 
+/**
+ * Interacts with the model interface object to get cost basis of a specific portfolio and returns
+ * to the user as string output.
+ */
 public class CostBasis implements StockPortfolioCommand {
 
-  /**
-   * Interacts with the model interface object to get cost basis of a specific portfolio and returns
-   * to the user as string output.
-   */
   @Override
   public void process(View view, Scanner scanner, ModelInterface model) {
     boolean flag;
@@ -27,7 +27,8 @@ public class CostBasis implements StockPortfolioCommand {
       } else {
         break;
       }
-    } while (!flag);
+    }
+    while (!flag);
   }
 
   @Override
@@ -68,7 +69,8 @@ public class CostBasis implements StockPortfolioCommand {
       if (invalidDate) {
         view.printInvalidInputMessage();
       }
-    } while (invalidDate);
+    }
+    while (invalidDate);
     view.showCostBasis(model.getCostBasis(selectedId, date));
     return true;
   }

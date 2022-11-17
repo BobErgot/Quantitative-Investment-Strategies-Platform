@@ -11,13 +11,12 @@ import controller.StockPortfolioCommand;
 import model.ModelInterface;
 import view.View;
 
+/**
+ * Interacts with the model interface object to get all portfolio information and then returns
+ * the same to the user as string output.
+ */
 public class ViewPortfolio implements StockPortfolioCommand {
 
-  /**
-   * Interacts with the model interface object to get all portfolio information and then returns
-   * the same
-   * to the user as string output.
-   */
   @Override
   public void process(View view, Scanner scanner, ModelInterface model) {
     List<String> portfolioData = model.getPortfolio();

@@ -9,17 +9,22 @@ import model.ModelInterface;
 import model.Periodicity;
 import view.View;
 
+/**
+ * Interacts with the model interface object to get data of a specific portfolio between the two
+ * dates specified by the user and generates chart with dynamic x-axis and y-axis scaling.
+ */
 public class GeneratePerformanceGraph implements controller.StockPortfolioCommand {
 
   @Override
   public void process(View view, Scanner scanner, ModelInterface model) {
     view.selectPortfolio();
-    boolean flag = false;
-    String selectedId = null;
+    boolean flag;
+    String selectedId;
     do {
       selectedId = scanner.next().trim();
       flag = model.idIsPresent(selectedId);
-    } while (!flag);
+    }
+    while (!flag);
     LocalDate to = null, from = null;
     flag = false;
     do {
@@ -32,7 +37,8 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
       } catch (DateTimeParseException invalidDate) {
         view.printInvalidDateError();
       }
-    } while (!flag);
+    }
+    while (!flag);
 
     Periodicity group = null;
     flag = false;
@@ -53,7 +59,8 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
       } catch (DateTimeParseException invalidDate) {
         view.printInvalidDateError();
       }
-    } while (!flag);
+    }
+    while (!flag);
 
     List<Double> portfolioPerformance = model.getPortfolioPerformance(selectedId, from, to, group);
     double max = Collections.min(portfolioPerformance);
@@ -79,6 +86,5 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
 
   @Override
   public void undo(ModelInterface model) {
-
   }
 }

@@ -23,7 +23,7 @@ public class ModelImplementationTest {
   public void testEmptyCreatePortfolios() {
     ModelInterface model = new MockModel();
     try {
-      model.createPortfolio("port1", LocalDate.now());
+      model.createPortfolio("", LocalDate.now());
       fail("On creating empty portfolio model should fail");
     } catch (IllegalArgumentException e) {
       // Test passed
@@ -40,10 +40,9 @@ public class ModelImplementationTest {
               .nextInt(10)) + 1, -1);
     }
     try {
-      model.createPortfolio("", LocalDate.now());
-      fail("Test case passed even though empty Id was given");
+      model.createPortfolio("port5", LocalDate.now());
     } catch (IllegalArgumentException e) {
-      // Test passed
+      fail("Test case failed even though valid data was given");
     }
   }
 

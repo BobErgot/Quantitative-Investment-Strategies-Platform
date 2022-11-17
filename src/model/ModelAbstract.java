@@ -45,6 +45,12 @@ abstract class ModelAbstract implements ModelInterface {
     this.getPortfolio();
   }
 
+  /**
+   * Construct a model implementation object and initialises the local set of shares and portfolios
+   * and creates objects of file interface based on the passed argument and api interface which it
+   * will be using to work with model on
+   * lower level.
+   */
   protected ModelAbstract(FileInterface fileInterface) {
     this.shares = new HashMap<>();
     this.portfolios = new HashSet<>();

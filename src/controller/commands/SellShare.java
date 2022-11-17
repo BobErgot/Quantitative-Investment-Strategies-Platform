@@ -9,13 +9,13 @@ import model.FlexibleModelImplementation;
 import model.ModelInterface;
 import view.View;
 
+/**
+ * Asks the user for input of fields namely portfolio, share to be sold from that portfolio and
+ * the number of shares to be sold. Based on the information collected, it interacts with model
+ * interface to calculate the total selling value of shares based on the present stock share price.
+ */
 public class SellShare implements StockPortfolioCommand {
 
-  /**
-   * Asks the user for input like if he wants to add shares, once a share is added the user get
-   * the option to create the portfolio. On receiving confirmation from the user the function
-   * interacts with the model interface object to transmit the portfolio information to be created.
-   */
   @Override
   public void process(View view, Scanner scanner, ModelInterface model) {
     boolean flag;
@@ -34,7 +34,8 @@ public class SellShare implements StockPortfolioCommand {
       } else {
         callPortfolio(view, scanner, model, selectedId);
       }
-    } while (!flag);
+    }
+    while (!flag);
   }
 
   private void callPortfolio(View view, Scanner scanner, ModelInterface model, String portfolioId) {
@@ -75,7 +76,8 @@ public class SellShare implements StockPortfolioCommand {
       } else {
         view.notPresentError("Company");
       }
-    } while (!isValidCompany);
+    }
+    while (!isValidCompany);
   }
 
   private boolean checkIfPortfolioMutable(String portfolioId, ModelInterface model) {

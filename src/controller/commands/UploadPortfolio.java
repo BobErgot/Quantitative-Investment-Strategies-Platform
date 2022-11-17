@@ -12,12 +12,12 @@ import view.View;
 import static utility.Constants.FILE_SEPARATOR;
 import static utility.Constants.RELATIVE_PATH;
 
+/**
+ * Sends the path from where the portfolio needs to be uploaded to the model interface object
+ * and notifies the user if something goes wrong during upload.
+ */
 public class UploadPortfolio implements StockPortfolioCommand {
 
-  /**
-   * Sends the path from where the portfolio needs to be uploaded to the model interface object
-   * and notifies the user if something goes wrong during upload.
-   */
   @Override
   public void process(View view, Scanner scanner, ModelInterface model) {
     boolean validPath = false;
@@ -62,7 +62,8 @@ public class UploadPortfolio implements StockPortfolioCommand {
       } else {
         view.printInvalidInputMessage();
       }
-    } while (!validPath);
+    }
+    while (!validPath);
   }
 
   @Override

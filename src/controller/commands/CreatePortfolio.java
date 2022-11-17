@@ -8,13 +8,13 @@ import model.FlexibleModelImplementation;
 import model.ModelInterface;
 import view.View;
 
+/**
+ * Asks the user for input like if he wants to add shares, once a share is added the user get
+ * the option to create the portfolio. On receiving confirmation from the user the function
+ * interacts with the model interface object to transmit the portfolio information to be created.
+ */
 public class CreatePortfolio implements StockPortfolioCommand {
 
-  /**
-   * Asks the user for input like if he wants to add shares, once a share is added the user get
-   * the option to create the portfolio. On receiving confirmation from the user the function
-   * interacts with the model interface object to transmit the portfolio information to be created.
-   */
   @Override
   public void process(View view, Scanner scanner, ModelInterface model) {
     boolean invalidInput;
@@ -33,7 +33,8 @@ public class CreatePortfolio implements StockPortfolioCommand {
       } else {
         view.printInvalidInputMessage();
       }
-    } while (!invalidInput);
+    }
+    while (!invalidInput);
     do {
       invalidInput = false;
       portfolioCompleted = false;
@@ -62,7 +63,8 @@ public class CreatePortfolio implements StockPortfolioCommand {
               if (invalidPortfolioName) {
                 view.printInvalidInputMessage();
               }
-            } while (invalidPortfolioName);
+            }
+            while (invalidPortfolioName);
           } else {
             invalidInput = true;
           }
@@ -78,7 +80,8 @@ public class CreatePortfolio implements StockPortfolioCommand {
       if (invalidInput) {
         view.printInvalidInputMessage();
       }
-    } while (invalidInput || !portfolioCompleted);
+    }
+    while (invalidInput || !portfolioCompleted);
   }
 
   @Override
@@ -126,6 +129,7 @@ public class CreatePortfolio implements StockPortfolioCommand {
       } else {
         view.notPresentError("Company");
       }
-    } while (!isValidCompany);
+    }
+    while (!isValidCompany);
   }
 }

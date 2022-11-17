@@ -9,12 +9,12 @@ import controller.StockPortfolioCommand;
 import model.ModelInterface;
 import view.View;
 
+/**
+ * Interacts with the model interface object to get valuation of a specific portfolio on a
+ * specific date entered by the user and returns the valuation amount to the user as string output.
+ */
 public class Valuation implements StockPortfolioCommand {
 
-  /**
-   * Interacts with the model interface object to get valuation of a specific portfolio and returns
-   * to the user as string output.
-   */
   @Override
   public void process(View view, Scanner scanner, ModelInterface model) {
     boolean flag;

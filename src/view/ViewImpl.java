@@ -211,7 +211,6 @@ public class ViewImpl implements View {
     }
   }
 
-
   @Override
   public void printStars(LocalDate date, Periodicity periodicity, Double value, int scale) {
     int numStars = (int) Math.ceil(value / Math.pow(10, scale));
@@ -230,12 +229,6 @@ public class ViewImpl implements View {
       this.out.print("*");
     }
     this.out.println();
-  }
-
-  public void alertShareInvalid() {
-    this.out.println("Which type of portfolio do you want to create?");
-    this.out.println("1. Fixed Portfolio");
-    this.out.println("2. Flexible Portfolio");
   }
 
   @Override
