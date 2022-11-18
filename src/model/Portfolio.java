@@ -96,7 +96,7 @@ class Portfolio {
             new StringBuilder("+id:" + this.id + LINE_BREAKER + "creationDate:" + creationDate
             + LINE_BREAKER + "*shares:");
     List<Share> shareList = new ArrayList<>(shares);
-    if(shareList.size() == 0) {
+    if (shareList.size() == 0) {
       return toString.append("").toString();
     }
     for (int i = 0; i < shares.size() - 1; i++) {
@@ -132,8 +132,12 @@ class Portfolio {
   public LocalDate[] getDateRangeOfStockData() {
     LocalDate[] range = {LocalDate.MAX, LocalDate.MIN};
     for (Share share : shares) {
-      if (share.getPurchaseDate().compareTo(range[0]) < 0) range[0] = share.getPurchaseDate();
-      else if (share.getPurchaseDate().compareTo(range[1]) >= 0) range[1] = share.getPurchaseDate();
+      if (share.getPurchaseDate().compareTo(range[0]) < 0) {
+        range[0] = share.getPurchaseDate();
+      }
+      else if (share.getPurchaseDate().compareTo(range[1]) >= 0) {
+        range[1] = share.getPurchaseDate();
+      }
     }
     return range;
   }

@@ -12,6 +12,7 @@ import model.ModelInterface;
 
 import static controller.MockModelUtil.compareStringContents;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Controller Tests to check functioning of controller in MVC.
@@ -29,6 +30,7 @@ public class ControllerImplTest {
     try {
       controller.start();
     } catch (Exception e) {
+      fail("Test threw an error");
     }
     assertTrue(
             compareStringContents("* Home Menu:\n"
@@ -77,7 +79,11 @@ public class ControllerImplTest {
     // can be any mock model
     ModelInterface model = new MockModelUpload(new StringBuilder());
     ControllerImpl controller = new ControllerImpl(in, out, model);
-    controller.start();
-
+    try {
+      controller.start();
+    }
+    catch (Exception e) {
+      fail("Test threw an error");
+    }
   }
 }

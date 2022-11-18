@@ -248,7 +248,8 @@ public class ModelImplementationTest {
     model.addShareToModel("IBM", LocalDate.now(), 20, 30);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.now());
-    model.sellStocks(portfolioName, "IBM", 20, LocalDate.now());
+    assertEquals(600, model.sellStocks(portfolioName, "IBM", 20,
+            LocalDate.now()));
   }
 
   // To sell share is greater than number of present shares
@@ -373,10 +374,10 @@ public class ModelImplementationTest {
             model.getPortfolioById(portfolioName));
     model.addShareToModel("MSFT", LocalDate.parse("2021-12-03"), 20,
             -1);
-    assertEquals("+id:Porttest\n" + "creationDate:2020-11-02\n" +
-                    "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:11.0,numShares:20|" +
-                    "+companyName:AAPL,purchaseDate:2021-11-01,price:11.0,numShares:20|" +
-                    "+companyName:MSFT,purchaseDate:2021-12-03,price:11.0,numShares:20",
+    assertEquals("+id:Porttest\n" + "creationDate:2020-11-02\n"
+                    + "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:11.0,numShares:20|"
+                    + "+companyName:AAPL,purchaseDate:2021-11-01,price:11.0,numShares:20|"
+                    + "+companyName:MSFT,purchaseDate:2021-12-03,price:11.0,numShares:20",
             model.getPortfolioById(portfolioName));
 
   }
