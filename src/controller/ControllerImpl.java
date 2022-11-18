@@ -52,8 +52,8 @@ public class ControllerImpl implements Controller {
     while (this.scanner.hasNext()) {
       StockPortfolioCommand command;
       String input = this.scanner.next();
-      if (input.equalsIgnoreCase("quit") || input.equalsIgnoreCase("exit"))
-      {
+      if (input.equalsIgnoreCase("quit")
+              || input.equalsIgnoreCase("exit")) {
         return;
       }
       Function<Scanner, StockPortfolioCommand> cmd = knownCommands.getOrDefault(input,

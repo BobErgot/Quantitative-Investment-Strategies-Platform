@@ -92,11 +92,13 @@ class Portfolio {
 
   @Override
   public String toString() {
-    StringBuilder toString = new StringBuilder("+id:" + this.id + LINE_BREAKER+"creationDate:" + creationDate
-            + LINE_BREAKER+"*shares:");
+    StringBuilder toString =
+            new StringBuilder("+id:" + this.id + LINE_BREAKER + "creationDate:" + creationDate
+            + LINE_BREAKER + "*shares:");
     List<Share> shareList = new ArrayList<>(shares);
-    if(shareList.size()==0)
+    if(shareList.size() == 0) {
       return toString.append("").toString();
+    }
     for (int i = 0; i < shares.size() - 1; i++) {
       String record = shareList.get(i).toString().replace("\n", ",");
       record = record.substring(0, record.length() - 1);

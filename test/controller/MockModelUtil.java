@@ -1,5 +1,8 @@
 package controller;
 
+/**
+ * Mock model util class to provide additional functionality to mock objects.
+ */
 class MockModelUtil {
 
   public static String merge(String... log) {

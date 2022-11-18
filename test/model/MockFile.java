@@ -2,6 +2,9 @@ package model;
 
 import java.nio.file.Path;
 
+/**
+ * Mock class to mimic the behaviour of CSVFile.
+ */
 class MockFile extends CSVFile {
 
   @Override

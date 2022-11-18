@@ -70,10 +70,11 @@ public class PortfolioTest {
     shareList.add(new Share("GOOGL", LocalDate.of(2022, 12, 12),
             2, 3));
     Portfolio p = new Portfolio("0", shareList, LocalDate.now());
-    LocalDate[] answer = {LocalDate.of(1978, 12, 11)
-            , LocalDate.of(2022, 12, 12)};
+    LocalDate[] answer = {LocalDate.of(1978, 12, 11),
+            LocalDate.of(2022, 12, 12)};
     LocalDate[] actual = p.getDateRangeOfStockData();
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 2; i++) {
       assertEquals(answer[i], actual[i]);
+    }
   }
 }

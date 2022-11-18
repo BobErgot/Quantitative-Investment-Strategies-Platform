@@ -26,15 +26,6 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.zip.DataFormatException;
 
-import static utility.Constants.BROKER_FEES;
-import static utility.Constants.LINE_BREAKER;
-import static utility.Constants.PORTFOLIO_DIRECTORY;
-import static utility.Constants.PORTFOLIO_FILENAME;
-import static utility.Constants.PORTFOLIO_NOT_FOUND;
-import static utility.Constants.RELATIVE_PATH;
-import static utility.Constants.STOCK_DIRECTORY;
-import static utility.Constants.TICKER_DIRECTORY;
-
 /**
  * Abstract base class for implementations of {@link ModelInterface}. This clas contains all the
  * method definitions that are common to the concrete implementations of the {@link ModelInterface}

@@ -33,6 +33,7 @@ public class CostBasis implements StockPortfolioCommand {
 
   @Override
   public void undo(ModelInterface model) {
+    // Undo functionality from future use
   }
 
   /**

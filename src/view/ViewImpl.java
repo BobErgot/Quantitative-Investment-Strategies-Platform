@@ -215,6 +215,7 @@ public class ViewImpl implements View {
     this.out.append(LINE_BREAKER + message);
   }
 
+  @Override
   public void askForEnum(Class<Periodicity> e) {
     this.out.append(LINE_BREAKER + "Please type any of the following values to group: ");
     for (Enum enumValue : EnumSet.allOf(Periodicity.class)) {

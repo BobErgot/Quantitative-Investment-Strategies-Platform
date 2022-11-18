@@ -37,8 +37,8 @@ public class FlexibleModelImplementation extends ModelAbstract {
     Portfolio portfolioToModify = this.getPortfolioObjectById(portfolioName);
     Set<Share> newShares = new HashSet<>(portfolioToModify.getListOfShares());
     if (!checkValidNumStocks(symbol, numShares, newShares, date)) {
-      throw new IllegalArgumentException("Number of shares is less than shares bought in " +
-          "this portfolio!");
+      throw new IllegalArgumentException("Number of shares is less than shares bought in "
+              + "this portfolio!");
     }
     double stockSellingPrice = 0.0;
 

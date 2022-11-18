@@ -26,8 +26,10 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
     do {
       selectedId = scanner.next().trim();
       flag = model.idIsPresent(selectedId);
-    } while (!flag);
-    LocalDate to = null, from = null;
+    }
+    while (!flag);
+    LocalDate to = null;
+    LocalDate from = null;
     flag = false;
     do {
       try {
@@ -39,7 +41,8 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
       } catch (DateTimeParseException invalidDate) {
         view.printInvalidDateError();
       }
-    } while (!flag);
+    }
+    while (!flag);
 
     Periodicity group = null;
     if (MONTHS.between(from, to) < 5) {
@@ -64,7 +67,8 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
       } else {
         flag = true;
       }
-    } while (!flag);
+    }
+    while (!flag);
     if (portfolioPerformance.size() == 0) {
       view.printInvalidInputMessage();
       return;
@@ -104,5 +108,6 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
 
   @Override
   public void undo(ModelInterface model) {
+    // Undo functionality from future use
   }
 }

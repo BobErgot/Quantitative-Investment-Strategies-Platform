@@ -38,10 +38,12 @@ public class Composition implements StockPortfolioCommand {
         view.printMessage(LINE_BREAKER);
         break;
       }
-    } while (!flag);
+    }
+    while (!flag);
   }
 
   @Override
   public void undo(ModelInterface model) {
+    // Undo functionality from future use
   }
 }
