@@ -66,7 +66,7 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
       }
     } while (!flag);
     if (portfolioPerformance.size() == 0) {
-      view.printInvalidInputMessage(); //TODO
+      view.printInvalidInputMessage();
       return;
     }
 

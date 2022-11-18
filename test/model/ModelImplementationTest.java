@@ -213,7 +213,8 @@ public class ModelImplementationTest {
     assertEquals("+id:Porttest\n" + "creationDate:2020-12-12\n"
             + "*shares:+companyName:IBM,purchaseDate:2022-11-14,price:31.0,numShares:20",
             model.getPortfolioById(portfolioName));
-    assertEquals(170.0, model.sellStocks(portfolioName, "IBM", 19), 0.0);
+    assertEquals(170.0, model.sellStocks(portfolioName, "IBM", 19,
+            LocalDate.now()), 0.0);
     assertEquals("+id:Porttest\n" + "creationDate:2020-12-12\n"
             + "*shares:+companyName:IBM,purchaseDate:2022-11-14,price:31.0,numShares:1",
             model.getPortfolioById(portfolioName));
@@ -225,7 +226,7 @@ public class ModelImplementationTest {
     model.addShareToModel("IBM", LocalDate.now(), 20, 30);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.now());
-    model.sellStocks(portfolioName, "IBM", 20);
+    model.sellStocks(portfolioName, "IBM", 20, LocalDate.now());
   }
 
   // To sell share is greater than number of present shares
@@ -237,7 +238,7 @@ public class ModelImplementationTest {
     model.createPortfolio(portfolioName, LocalDate.now());
 
     try {
-      model.sellStocks(portfolioName, "IBM", 30);
+      model.sellStocks(portfolioName, "IBM", 30, LocalDate.now());
       fail("Test case passed even though blank Id was given");
     } catch (IllegalArgumentException e) {
       // Test passed
@@ -338,7 +339,6 @@ public class ModelImplementationTest {
             model.getPortfolioById(portfolioName));
     model.addShareToModel("MSFT", LocalDate.parse("2021-12-03"), 20,
             -1);
-    //model.appendPortfolio(portfolioName); TODO
     assertEquals("+id:Porttest\n" + "creationDate:2020-11-02\n" +
             "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:11.0,numShares:20|" +
             "+companyName:AAPL,purchaseDate:2021-11-01,price:11.0,numShares:20|" +
