@@ -394,7 +394,7 @@ abstract class ModelAbstract implements ModelInterface {
       String failedPortfolio = failedPortfolios.toString();
       String failedMessage = "";
       if (failedPortfolio.length() > 0) {
-        failedMessage += "The following portfolios already exist: " + failedPortfolio + "\n";
+        failedMessage += "The following portfolios already exist: " + failedPortfolio + LINE_BREAKER;
       }
       if (failedShare.length() > 0) {
         failedMessage += "The following shares are invalid: " + failedShare;

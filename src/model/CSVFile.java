@@ -27,7 +27,7 @@ import java.util.logging.Level;
 class CSVFile extends FileAbstract {
 
   private static final String EXTENSION = "csv";
-  private static final String RECORD_DELIMITER = "\n";
+  private static final String RECORD_DELIMITER = LINE_BREAKER;
 
   @Override
   public String getFileExtension() {
@@ -69,7 +69,7 @@ class CSVFile extends FileAbstract {
         Future<Integer> operation = fileChannel.read(buffer, 0);
         operation.get();
         String fileContent = new String(buffer.array()).trim();
-        for (String lineData : fileContent.split("\n")) {
+        for (String lineData : fileContent.split(LINE_BREAKER)) {
           if (lineData.trim().length() > 0) {
             fileData.add(lineData.trim());
           }
@@ -85,7 +85,7 @@ class CSVFile extends FileAbstract {
   @Override
   public String convertObjectIntoString(String object, List<String> referenceFile) {
     StringBuilder stringFormat = new StringBuilder();
-    String[] objectFields = object.split("\n");
+    String[] objectFields = object.split(LINE_BREAKER);
     int index = 0;
     for (int i = 0; i < objectFields.length - 1; i++) {
       if (objectFields[i].charAt(0) == '*') {
@@ -112,7 +112,7 @@ class CSVFile extends FileAbstract {
     StringBuilder stringFormat = new StringBuilder();
     for (T t : objectList) {
       stringFormat.append(convertObjectIntoString(t.toString().trim(), null));
-      stringFormat.append("\n");
+      stringFormat.append(LINE_BREAKER);
     }
     return stringFormat.toString();
   }

@@ -100,11 +100,11 @@ class Portfolio {
       return toString.append("").toString();
     }
     for (int i = 0; i < shares.size() - 1; i++) {
-      String record = shareList.get(i).toString().replace("\n", ",");
+      String record = shareList.get(i).toString().replace(LINE_BREAKER, ",");
       record = record.substring(0, record.length() - 1);
       toString.append(record).append("|");
     }
-    String record = shareList.get(shares.size() - 1).toString().replace("\n",
+    String record = shareList.get(shares.size() - 1).toString().replace(LINE_BREAKER,
             ",");
     record = record.substring(0, record.length() - 1);
     toString.append(record);
