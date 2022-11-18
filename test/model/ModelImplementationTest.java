@@ -352,7 +352,7 @@ public class ModelImplementationTest {
     ModelInterface model = new MockModel();
     String portfolioName = "Porttest";
     try {
-      model.appendPortfolio(portfolioName, "AZDESS", 10 );
+      model.appendPortfolio(portfolioName, "AZDESS", 10, LocalDate.now());
       fail("Invalid appending operation & function did not throw any error");
     } catch (NoSuchElementException e) {
       // accepted

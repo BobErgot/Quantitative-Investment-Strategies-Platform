@@ -63,8 +63,12 @@ public class CostBasis implements StockPortfolioCommand {
           view.printInvalidDateError();
         }
       }
-      invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31))
-              && date.isBefore(LocalDate.now());
+      if (date.isAfter(LocalDate.of(1949, 12, 31))
+              && date.isBefore(LocalDate.now())) {
+        invalidDate = false;
+      } else {
+        invalidDate = true;
+      }
       if (invalidDate) {
         view.printInvalidInputMessage();
       }

@@ -32,11 +32,11 @@ public class FlexibleModelImplementation extends ModelAbstract {
   }
 
   @Override
-  public double sellStocks(String portfolioName, String symbol, int numShares) {
+  public double sellStocks(String portfolioName, String symbol, int numShares, LocalDate date) {
     // Checking if numShares is less than the currently less than bought shares
     Portfolio portfolioToModify = this.getPortfolioObjectById(portfolioName);
     Set<Share> newShares = new HashSet<>(portfolioToModify.getListOfShares());
-    if (!checkValidNumStocks(symbol, numShares, newShares)) {
+    if (!checkValidNumStocks(symbol, numShares, newShares, date)) {
       throw new IllegalArgumentException("Number of shares is less than shares bought in " +
           "this portfolio!");
     }
@@ -44,10 +44,10 @@ public class FlexibleModelImplementation extends ModelAbstract {
 
     for (Share share : new HashSet<>(newShares)) {
       if (share.getCompanyName().equals(symbol)) {
-        double currentShareSellingPrice = this.getStockPrice(share.getCompanyName(),
-            LocalDate.now());
+        double currentShareSellingPrice = this.getStockPrice(share.getCompanyName(), date);
         newShares.remove(share);
-        if (share.getNumShares() > numShares) {
+        if (share.getNumShares() > numShares && (share.getPurchaseDate().isBefore(date)
+                || share.getPurchaseDate().isEqual(date))) {
           stockSellingPrice += numShares * currentShareSellingPrice;
           newShares.add(new Share(share.getCompanyName(), share.getPurchaseDate(), share.getPrice(),
               share.getNumShares() - numShares));

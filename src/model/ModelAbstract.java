@@ -422,12 +422,14 @@ abstract class ModelAbstract implements ModelInterface {
     return stockData.contains(symbol);
   }
 
-  protected boolean checkValidNumStocks(String symbol, int numStocks, Set<Share> newShares) {
+  protected boolean checkValidNumStocks(String symbol, int numStocks, Set<Share> newShares,
+                                        LocalDate date) {
     int companyShares = 0;
     if (!this.checkTicker(symbol))
       throw new NoSuchElementException("Ticker does not exist");
     for (Share share : newShares) {
-      if (share.getCompanyName().equals(symbol)) {
+      if (share.getCompanyName().equals(symbol) && (share.getPurchaseDate().isBefore(date)
+              || share.getPurchaseDate().isEqual(date))) {
         companyShares += share.getNumShares();
         if (companyShares >= numStocks) {
           return true;
@@ -440,7 +442,7 @@ abstract class ModelAbstract implements ModelInterface {
   }
 
   @Override
-  public double sellStocks(String portfolioName, String symbol, int numShares) {
+  public double sellStocks(String portfolioName, String symbol, int numShares, LocalDate date) {
     throw new IllegalStateException("Cannot access this function!");
   }
 

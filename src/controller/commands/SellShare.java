@@ -1,8 +1,11 @@
 package controller.commands;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import controller.StockPortfolioCommand;
 import model.FlexibleModelImplementation;
@@ -60,8 +63,34 @@ public class SellShare implements StockPortfolioCommand {
             view.printInvalidInputMessage();
             isValidCompany = false;
           } else {
+            boolean invalidDate;
+            LocalDate date;
+            String stockDate;
+            do {
+              while (true) {
+                try {
+                  view.askForDate();
+                  stockDate = scanner.next();
+                  invalidDate = !(Pattern.matches("\\d{4}-\\d{2}-\\d{2}", stockDate));
+                  date = LocalDate.parse(stockDate);
+                  break;
+                } catch (DateTimeParseException dtp) {
+                  view.printInvalidDateError();
+                }
+              }
+              if (date.isAfter(LocalDate.of(1949, 12, 31))
+                      && (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now()))) {
+                invalidDate = false;
+              } else {
+                invalidDate = true;
+              }
+              if (invalidDate) {
+                view.printInvalidInputMessage();
+              }
+            }
+            while (invalidDate);
             try {
-              double soldPrice = model.sellStocks(portfolioId, companyName, shares);
+              double soldPrice = model.sellStocks(portfolioId, companyName, shares, date);
               view.showSoldValuation(soldPrice);
               view.printCompanyStockUpdated();
             } catch (NoSuchElementException noSuchElementException) {

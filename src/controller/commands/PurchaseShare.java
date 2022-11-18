@@ -78,16 +78,20 @@ public class PurchaseShare implements StockPortfolioCommand {
                   view.printInvalidDateError();
                 }
               }
-              invalidDate = invalidDate && date.isAfter(LocalDate.of(1949, 12, 31))
-                      && date.isBefore(LocalDate.now());
+              if (date.isAfter(LocalDate.of(1949, 12, 31))
+                      && (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now()))) {
+                invalidDate = false;
+              } else {
+                invalidDate = true;
+              }
               if (invalidDate) {
                 view.printInvalidInputMessage();
               }
             }
             while (invalidDate);
             try {
-              double soldPrice = model.appendPortfolio(portfolioId, companyName, shares, date);
-              view.showAmountPaid(soldPrice);
+              double boughtPrice = model.appendPortfolio(portfolioId, companyName, shares, date);
+              view.showAmountPaid(boughtPrice);
               view.printCompanyStockUpdated();
             } catch (NoSuchElementException noSuchElementException) {
               isValidCompany = false;

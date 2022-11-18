@@ -54,10 +54,10 @@ public class ViewImpl implements View {
   public void showAddShareWithApiInputMenu(int parameterNumber) throws IllegalArgumentException {
     switch (parameterNumber) {
       case 0:
-        this.out.append(LINE_BREAKER + "Enter Company Name:");
+        this.out.append(LINE_BREAKER + "Enter Company Name: ");
         break;
       case 1:
-        this.out.append(LINE_BREAKER + "Enter Number of shares:");
+        this.out.append(LINE_BREAKER + "Enter Number of shares: ");
         break;
       default:
         throw new IllegalArgumentException("Incorrect parameter Number");
@@ -143,7 +143,7 @@ public class ViewImpl implements View {
 
   @Override
   public void askForDate() {
-    this.out.append(LINE_BREAKER + "Please enter date in yyyy-mm-dd format.");
+    this.out.append(LINE_BREAKER + "Please enter date in yyyy-mm-dd format: ");
   }
 
   @Override
@@ -170,7 +170,7 @@ public class ViewImpl implements View {
 
   @Override
   public void enterPath() {
-    this.out.append(LINE_BREAKER + "Enter path:");
+    this.out.append(LINE_BREAKER + "Enter path: ");
   }
 
   @Override
@@ -216,7 +216,7 @@ public class ViewImpl implements View {
   }
 
   public void askForEnum(Class<Periodicity> e) {
-    this.out.append(LINE_BREAKER + "Please type any of the following values to group:");
+    this.out.append(LINE_BREAKER + "Please type any of the following values to group: ");
     for (Enum enumValue : EnumSet.allOf(Periodicity.class)) {
       this.out.append(enumValue.toString());
     }

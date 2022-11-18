@@ -1,4 +1,16 @@
-JAR commands to run the program:
+A text description (SETUP-README.txt) in the res folder of how exactly to run your program  from the
+ JAR file. If you require the jar file to be in a specific folder, or require other files  with it,
+ please include these directions here. You should also include detailed instructions on how  to run
+ your program to create a portfolio, purchase stocks of at least 3 different companies in that
+ portfolio at different dates and then query the value and cost basis of that portfolio on two
+ specific dates. We will run your program with this data to begin grading. You should also include
+ a list of stocks that your program supports, along with dates on which its value can be determined
+  (if there are restrictions in your program about which data is available).
+
+
+Unzip the submitted file and copy the JAR file to desired location in an empty folder.
+
+commands to run the program:
 1. jar tf pdp.jar
 2. jar xf pdp.jar stocker
 3. java -jar pdp.jar
