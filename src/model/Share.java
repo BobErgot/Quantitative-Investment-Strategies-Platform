@@ -1,5 +1,7 @@
 package model;
 
+import static utility.Constants.LINE_BREAKER;
+
 import java.time.LocalDate;
 
 /**
@@ -104,7 +106,7 @@ public class Share implements Comparable<Object> {
 
   @Override
   public String toString() {
-    return "+companyName:" + this.companyName + "\n" + "purchaseDate:" + this.purchaseDate + "\n"
-            + "price:" + this.price + "\n" + "numShares:" + this.numShares + "\n";
+    return "+companyName:" + this.companyName + LINE_BREAKER + "purchaseDate:" + this.purchaseDate + LINE_BREAKER
+            + "price:" + this.price + LINE_BREAKER + "numShares:" + this.numShares + LINE_BREAKER;
   }
 }
