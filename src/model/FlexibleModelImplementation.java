@@ -101,7 +101,7 @@ public class FlexibleModelImplementation extends ModelAbstract {
   @Override
   public double appendPortfolio(String portfolioName, String symbol, int numShares, LocalDate date)
       throws NoSuchElementException {
-    if (!checkTicker(symbol) && numShares <= 0) {
+    if (!checkTicker(symbol) && numShares <= 0 )  {
       throw new NoSuchElementException("Entered ticker symbol or share numbers is invalid");
     }
     String stockFileName = null;

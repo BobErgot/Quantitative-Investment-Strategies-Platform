@@ -1,5 +1,8 @@
 package controller.commands;
 
+import static java.time.temporal.ChronoUnit.MONTHS;
+import static java.time.temporal.ChronoUnit.YEARS;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Collections;
@@ -23,8 +26,7 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
     do {
       selectedId = scanner.next().trim();
       flag = model.idIsPresent(selectedId);
-    }
-    while (!flag);
+    } while (!flag);
     LocalDate to = null, from = null;
     flag = false;
     do {
@@ -37,54 +39,65 @@ public class GeneratePerformanceGraph implements controller.StockPortfolioComman
       } catch (DateTimeParseException invalidDate) {
         view.printInvalidDateError();
       }
-    }
-    while (!flag);
+    } while (!flag);
 
     Periodicity group = null;
+    if (MONTHS.between(from, to) < 5) {
+      group = Periodicity.DAY;
+    } else if (YEARS.between(from, to) < 5) {
+      group = Periodicity.MONTH;
+    } else {
+      group = Periodicity.YEAR;
+    }
     flag = false;
+    List<Double> portfolioPerformance;
     do {
-      try {
-        view.askForEnum(Periodicity.class);
-        String groupString = scanner.next().trim();
-        if (groupString.equalsIgnoreCase("day")) {
+      portfolioPerformance = model.getPortfolioPerformance(selectedId, from, to, group);
+      if (portfolioPerformance.size() < 5) {
+        if (group == Periodicity.DAY) {
+          flag = true;
+        } else if (group == Periodicity.MONTH) {
           group = Periodicity.DAY;
-        }
-        if (groupString.equalsIgnoreCase("month")) {
+        } else {
           group = Periodicity.MONTH;
         }
-        if (groupString.equalsIgnoreCase("year")) {
-          group = Periodicity.YEAR;
-        }
+      } else {
         flag = true;
-      } catch (DateTimeParseException invalidDate) {
-        view.printInvalidDateError();
       }
-    }
-    while (!flag);
-
-    List<Double> portfolioPerformance = model.getPortfolioPerformance(selectedId, from, to, group);
-    if(portfolioPerformance.size()==0) {
+    } while (!flag);
+    if (portfolioPerformance.size() == 0) {
       view.printInvalidInputMessage(); //TODO
       return;
     }
 
-    double max = Collections.min(portfolioPerformance);
-    double min = Collections.max(portfolioPerformance);
-    int scale = (int) Math.floor(Math.log10((max + min) / 2));
+    double max = Collections.max(portfolioPerformance);
+    double min = Collections.min(portfolioPerformance);
+    int scale = (int) Math.floor(Math.log10(min));
+
+    view.printMessage("Graph From:" + from + "\tTo:" + to);
 
     LocalDate previousDate = to;
     int index = 0;
-    for (LocalDate date = to; index<portfolioPerformance.size() && (date.isAfter(from) ||
-            date.equals(from)); date = date.plusDays(-1)) {
-      if (previousDate.getYear() != (date.getYear()) && group == Periodicity.YEAR) {
-        view.printStars(date, group, portfolioPerformance.get(index++), scale);
-      } else if (previousDate.getMonth().compareTo(date.getMonth()) != 0
-          && group == Periodicity.MONTH) {
-        view.printStars(date, group, portfolioPerformance.get(index++), scale);
-      } else if (group == Periodicity.DAY) {
+
+    int numReqSkip = portfolioPerformance.size() - 30;
+
+    for (LocalDate date = to;
+        index < portfolioPerformance.size() && (date.isAfter(from) || date.equals(from));
+        date = date.plusDays(-1)) {
+
+      if ((previousDate.getYear() != (date.getYear()) && group == Periodicity.YEAR) || (
+          previousDate.getMonth().compareTo(date.getMonth()) != 0 && group == Periodicity.MONTH)
+          || (group == Periodicity.DAY)) {
+        previousDate = date;
+        numReqSkip--;
+        if ((numReqSkip % 2 == 0 || numReqSkip % 3 == 0 || numReqSkip % 5 == 0) && numReqSkip > 0) {
+          continue;
+        }
         view.printStars(date, group, portfolioPerformance.get(index++), scale);
       }
       previousDate = date;
+
+
     }
     view.printMessage("SCALE:\t * ≈ " + (int) Math.pow(10, scale) + "$");
   }
