@@ -108,7 +108,7 @@ public interface ModelInterface {
    * @param from the start date
    * @param to the end date
    * @param group time filter category
-   * @return a list of data points that can be used by the view to plot the bar graph
+   * @re  turn a list of data points that can be used by the view to plot the bar graph
    */
   List<Double> getPortfolioPerformance(String id, LocalDate from, LocalDate to, Periodicity group);
 
