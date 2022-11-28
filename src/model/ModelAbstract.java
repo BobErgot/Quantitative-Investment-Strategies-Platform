@@ -258,7 +258,8 @@ abstract class ModelAbstract implements ModelInterface {
       } else {
         if (footer > header + headerDistance) {
           footer = (int) (header + headerDistance);
-          footerDate = LocalDate.parse(stockData.get(footer).split(",", 2)[0]).atStartOfDay();
+          footerDate = LocalDate.parse(stockData.get(footer).split(",",
+                  2)[0]).atStartOfDay();
         } else {
           int mid = footer - (footer - header) / 2;
           LocalDateTime midDate = LocalDate.parse(stockData.get(mid).split(",", 2)[0])
@@ -394,7 +395,8 @@ abstract class ModelAbstract implements ModelInterface {
       String failedPortfolio = failedPortfolios.toString();
       String failedMessage = "";
       if (failedPortfolio.length() > 0) {
-        failedMessage += "The following portfolios already exist: " + failedPortfolio + LINE_BREAKER;
+        failedMessage += "The following portfolios already exist: " + failedPortfolio
+                + LINE_BREAKER;
       }
       if (failedShare.length() > 0) {
         failedMessage += "The following shares are invalid: " + failedShare;

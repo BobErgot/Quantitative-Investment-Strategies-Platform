@@ -106,7 +106,8 @@ public class Share implements Comparable<Object> {
 
   @Override
   public String toString() {
-    return "+companyName:" + this.companyName + LINE_BREAKER + "purchaseDate:" + this.purchaseDate + LINE_BREAKER
-            + "price:" + this.price + LINE_BREAKER + "numShares:" + this.numShares + LINE_BREAKER;
+    return "+companyName:" + this.companyName + LINE_BREAKER + "purchaseDate:"
+            + this.purchaseDate + LINE_BREAKER + "price:" + this.price + LINE_BREAKER
+            + "numShares:" + this.numShares + LINE_BREAKER;
   }
 }
