@@ -24,7 +24,7 @@ public class ModelImplementationTest {
 
   // create Empty portfolio
   @Test
-  public void testEmptyCreatePortfolios() {
+  public void testEmptyCreatePortfolio() {
     ModelInterface model = new MockModel();
     try {
       model.createPortfolio("", LocalDate.now());
@@ -243,7 +243,7 @@ public class ModelImplementationTest {
   }
 
   @Test
-  public void testSellAllShares() {
+  public void testSellAllShare() {
     ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.now(), 20, 30);
     String portfolioName = "Porttest";
@@ -360,7 +360,7 @@ public class ModelImplementationTest {
   }
 
   @Test
-  public void testValidAppendPortfolio() {
+  public void testValidAppendPortfolios() {
     ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20,
             -1);
@@ -383,7 +383,7 @@ public class ModelImplementationTest {
   }
 
   @Test
-  public void testInvalidAppendPortfolio() {
+  public void testInvalidAppendPortfolios() {
     ModelInterface model = new MockModel();
     String portfolioName = "Porttest";
     try {
