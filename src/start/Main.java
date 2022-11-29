@@ -2,7 +2,9 @@ package start;
 
 import controller.Controller;
 import controller.ControllerImpl;
+import gui.HomeScreen;
 import model.ModelImplementation;
+import model.ModelInterface;
 
 /**
  * This class serves as an entryway for the portfolio management program.
@@ -14,7 +16,9 @@ public class Main {
    * @param args command line arguments passed when the jar is executed
    */
   public static void main(String[] args) {
-    Controller c = new ControllerImpl(System.in, System.out, new ModelImplementation());
-    c.start();
+    ModelInterface model = new ModelImplementation();
+    HomeScreen view = new HomeScreen();
+    Controller controller = new ControllerImpl(model, view);
+    controller.start();
   }
 }

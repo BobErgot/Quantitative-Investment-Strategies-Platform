@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.time.LocalDate;
 
+import gui.HomeScreen;
 import model.ModelInterface;
 
 import static controller.MockModelUtil.compareStringContents;
@@ -26,7 +27,7 @@ public class ControllerImplTest {
     // can be any mock model
     ModelInterface model = new MockModelUpload(new StringBuilder());
     model.createPortfolio("testabc", LocalDate.now());
-    ControllerImpl controller = new ControllerImpl(in, out, model);
+    ControllerImpl controller = new ControllerImpl(model, new HomeScreen());
     try {
       controller.start();
     } catch (Exception e) {
@@ -78,7 +79,7 @@ public class ControllerImplTest {
     InputStream in = new ByteArrayInputStream(("876 4").getBytes());
     // can be any mock model
     ModelInterface model = new MockModelUpload(new StringBuilder());
-    ControllerImpl controller = new ControllerImpl(in, out, model);
+    ControllerImpl controller = new ControllerImpl(model, new HomeScreen());
     try {
       controller.start();
     }

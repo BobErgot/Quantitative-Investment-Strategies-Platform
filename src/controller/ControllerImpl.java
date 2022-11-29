@@ -18,6 +18,9 @@ import model.ModelInterface;
 import view.View;
 import view.ViewImpl;
 
+import static java.lang.System.in;
+import static java.lang.System.out;
+
 /**
  * The controller implementation that receives all its inputs from an InputStream object and
  * transmits all outputs to a PrintStream object. It also interacts with the model based on the
@@ -34,14 +37,14 @@ public class ControllerImpl implements Controller, ActionListener {
    * Construct a controller implementation object that has the provided InputStream, PrintStream and
    * ModelInterface object.
    *
-   * @param in    InputStream object to receive all the inputs
-   * @param out   PrintStream object to transmit all the outputs to
-   * @param model ModelInterface object to communicate and receive data from model implementation
+   * @param model ModelInterface object to communicate and receive data from model
+   *              implementation
+   * @param view ModelInterface object to communicate and send data to view implementation
    */
-  public ControllerImpl(InputStream in, PrintStream out, ModelInterface model) {
+  public ControllerImpl(ModelInterface model, HomeScreen view) {
     this.scanner = new Scanner(in);
     this.viewObject = new ViewImpl(out);
-    view = new HomeScreen();
+    this.view = view;
     this.modelObject = model;
   }
 

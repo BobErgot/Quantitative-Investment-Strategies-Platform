@@ -8,7 +8,7 @@
     <properties>
       <name value=""/>
     </properties>
-    <border type="none" title="Stocker"/>
+    <border type="none" title=""/>
     <children>
       <tabbedpane id="f13db" binding="homeScreenTabbedPane">
         <constraints>
