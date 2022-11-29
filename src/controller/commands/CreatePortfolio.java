@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 import controller.StockPortfolioCommand;
-import gui.HomeScreen;
+import model.FlexibleModelImplementation;
 import model.ModelInterface;
 import view.View;
 
@@ -16,73 +16,72 @@ import view.View;
 public class CreatePortfolio implements StockPortfolioCommand {
 
   @Override
-  public boolean process(ModelInterface model, HomeScreen view) {
-//    boolean invalidInput;
-//    boolean portfolioCompleted;
-//    invalidInput = false;
-//    do {
-//      view.askPortfolioType();
-//      String choice = scanner.next();
-//      if (choice.equals("1")) {
-//        invalidInput = true;
-//        break;
-//      } else if (choice.equals("2")) {
-//        model = new FlexibleModelImplementation();
-//        invalidInput = true;
-//        break;
-//      } else {
-//        view.printInvalidInputMessage();
-//      }
-//    }
-//    while (!invalidInput);
-//    do {
-//      invalidInput = false;
-//      portfolioCompleted = false;
-//      boolean canCreateShare = model.canCreateShare();
-//      view.showCreatePortfolioMenu(canCreateShare);
-//      String choice = scanner.next();
-//      switch (choice) {
-//        case "1":
-//          this.addShareWithApiInput(view, scanner, model);
-//          break;
-//        case "2":
-//          if (canCreateShare) {
-//            boolean invalidPortfolioName = false;
-//            do {
-//              invalidPortfolioName = false;
-//              view.askForPortfolioName();
-//              String portfolioName = scanner.next().trim();
-//              if (portfolioName.length() > 0 && !model.idIsPresent(portfolioName)) {
-//                model.createPortfolio(portfolioName, LocalDate.now());
-//                portfolioCompleted = true;
-//                view.showMainMenu();
-//                break;
-//              } else {
-//                invalidPortfolioName = true;
-//              }
-//              if (invalidPortfolioName) {
-//                view.printInvalidInputMessage();
-//              }
-//            }
-//            while (invalidPortfolioName);
-//          } else {
-//            invalidInput = true;
-//          }
-//          break;
-//        case "back":
-//          portfolioCompleted = true;
-//          view.showMainMenu();
-//          break;
-//        default:
-//          invalidInput = true;
-//          break;
-//      }
-//      if (invalidInput) {
-//        view.printInvalidInputMessage();
-//      }
-//    }
-//    while (invalidInput || !portfolioCompleted);
-    return false;
+  public void process(View view, Scanner scanner, ModelInterface model) {
+    boolean invalidInput;
+    boolean portfolioCompleted;
+    invalidInput = false;
+    do {
+      view.askPortfolioType();
+      String choice = scanner.next();
+      if (choice.equals("1")) {
+        invalidInput = true;
+        break;
+      } else if (choice.equals("2")) {
+        model = new FlexibleModelImplementation();
+        invalidInput = true;
+        break;
+      } else {
+        view.printInvalidInputMessage();
+      }
+    }
+    while (!invalidInput);
+    do {
+      invalidInput = false;
+      portfolioCompleted = false;
+      boolean canCreateShare = model.canCreateShare();
+      view.showCreatePortfolioMenu(canCreateShare);
+      String choice = scanner.next();
+      switch (choice) {
+        case "1":
+          this.addShareWithApiInput(view, scanner, model);
+          break;
+        case "2":
+          if (canCreateShare) {
+            boolean invalidPortfolioName = false;
+            do {
+              invalidPortfolioName = false;
+              view.askForPortfolioName();
+              String portfolioName = scanner.next().trim();
+              if (portfolioName.length() > 0 && !model.idIsPresent(portfolioName)) {
+                model.createPortfolio(portfolioName, LocalDate.now());
+                portfolioCompleted = true;
+                view.showMainMenu();
+                break;
+              } else {
+                invalidPortfolioName = true;
+              }
+              if (invalidPortfolioName) {
+                view.printInvalidInputMessage();
+              }
+            }
+            while (invalidPortfolioName);
+          } else {
+            invalidInput = true;
+          }
+          break;
+        case "back":
+          portfolioCompleted = true;
+          view.showMainMenu();
+          break;
+        default:
+          invalidInput = true;
+          break;
+      }
+      if (invalidInput) {
+        view.printInvalidInputMessage();
+      }
+    }
+    while (invalidInput || !portfolioCompleted);
   }
 
   @Override

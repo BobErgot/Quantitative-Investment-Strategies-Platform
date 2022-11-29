@@ -1,9 +1,5 @@
 package controller;
 
-import controller.commands.CreatePortfolio;
-import controller.commands.UploadPortfolio;
-import controller.commands.ViewPortfolio;
-import gui.HomeScreen;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -11,12 +7,13 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.function.Function;
+
+import controller.commands.CreatePortfolio;
+import controller.commands.UploadPortfolio;
+import controller.commands.ViewPortfolio;
 import model.ModelInterface;
 import view.View;
 import view.ViewImpl;
-
-import static java.lang.System.in;
-import static java.lang.System.out;
 
 /**
  * The controller implementation that receives all its inputs from an InputStream object and
@@ -33,11 +30,11 @@ public class ControllerImpl implements Controller {
    * Construct a controller implementation object that has the provided InputStream, PrintStream and
    * ModelInterface object.
    *
-   * @param model ModelInterface object to communicate and receive data from model
-   *              implementation
-   * @param view ModelInterface object to communicate and send data to view implementation
+   * @param in    InputStream object to receive all the inputs
+   * @param out   PrintStream object to transmit all the outputs to
+   * @param model ModelInterface object to communicate and receive data from model implementation
    */
-  public ControllerImpl(ModelInterface model, HomeScreen view) {
+  public ControllerImpl(InputStream in, PrintStream out, ModelInterface model) {
     this.scanner = new Scanner(in);
     this.viewObject = new ViewImpl(out);
     this.modelObject = model;
@@ -48,7 +45,7 @@ public class ControllerImpl implements Controller {
     Stack<StockPortfolioCommand> commands = new Stack<>();
     Map<String, Function<Scanner, StockPortfolioCommand>> knownCommands = new HashMap<>();
     knownCommands.put("1", s -> new CreatePortfolio());
-//    knownCommands.put("2", s -> new UploadPortfolio());
+    knownCommands.put("2", s -> new UploadPortfolio());
     knownCommands.put("3", s -> new ViewPortfolio());
 
     viewObject.showMainMenu();
@@ -56,19 +53,18 @@ public class ControllerImpl implements Controller {
       StockPortfolioCommand command;
       String input = this.scanner.next();
       if (input.equalsIgnoreCase("quit")
-          || input.equalsIgnoreCase("exit")) {
+              || input.equalsIgnoreCase("exit")) {
         return;
       }
       Function<Scanner, StockPortfolioCommand> cmd = knownCommands.getOrDefault(input,
-          null);
+              null);
       if (cmd == null) {
         viewObject.printInvalidInputMessage();
       } else {
         command = cmd.apply(this.scanner);
         commands.add(command);
-//        command.process(this.viewObject, this.scanner, this.modelObject);
+        command.process(this.viewObject, this.scanner, this.modelObject);
       }
     }
   }
-
 }

@@ -1,9 +1,15 @@
 package gui_controller;
 
 import gui.HomeScreen;
+
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.util.zip.DataFormatException;
+
 import model.FlexibleModelImplementation;
 import model.ModelInterface;
+
+import static utility.Constants.FILE_SEPARATOR;
 
 public class GeneralController implements Features{
   private ModelInterface model;
@@ -40,8 +46,22 @@ public class GeneralController implements Features{
   }
 
   @Override
-  public void uploadPortfolio(String path, boolean isRelativePath) {
-
+  public boolean uploadPortfolio(String filePath) {
+    boolean validPath = false;
+    int idx = filePath.lastIndexOf(FILE_SEPARATOR);
+    String folderName = filePath.substring(0, idx);
+    String[] file = filePath.substring(idx + 1).split("\\.");
+    idx = folderName.lastIndexOf(FILE_SEPARATOR);
+    String root = filePath.substring(0, idx);
+    String folder = filePath.substring(idx + 1);
+    idx = folder.lastIndexOf(FILE_SEPARATOR);
+    folder = folder.substring(0, idx);
+    try {
+      validPath = model.addPortfolioByUpload(root, folder, file[0], file[1]);
+    } catch (DataFormatException | FileNotFoundException e) {
+      validPath = false;
+    }
+    return validPath;
   }
 
   @Override

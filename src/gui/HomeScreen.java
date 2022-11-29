@@ -49,11 +49,8 @@ public class HomeScreen extends JFrame implements GUIView {
   private JButton createFlexiblePortfolioButton;
   private JButton uploadButton;
   private JTextField portfolioNameJTextField;
-  // Upload
+
   private Path filePath;
-
-  private String absoluteFilePath;
-
   public HomeScreen() {
     browseFileJButton.addActionListener(new ActionListener() {
       @Override
@@ -72,15 +69,22 @@ public class HomeScreen extends JFrame implements GUIView {
         }
       }
     });
+  }
 
-    uploadButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (filePath != null && !filePath.getFileName().toString().isEmpty()) {
-          absoluteFilePath = filePath.toAbsolutePath().toString();
-        }
-      }
-    });
+  @Override
+  public void addFeatures(Features features) {
+    addShareJButton.addActionListener(evt -> addShare(features));
+    createFixedPortfolioJButton.addActionListener(evt -> addPortfolio(features,
+            PortfolioType.Fixed));
+    createFlexiblePortfolioButton.addActionListener(evt -> addPortfolio(features,
+            PortfolioType.Flexible));
+    uploadButton.addActionListener(evt -> uploadPortfolio(features));
+  }
+
+
+  @Override
+  public void clearText(String id) {
+    return;
   }
 
   public void showView() {
@@ -89,55 +93,11 @@ public class HomeScreen extends JFrame implements GUIView {
     this.setContentPane(applicationJPanel);
     this.setSize(500, 500);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//    browseFileJButton.addActionListener(actionListener);
     this.pack();
-  }
-
-  public String getFilePath() {
-    if (filePath != null && !filePath.getFileName().toString().isEmpty()) {
-      absoluteFilePath = filePath.toAbsolutePath().toString();
-    }
-    return absoluteFilePath;
-  }
-
-  public void clearPathSelectedLabel() {
-    pathSelectedJLabel.setText("No Files Selected");
-    absoluteFilePath = null;
-    filePath = null;
-    notificationJLabel.setText("File uploaded successfully!");
-    notificationJLabel.setForeground(Color.GREEN);
-    uploadButton.setEnabled(false);
-  }
-
-  public void errorPathSelectedLabel() {
-    pathSelectedJLabel.setText("Try to upload another file");
-    absoluteFilePath = null;
-    filePath = null;
-    notificationJLabel.setText("File upload failed as either the file did not exist or format is " +
-        "wrong!");
-    notificationJLabel.setForeground(Color.RED);
-    uploadButton.setEnabled(false);
   }
 
   public void makeVisible() {
     this.setVisible(true);
-  }
-
-  public void refresh() {
-    this.repaint();
-  }
-
-  public void showErrorMessage(String error) {
-    JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
-  }
-
-  private boolean checkValidStocks(String numStocks) {
-    try {
-      int test = Integer.parseInt(numStocks);
-      return test > 0;
-    } catch (NumberFormatException invalidStock) {
-      return false;
-    }
   }
 
   private void addShare(Features features) {
@@ -148,7 +108,7 @@ public class HomeScreen extends JFrame implements GUIView {
       if (!companyAdded) {
         // Give invalid ticker symbol error.
         JOptionPane.showMessageDialog(new JFrame(), INVALID_TICKER, "Dialog",
-            JOptionPane.ERROR_MESSAGE);
+                JOptionPane.ERROR_MESSAGE);
       } else {
         // Stocks added successfully
         companyTickerJTextField.setText("");
@@ -160,7 +120,16 @@ public class HomeScreen extends JFrame implements GUIView {
     } else {
       // give invalid stocks exception to user.
       JOptionPane.showMessageDialog(new JFrame(), INVALID_STOCKS, "Dialog",
-          JOptionPane.ERROR_MESSAGE);
+              JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+  private boolean checkValidStocks(String numStocks) {
+    try {
+      int test = Integer.parseInt(numStocks);
+      return test > 0;
+    } catch (NumberFormatException invalidStock) {
+      return false;
     }
   }
 
@@ -171,34 +140,55 @@ public class HomeScreen extends JFrame implements GUIView {
       portfolioSaved = features.createPortfolio(portfolioName, pType);
     } else {
       JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_INVALID, "Dialog",
-          JOptionPane.ERROR_MESSAGE);
+              JOptionPane.ERROR_MESSAGE);
     }
     if (!portfolioSaved) {
       JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_EXISTS, "Dialog",
-          JOptionPane.ERROR_MESSAGE);
+              JOptionPane.ERROR_MESSAGE);
     } else {
       // Portfolio created successfully
       portfolioNameJTextField.setText("");
       JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_CREATED, "Dialog",
-          JOptionPane.OK_OPTION);
+              JOptionPane.OK_OPTION);
       createFlexiblePortfolioButton.setEnabled(false);
       createFixedPortfolioJButton.setEnabled(false);
     }
   }
 
-  @Override
-  public void addFeatures(Features features) {
-
-    addShareJButton.addActionListener(evt -> addShare(features));
-    createFixedPortfolioJButton.addActionListener(
-        evt -> addPortfolio(features, PortfolioType.Fixed));
-    createFlexiblePortfolioButton.addActionListener(
-        evt -> addPortfolio(features, PortfolioType.Flexible));
+  private void uploadPortfolio(Features features) {
+    Path filePath = this.filePath;
+    String absoluteFilePath = null;
+    if (filePath != null && !filePath.getFileName().toString().isEmpty()) {
+      absoluteFilePath = filePath.toAbsolutePath().toString();
+    }
+    boolean status = features.uploadPortfolio(absoluteFilePath);
+    if (status){
+      clearPathSelectedLabel();
+    } else {
+      errorPathSelectedLabel();
+    }
   }
 
+  public void clearPathSelectedLabel() {
+    pathSelectedJLabel.setText("No Files Selected");
+    notificationJLabel.setText("File uploaded successfully!");
+    notificationJLabel.setForeground(Color.GREEN);
+    uploadButton.setEnabled(false);
+  }
 
-  @Override
-  public void clearText(String id) {
+  public void errorPathSelectedLabel() {
+    pathSelectedJLabel.setText("Try to upload another file");
+    notificationJLabel.setText("File upload failed as either the file did not exist or format is " +
+        "wrong!");
+    notificationJLabel.setForeground(Color.RED);
+    uploadButton.setEnabled(false);
+  }
 
+  public void refresh() {
+    this.repaint();
+  }
+
+  public void showErrorMessage(String error) {
+    JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
   }
 }

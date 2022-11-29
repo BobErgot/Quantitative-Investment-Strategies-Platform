@@ -6,7 +6,6 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import controller.StockPortfolioCommand;
-import gui.HomeScreen;
 import model.ModelInterface;
 import view.View;
 
@@ -17,20 +16,19 @@ import view.View;
 public class Valuation implements StockPortfolioCommand {
 
   @Override
-  public boolean process(ModelInterface model, HomeScreen View) {
-    boolean flag = false;
-//    do {
-//      view.selectPortfolio();
-//      String selectedId = scanner.next().trim();
-//      flag = showValuationOfPortfolio(selectedId, view, scanner, model);
-//      if (!flag) {
-//        view.printInvalidInputMessage();
-//      } else {
-//        break;
-//      }
-//    }
-//    while (!flag);
-    return flag;
+  public void process(View view, Scanner scanner, ModelInterface model) {
+    boolean flag;
+    do {
+      view.selectPortfolio();
+      String selectedId = scanner.next().trim();
+      flag = showValuationOfPortfolio(selectedId, view, scanner, model);
+      if (!flag) {
+        view.printInvalidInputMessage();
+      } else {
+        break;
+      }
+    }
+    while (!flag);
   }
 
   @Override

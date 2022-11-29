@@ -6,7 +6,7 @@ public interface Features {
   boolean createPortfolio(String portfolioName, PortfolioType pType);
 
   // Upload Tab
-  void uploadPortfolio(String path, boolean isRelativePath);
+  boolean uploadPortfolio(String filePath);
 
   // View Tab
   void purchaseShare(String portfolioName, String shareName, int numShares);

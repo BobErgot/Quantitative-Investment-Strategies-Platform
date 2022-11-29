@@ -16,8 +16,6 @@ public class Main {
    * @param args command line arguments passed when the jar is executed
    */
   public static void main(String[] args) {
-//    Controller c = new ControllerImpl(System.in, System.out, new ModelImplementation());
-//    c.start();
     HomeScreen view = new HomeScreen();
     GeneralController generalController = new GeneralController( new ModelImplementation());
     generalController.setView(view);
