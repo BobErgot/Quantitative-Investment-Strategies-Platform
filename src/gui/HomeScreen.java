@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.nio.file.Path;
 
 import javax.swing.*;
@@ -17,12 +16,19 @@ public class HomeScreen {
   private JButton addShareJButton;
   private JButton browseFileJButton;
   private JLabel notificationJLabel;
-  private JScrollPane viewPortfolioJScrollPane;
   private JPanel createPortfolioJPanel;
   private JPanel uploadPortfolioJPanel;
   private JLabel companyTickerJLabel;
   private JLabel numberSharesJLabel;
   private JLabel pathSelectedJLabel;
+  private JPanel viewPortfolioJPanel;
+  private JButton compositionButton;
+  private JButton valuationButton;
+  private JButton costBasisButton;
+  private JButton buySharesButton;
+  private JButton sellSharesButton;
+  private JButton investmentPerformanceButton;
+  private JButton createNewInvestmentStrategyButton;
 
   public HomeScreen() {
     browseFileJButton.addActionListener(new ActionListener() {
