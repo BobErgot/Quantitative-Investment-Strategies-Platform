@@ -1,12 +1,15 @@
 package gui;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
 
 import javax.swing.*;
 
-public class HomeScreen {
+import controller.ControllerImpl;
+
+public class HomeScreen extends JFrame{
   private JPanel applicationJPanel;
   private JTabbedPane homeScreenTabbedPane;
   private JButton createFixedPortfolioJButton;
@@ -40,5 +43,27 @@ public class HomeScreen {
         Path chosenFilePath = jFileChooser.getSelectedFile().toPath();
       }
     });
+  }
+
+  public void showView (ActionListener actionListener) {
+    makeVisible();
+    this.setTitle("Stocker");
+    this.setContentPane(applicationJPanel);
+    this.setSize(500, 500);
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    browseFileJButton.addActionListener(actionListener);
+    this.pack();
+  }
+
+  public void makeVisible() {
+    this.setVisible(true);
+  }
+
+  public void refresh() {
+    this.repaint();
+  }
+
+  public void showErrorMessage(String error) {
+    JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
   }
 }

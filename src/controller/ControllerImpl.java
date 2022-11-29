@@ -1,5 +1,7 @@
 package controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import java.util.function.Function;
 import controller.commands.CreatePortfolio;
 import controller.commands.UploadPortfolio;
 import controller.commands.ViewPortfolio;
+import gui.HomeScreen;
 import model.ModelInterface;
 import view.View;
 import view.ViewImpl;
@@ -20,11 +23,12 @@ import view.ViewImpl;
  * transmits all outputs to a PrintStream object. It also interacts with the model based on the
  * received input from the user.
  */
-public class ControllerImpl implements Controller {
+public class ControllerImpl implements Controller, ActionListener {
 
   private final View viewObject;
   private final ModelInterface modelObject;
   private final Scanner scanner;
+  private final HomeScreen view;
 
   /**
    * Construct a controller implementation object that has the provided InputStream, PrintStream and
@@ -37,11 +41,13 @@ public class ControllerImpl implements Controller {
   public ControllerImpl(InputStream in, PrintStream out, ModelInterface model) {
     this.scanner = new Scanner(in);
     this.viewObject = new ViewImpl(out);
+    view = new HomeScreen();
     this.modelObject = model;
   }
 
   @Override
   public void start() {
+    this.view.showView(this);
     Stack<StockPortfolioCommand> commands = new Stack<>();
     Map<String, Function<Scanner, StockPortfolioCommand>> knownCommands = new HashMap<>();
     knownCommands.put("1", s -> new CreatePortfolio());
@@ -66,5 +72,10 @@ public class ControllerImpl implements Controller {
         command.process(this.viewObject, this.scanner, this.modelObject);
       }
     }
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+
   }
 }
