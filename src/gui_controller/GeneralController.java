@@ -1,5 +1,6 @@
 package gui_controller;
 
+import gui.GUIView;
 import gui.HomeScreen;
 
 import java.io.FileNotFoundException;
@@ -13,12 +14,12 @@ import static utility.Constants.FILE_SEPARATOR;
 
 public class GeneralController implements Features{
   private ModelInterface model;
-  private HomeScreen view;
+  private GUIView view;
   public GeneralController(ModelInterface model){
     this.model = model;
 
   }
-  public void setView(HomeScreen view) {
+  public void setView(GUIView view) {
     this.view = view;
     this.view.addFeatures(this);
     this.view.showView();
