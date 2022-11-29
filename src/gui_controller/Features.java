@@ -3,7 +3,7 @@ package gui_controller;
 public interface Features {
   // Create portfolio tab
   boolean purchaseShare(String shareName, int numShares);
-  void createPortfolio(String portfolioName);
+  boolean createPortfolio(String portfolioName, PortfolioType pType);
 
   // Upload Tab
   void uploadPortfolio(String path, boolean isRelativePath);

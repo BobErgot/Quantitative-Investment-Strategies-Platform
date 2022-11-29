@@ -2,20 +2,31 @@ package gui;
 
 import static utility.ViewConstants.INVALID_STOCKS;
 import static utility.ViewConstants.INVALID_TICKER;
+import static utility.ViewConstants.PORTFOLIO_CREATED;
+import static utility.ViewConstants.PORTFOLIO_EXISTS;
+import static utility.ViewConstants.PORTFOLIO_INVALID;
 
 import gui_controller.Features;
-import java.awt.*;
+import gui_controller.PortfolioType;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
-
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class HomeScreen extends JFrame implements GUIView {
+
   private JPanel applicationJPanel;
   private JTabbedPane homeScreenTabbedPane;
-  private JButton createFlexiblePortfolioJButton;
+  private JButton createFixedPortfolioJButton;
   private JTextField companyTickerJTextField;
   private JTextField numberSharesJTextField;
   private JButton addShareJButton;
@@ -34,9 +45,11 @@ public class HomeScreen extends JFrame implements GUIView {
   private JButton sellSharesButton;
   private JButton investmentPerformanceButton;
   private JButton createNewInvestmentStrategyButton;
+  // Create Portfolio
   private JButton createFlexiblePortfolioButton;
   private JButton uploadButton;
-
+  private JTextField portfolioNameJTextField;
+  // Upload
   private Path filePath;
 
   private String absoluteFilePath;
@@ -47,11 +60,13 @@ public class HomeScreen extends JFrame implements GUIView {
       public void actionPerformed(ActionEvent e) {
         JFileChooser jFileChooser = new JFileChooser();
         int selectedFile = jFileChooser.showOpenDialog(null);
-        if (selectedFile != JFileChooser.APPROVE_OPTION) return;
+        if (selectedFile != JFileChooser.APPROVE_OPTION) {
+          return;
+        }
         filePath = jFileChooser.getSelectedFile().toPath();
-        if(filePath != null && !filePath.getFileName().toString().isEmpty()){
+        if (filePath != null && !filePath.getFileName().toString().isEmpty()) {
           pathSelectedJLabel.setText(filePath.getFileName().toString());
-          pathSelectedJLabel.setBorder(new EmptyBorder(0,10,0,0));
+          pathSelectedJLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
           uploadButton.setEnabled(true);
           browseFileJButton.setText("Browse another File");
         }
@@ -61,14 +76,14 @@ public class HomeScreen extends JFrame implements GUIView {
     uploadButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        if(filePath != null && !filePath.getFileName().toString().isEmpty()){
+        if (filePath != null && !filePath.getFileName().toString().isEmpty()) {
           absoluteFilePath = filePath.toAbsolutePath().toString();
         }
       }
     });
   }
 
-  public void showView () {
+  public void showView() {
     makeVisible();
     this.setTitle("Stocker");
     this.setContentPane(applicationJPanel);
@@ -79,7 +94,7 @@ public class HomeScreen extends JFrame implements GUIView {
   }
 
   public String getFilePath() {
-    if(filePath != null && !filePath.getFileName().toString().isEmpty()){
+    if (filePath != null && !filePath.getFileName().toString().isEmpty()) {
       absoluteFilePath = filePath.toAbsolutePath().toString();
     }
     return absoluteFilePath;
@@ -99,7 +114,7 @@ public class HomeScreen extends JFrame implements GUIView {
     absoluteFilePath = null;
     filePath = null;
     notificationJLabel.setText("File upload failed as either the file did not exist or format is " +
-            "wrong!");
+        "wrong!");
     notificationJLabel.setForeground(Color.RED);
     uploadButton.setEnabled(false);
   }
@@ -119,12 +134,13 @@ public class HomeScreen extends JFrame implements GUIView {
   private boolean checkValidStocks(String numStocks) {
     try {
       int test = Integer.parseInt(numStocks);
-      return test>     0  ;
+      return test > 0;
     } catch (NumberFormatException invalidStock) {
       return false;
     }
   }
-  private void addShare(Features features)  {
+
+  private void addShare(Features features) {
     String numStocks = numberSharesJTextField.getText().trim();
     String companyStocks = companyTickerJTextField.getText().trim();
     if (checkValidStocks(numStocks)) {
@@ -133,11 +149,13 @@ public class HomeScreen extends JFrame implements GUIView {
         // Give invalid ticker symbol error.
         JOptionPane.showMessageDialog(new JFrame(), INVALID_TICKER, "Dialog",
             JOptionPane.ERROR_MESSAGE);
-      }
-      else{
+      } else {
         // Stocks added successfully
         companyTickerJTextField.setText("");
         numberSharesJTextField.setText("");
+        createFlexiblePortfolioButton.setEnabled(true);
+        createFixedPortfolioJButton.setEnabled(true);
+
       }
     } else {
       // give invalid stocks exception to user.
@@ -146,15 +164,37 @@ public class HomeScreen extends JFrame implements GUIView {
     }
   }
 
-  @Override
-  public void addFeatures(Features features) {
-    addShareJButton.addActionListener(evt -> addShare(features));
-    createFixedPortfolioJButton.addActionListener(evt->{
-//      String portfolioName =
-//      boolean portfolioSaved = features.createPortfolio(portfolioName);
-    });
+  private void addPortfolio(Features features, PortfolioType pType) {
+    String portfolioName = portfolioNameJTextField.getText();
+    boolean portfolioSaved = true;
+    if (portfolioName.length() > 0) {
+      portfolioSaved = features.createPortfolio(portfolioName, pType);
+    } else {
+      JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_INVALID, "Dialog",
+          JOptionPane.ERROR_MESSAGE);
+    }
+    if (!portfolioSaved) {
+      JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_EXISTS, "Dialog",
+          JOptionPane.ERROR_MESSAGE);
+    } else {
+      // Portfolio created successfully
+      portfolioNameJTextField.setText("");
+      JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_CREATED, "Dialog",
+          JOptionPane.OK_OPTION);
+      createFlexiblePortfolioButton.setEnabled(false);
+      createFixedPortfolioJButton.setEnabled(false);
+    }
   }
 
+  @Override
+  public void addFeatures(Features features) {
+
+    addShareJButton.addActionListener(evt -> addShare(features));
+    createFixedPortfolioJButton.addActionListener(
+        evt -> addPortfolio(features, PortfolioType.Fixed));
+    createFlexiblePortfolioButton.addActionListener(
+        evt -> addPortfolio(features, PortfolioType.Flexible));
+  }
 
 
   @Override

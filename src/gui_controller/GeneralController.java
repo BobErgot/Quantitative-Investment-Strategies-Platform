@@ -2,6 +2,7 @@ package gui_controller;
 
 import gui.HomeScreen;
 import java.time.LocalDate;
+import model.FlexibleModelImplementation;
 import model.ModelInterface;
 
 public class GeneralController implements Features{
@@ -28,8 +29,14 @@ public class GeneralController implements Features{
   }
 
   @Override
-  public void createPortfolio(String portfolioName) {
-
+  public boolean createPortfolio(String portfolioName, PortfolioType pType) {
+    if (!model.idIsPresent(portfolioName)) {
+      if (pType == PortfolioType.Flexible)
+        this.model = new FlexibleModelImplementation();
+      this.model.createPortfolio(portfolioName, LocalDate.now());
+      return true;
+    }
+    return false;
   }
 
   @Override

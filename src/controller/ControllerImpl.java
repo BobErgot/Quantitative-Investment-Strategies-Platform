@@ -3,6 +3,7 @@ package controller;
 import controller.commands.CreatePortfolio;
 import controller.commands.UploadPortfolio;
 import controller.commands.ViewPortfolio;
+import gui.HomeScreen;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public class ControllerImpl implements Controller {
     Stack<StockPortfolioCommand> commands = new Stack<>();
     Map<String, Function<Scanner, StockPortfolioCommand>> knownCommands = new HashMap<>();
     knownCommands.put("1", s -> new CreatePortfolio());
-    knownCommands.put("2", s -> new UploadPortfolio());
+//    knownCommands.put("2", s -> new UploadPortfolio());
     knownCommands.put("3", s -> new ViewPortfolio());
 
     viewObject.showMainMenu();
@@ -65,7 +66,7 @@ public class ControllerImpl implements Controller {
       } else {
         command = cmd.apply(this.scanner);
         commands.add(command);
-        command.process(this.viewObject, this.scanner, this.modelObject);
+//        command.process(this.viewObject, this.scanner, this.modelObject);
       }
     }
   }
