@@ -51,34 +51,45 @@ public class ControllerImpl implements Controller, ActionListener {
   @Override
   public void start() {
     this.view.showView(this);
-    Stack<StockPortfolioCommand> commands = new Stack<>();
-    Map<String, Function<Scanner, StockPortfolioCommand>> knownCommands = new HashMap<>();
-    knownCommands.put("1", s -> new CreatePortfolio());
-    knownCommands.put("2", s -> new UploadPortfolio());
-    knownCommands.put("3", s -> new ViewPortfolio());
-
-    viewObject.showMainMenu();
-    while (this.scanner.hasNext()) {
-      StockPortfolioCommand command;
-      String input = this.scanner.next();
-      if (input.equalsIgnoreCase("quit")
-              || input.equalsIgnoreCase("exit")) {
-        return;
-      }
-      Function<Scanner, StockPortfolioCommand> cmd = knownCommands.getOrDefault(input,
-              null);
-      if (cmd == null) {
-        viewObject.printInvalidInputMessage();
-      } else {
-        command = cmd.apply(this.scanner);
-        commands.add(command);
-        command.process(this.viewObject, this.scanner, this.modelObject);
-      }
-    }
+//    Stack<StockPortfolioCommand> commands = new Stack<>();
+//    Map<String, Function<Scanner, StockPortfolioCommand>> knownCommands = new HashMap<>();
+//    knownCommands.put("1", s -> new CreatePortfolio());
+//    knownCommands.put("2", s -> new UploadPortfolio());
+//    knownCommands.put("3", s -> new ViewPortfolio());
+//
+//    viewObject.showMainMenu();
+//    while (this.scanner.hasNext()) {
+//      StockPortfolioCommand command;
+//      String input = this.scanner.next();
+//      if (input.equalsIgnoreCase("quit")
+//              || input.equalsIgnoreCase("exit")) {
+//        return;
+//      }
+//      Function<Scanner, StockPortfolioCommand> cmd = knownCommands.getOrDefault(input,
+//              null);
+//      if (cmd == null) {
+//        viewObject.printInvalidInputMessage();
+//      } else {
+//        command = cmd.apply(this.scanner);
+//        commands.add(command);
+//        command.process(this.modelObject, this.view);
+//      }
+//    }
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-
+    if (e.getActionCommand().equals("Upload")){
+      String filePath = view.getFilePath();
+      StockPortfolioCommand command;
+      command = new UploadPortfolio(filePath);
+      boolean status = command.process(this.modelObject, this.view);
+      System.out.println(status);
+      if (status){
+        view.clearPathSelectedLabel();
+      } else {
+        view.errorPathSelectedLabel();
+      }
+    }
   }
 }

@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import controller.StockPortfolioCommand;
+import gui.HomeScreen;
 import model.FlexibleModelImplementation;
 import model.ModelInterface;
 import view.View;
@@ -20,28 +21,29 @@ import view.View;
 public class SellShare implements StockPortfolioCommand {
 
   @Override
-  public void process(View view, Scanner scanner, ModelInterface model) {
-    boolean flag;
-    boolean fixed = false;
-    do {
-      view.selectPortfolio();
-      String selectedId = scanner.next().trim();
-      flag = model.idIsPresent(selectedId);
-      if (!flag) {
-        view.printInvalidInputMessage();
-        continue;
-      }
-      if (flag) {
-        fixed = checkIfPortfolioMutable(selectedId, model);
-      }
-      if (!fixed) {
-        flag = false;
-        view.alertFixedPortfolio();
-      } else {
-        callPortfolio(view, scanner, model, selectedId);
-      }
-    }
-    while (!flag);
+  public boolean process(ModelInterface model, HomeScreen view) {
+    boolean flag = false;
+//    boolean fixed = false;
+//    do {
+//      view.selectPortfolio();
+//      String selectedId = scanner.next().trim();
+//      flag = model.idIsPresent(selectedId);
+//      if (!flag) {
+//        view.printInvalidInputMessage();
+//        continue;
+//      }
+//      if (flag) {
+//        fixed = checkIfPortfolioMutable(selectedId, model);
+//      }
+//      if (!fixed) {
+//        flag = false;
+//        view.alertFixedPortfolio();
+//      } else {
+//        callPortfolio(view, scanner, model, selectedId);
+//      }
+//    }
+//    while (!flag);
+    return flag;
   }
 
   private void callPortfolio(View view, Scanner scanner, ModelInterface model, String portfolioId) {
