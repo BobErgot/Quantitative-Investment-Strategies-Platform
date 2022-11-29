@@ -1,5 +1,9 @@
 package gui;
 
+import static utility.ViewConstants.INVALID_STOCKS;
+import static utility.ViewConstants.INVALID_TICKER;
+
+import gui_controller.Features;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +12,7 @@ import java.nio.file.Path;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class HomeScreen extends JFrame{
+public class HomeScreen extends JFrame implements GUIView {
   private JPanel applicationJPanel;
   private JTabbedPane homeScreenTabbedPane;
   private JButton createFlexiblePortfolioJButton;
@@ -64,14 +68,13 @@ public class HomeScreen extends JFrame{
     });
   }
 
-  public void showView (ActionListener actionListener) {
+  public void showView () {
     makeVisible();
     this.setTitle("Stocker");
     this.setContentPane(applicationJPanel);
     this.setSize(500, 500);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    browseFileJButton.addActionListener(actionListener);
-    uploadButton.addActionListener(actionListener);
+//    browseFileJButton.addActionListener(actionListener);
     this.pack();
   }
 
@@ -111,5 +114,51 @@ public class HomeScreen extends JFrame{
 
   public void showErrorMessage(String error) {
     JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
+  }
+
+  private boolean checkValidStocks(String numStocks) {
+    try {
+      int test = Integer.parseInt(numStocks);
+      return test>     0  ;
+    } catch (NumberFormatException invalidStock) {
+      return false;
+    }
+  }
+  private void addShare(Features features)  {
+    String numStocks = numberSharesJTextField.getText().trim();
+    String companyStocks = companyTickerJTextField.getText().trim();
+    if (checkValidStocks(numStocks)) {
+      boolean companyAdded = features.purchaseShare(companyStocks, Integer.parseInt(numStocks));
+      if (!companyAdded) {
+        // Give invalid ticker symbol error.
+        JOptionPane.showMessageDialog(new JFrame(), INVALID_TICKER, "Dialog",
+            JOptionPane.ERROR_MESSAGE);
+      }
+      else{
+        // Stocks added successfully
+        companyTickerJTextField.setText("");
+        numberSharesJTextField.setText("");
+      }
+    } else {
+      // give invalid stocks exception to user.
+      JOptionPane.showMessageDialog(new JFrame(), INVALID_STOCKS, "Dialog",
+          JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+  @Override
+  public void addFeatures(Features features) {
+    addShareJButton.addActionListener(evt -> addShare(features));
+    createFixedPortfolioJButton.addActionListener(evt->{
+//      String portfolioName =
+//      boolean portfolioSaved = features.createPortfolio(portfolioName);
+    });
+  }
+
+
+
+  @Override
+  public void clearText(String id) {
+
   }
 }
