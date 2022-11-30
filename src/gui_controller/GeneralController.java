@@ -5,6 +5,7 @@ import static utility.Constants.FILE_SEPARATOR;
 import gui.GUIView;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 import model.FlexibleModelImplementation;
@@ -28,18 +29,12 @@ public class GeneralController implements Features {
   }
 
   private void updatePortfolioList() {
-    this.view.listAllPortfolios(
-        this.model.getPortfolio().stream().map((inp) -> inp.split("\\|\\|")[2].trim())
-            .collect(Collectors.toList()));
-  }
-
-  @Override
-  public boolean purchaseShare(String shareName, int numShares) {
-    try {
-      return model.addShareToModel(shareName, LocalDate.now(), numShares, -1);
-    } catch (IllegalArgumentException invalidTicker) {
-      return false;
-    }
+    List<String> portfolios = new FlexibleModelImplementation().getPortfolio();
+    this.view.listAllPortfolios(portfolios.stream().map((inp) -> inp.split("\\|\\|")[2].trim())
+        .collect(Collectors.toList()));
+    this.view.listAllMutablePortfolios(
+        portfolios.stream().filter(inp -> inp.split("\\|\\|").length >= 5)
+            .map((inp) -> inp.split("\\|\\|")[2].trim()).collect(Collectors.toList()));
   }
 
   @Override
@@ -75,8 +70,26 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public void purchaseShare(String portfolioName, String shareName, int numShares) {
+  public boolean purchaseShare(String shareName, int numShares, LocalDate date) {
+    try {
+      return model.addShareToModel(shareName, date, numShares, -1);
+    } catch (IllegalArgumentException invalidTicker) {
+      return false;
+    }
+  }
 
+  @Override
+  public boolean purchaseShare(String portfolioName, String shareName, int numShares,
+      LocalDate date) {
+    if (!this.model.checkTicker(shareName)) {
+      return false;
+    }
+    try {
+      new FlexibleModelImplementation().appendPortfolio(portfolioName, shareName, numShares, date);
+      return true;
+    } catch (IllegalArgumentException invalidTicker) {
+      return false;
+    }
   }
 
   @Override
@@ -85,8 +98,8 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public void generateCostBasis() {
-
+  public double generateCostBasis(String id, LocalDate date) {
+    return this.model.getCostBasis(id, date);
   }
 
   @Override

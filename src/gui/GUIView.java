@@ -11,5 +11,7 @@ public interface GUIView {
 
   void showView();
 
-  void listAllPortfolios(List<String> collect);
+  void listAllPortfolios(List<String> portfolios);
+
+  void listAllMutablePortfolios(List<String> portfolios);
 }
