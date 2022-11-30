@@ -76,6 +76,8 @@ public class GeneralController implements Features {
 
   @Override
   public boolean purchaseShare(String shareName, int numShares, LocalDate date) {
+    if(numShares<=0)
+      return false;
     try {
       return model.addShareToModel(shareName, date, numShares, -1);
     } catch (IllegalArgumentException invalidTicker) {
@@ -99,7 +101,7 @@ public class GeneralController implements Features {
 
   @Override
   public double sellShare(String portfolioName, String shareName, int numShares, LocalDate date) {
-    if (!this.model.checkTicker(shareName)) {
+    if (!this.model.checkTicker(shareName) || numShares<=0.0) {
       return -1.0;
     }
     return new FlexibleModelImplementation().sellStocks(portfolioName, shareName,
@@ -113,7 +115,6 @@ public class GeneralController implements Features {
 
   @Override
   public String generateComposition(String id) {
-    System.out.println(id + this.model.getPortfolioById(id));
     return this.model.getPortfolioById(id);
   }
 
