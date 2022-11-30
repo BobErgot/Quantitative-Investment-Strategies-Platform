@@ -23,7 +23,10 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.zip.DataFormatException;
 
 /**
@@ -191,26 +194,27 @@ abstract class ModelAbstract implements ModelInterface {
     }
     LocalDate[] range = portfolioObject.getDateRangeOfStockData();
     range[0] = from.compareTo(range[0]) > 0 ? from : range[0];
-    range[1] = to;
-    LocalDate previousDate = range[0];
-    for (LocalDate date = range[0]; date.isBefore(range[1]) || date.equals(range[1]);
-        date = date.plusDays(1)) {
+    range[1] = roundUpDate(to,group);
 
-      if (previousDate.getMonth().compareTo(date.getMonth()) != 0 && group == Periodicity.MONTH) {
-        portfolioPerformanceByPeriodicity.add(
-            this.getValuationGivenDate(portfolioObject.getId(), date));
-      } else if (previousDate.getYear() < date.getYear() && group == Periodicity.YEAR) {
-        portfolioPerformanceByPeriodicity.add(
-            this.getValuationGivenDate(portfolioObject.getId(), date));
-      } else {
-        portfolioPerformanceByPeriodicity.add(
-            this.getValuationGivenDate(portfolioObject.getId(), date));
-      }
-      previousDate = date;
+    LocalDate date = range[0];
+    Map<Periodicity, Function<LocalDate,LocalDate>> updateFunction = new HashMap<>();
+    updateFunction.put(Periodicity.DAY, (currentDate)->currentDate.plusDays(1));
+    updateFunction.put(Periodicity.MONTH, (currentDate)->currentDate.plusMonths(1));
+    updateFunction.put(Periodicity.YEAR, (currentDate)->currentDate.plusYears(1));
+
+    while(date.isBefore(range[1]) || date.equals(range[1])){
+      portfolioPerformanceByPeriodicity.add(this.getValuationGivenDate(portfolioObject.getId(), date));
+      date = roundUpDate(updateFunction.get(group).apply(date),group);
     }
     return portfolioPerformanceByPeriodicity;
   }
-
+  private LocalDate roundUpDate(LocalDate date, Periodicity periodicity){
+    if(periodicity==Periodicity.MONTH)
+      return date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
+    else if (periodicity==Periodicity.YEAR)
+      return LocalDate.of(date.getYear(),12,31);
+    return date;
+  }
 
   private double calculateAveragePrice(int position, List<String> stockData) {
     return Double.parseDouble(stockData.get(position).split(",")[4]);

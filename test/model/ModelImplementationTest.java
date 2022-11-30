@@ -348,11 +348,33 @@ public class ModelImplementationTest {
             -1);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
-    double[] answer = {12400.0, 18400.0, 1000.0};
+    double[] answer = {400.0, 600.0, 600.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
             LocalDate.parse("2020-11-01"), LocalDate.parse("2022-01-01"),
             Periodicity.MONTH);
-    assertEquals(2, actual.size());
+    assertEquals(3, actual.size());
+    for (int i = 0; i <= 1; i++) {
+      assertEquals(answer[i], actual.get(i), 0.0);
+    }
+
+  }
+  @Test
+  public void testYearlyGetPortfolioPerformance() {
+    ModelInterface model = new MockModel();
+    model.addShareToModel("IBM", LocalDate.parse("2020-11-01"), 20,
+        -1);
+    model.addShareToModel("AAPL", LocalDate.parse("2019-11-01"), 20,
+        -1);
+    model.addShareToModel("MSFT", LocalDate.parse("2021-12-03"), 20,
+        -1);
+    String portfolioName = "Porttest";
+    model.createPortfolio(portfolioName, LocalDate.parse("2019-11-02"));
+    double[] answer = {400.0, 600.0, 600.0};
+    List<Double> actual = model.getPortfolioPerformance(portfolioName,
+        LocalDate.parse("2020-11-01"), LocalDate.parse("2022-01-01"),
+        Periodicity.YEAR);
+    System.out.println(actual);
+    assertEquals(3, actual.size());
     for (int i = 0; i <= 1; i++) {
       assertEquals(answer[i], actual.get(i), 0.0);
     }
