@@ -11,8 +11,8 @@ public interface Features {
   boolean uploadPortfolio(String filePath);
 
   // View Tab
-  boolean purchaseShare(String portfolioName, String shareName, int numShares, LocalDate date);
-  void sellShare();
+  double purchaseShare(String portfolioName, String shareName, int numShares, LocalDate date);
+  double sellShare(String portfolioName, String shareName, int numShares, LocalDate date);
   double generateCostBasis(String id, LocalDate date);
   String generateComposition(String id);
   void generatePerformanceGraph();

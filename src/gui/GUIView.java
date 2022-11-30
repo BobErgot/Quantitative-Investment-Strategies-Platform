@@ -7,8 +7,6 @@ public interface GUIView {
 
   void addFeatures(Features features);
 
-  void clearText(String id);
-
   void showView();
 
   void listAllPortfolios(List<String> portfolios);

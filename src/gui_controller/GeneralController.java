@@ -79,21 +79,28 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public boolean purchaseShare(String portfolioName, String shareName, int numShares,
+  public double purchaseShare(String portfolioName, String shareName, int numShares,
       LocalDate date) {
     if (!this.model.checkTicker(shareName)) {
-      return false;
+      return -1.0;
     }
     try {
-      new FlexibleModelImplementation().appendPortfolio(portfolioName, shareName, numShares, date);
-      return true;
+      double boughtPrice = new FlexibleModelImplementation().appendPortfolio(portfolioName,
+          shareName, numShares, date);
+      return boughtPrice;
     } catch (IllegalArgumentException invalidTicker) {
-      return false;
+      return -1.0;
     }
   }
 
   @Override
-  public void sellShare() {
+  public double sellShare(String portfolioName, String shareName, int numShares, LocalDate date) {
+    if (!this.model.checkTicker(shareName)) {
+      return -1.0;
+    }
+    double sellingPrice = new FlexibleModelImplementation().sellStocks(portfolioName, shareName,
+        numShares, date);
+    return sellingPrice;
 
   }
 
