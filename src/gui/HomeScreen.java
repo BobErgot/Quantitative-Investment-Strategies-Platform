@@ -1,42 +1,40 @@
 package gui;
 
-import static utility.ViewConstants.BOUGHT_FOR;
-import static utility.ViewConstants.INVALID_DATE;
-import static utility.ViewConstants.INVALID_STOCKS;
-import static utility.ViewConstants.INVALID_TICKER;
-import static utility.ViewConstants.PORTFOLIO_CREATED;
-import static utility.ViewConstants.PORTFOLIO_EXISTS;
-import static utility.ViewConstants.PORTFOLIO_INVALID;
-import static utility.ViewConstants.SHARE_NUMBER_EXCEEDS;
-import static utility.ViewConstants.SOLD_FOR;
-import static utility.ViewConstants.STOCK_INVALID;
+import java.awt.*;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.DuplicateFormatFlagsException;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import gui_controller.Features;
 import gui_controller.PortfolioType;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.nio.file.Path;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.border.EmptyBorder;
+import static gui.ViewValidator.checkValidDate;
+import static gui.ViewValidator.checkValidFile;
+import static gui.ViewValidator.checkValidStocks;
+import static gui.utility.ViewConstants.BOUGHT_FOR;
+import static gui.utility.ViewConstants.FILE_UPLOAD_ANOTHER;
+import static gui.utility.ViewConstants.FILE_UPLOAD_FAIL_EXTENSION;
+import static gui.utility.ViewConstants.FILE_UPLOAD_FAIL_FORMAT;
+import static gui.utility.ViewConstants.FILE_UPLOAD_FAIL_NOT_FOUND;
+import static gui.utility.ViewConstants.FILE_UPLOAD_SUCCESS;
+import static gui.utility.ViewConstants.INVALID_DATE;
+import static gui.utility.ViewConstants.INVALID_STOCKS;
+import static gui.utility.ViewConstants.INVALID_TICKER;
+import static gui.utility.ViewConstants.NO_FILES_SELECTED;
+import static gui.utility.ViewConstants.PORTFOLIO_CREATED;
+import static gui.utility.ViewConstants.PORTFOLIO_EXISTS;
+import static gui.utility.ViewConstants.PORTFOLIO_INVALID;
+import static gui.utility.ViewConstants.SHARE_NUMBER_EXCEEDS;
+import static gui.utility.ViewConstants.SOLD_FOR;
+import static gui.utility.ViewConstants.STOCK_INVALID;
+import static gui.utility.ViewConstants.SUPPORTED_FILES;
+import static gui.utility.ViewConstants.SUPPORTED_FILE_EXTENSION;
+import static gui.utility.ViewConstants.UPLOAD_ANOTHER_FILE;
 
 /**
  * Java Swing implementation of GUIView, implements the GUI & all its features for the Stock
@@ -86,72 +84,52 @@ public class HomeScreen extends JFrame implements GUIView {
   // Upload
   private Path filePath;
 
-  public HomeScreen() {
-    browseFileJButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        JFileChooser jFileChooser = new JFileChooser();
-        int selectedFile = jFileChooser.showOpenDialog(null);
-        if (selectedFile != JFileChooser.APPROVE_OPTION) {
-          return;
-        }
-        filePath = jFileChooser.getSelectedFile().toPath();
-        if (filePath != null && !filePath.getFileName().toString().isEmpty()) {
-          pathSelectedJLabel.setText(filePath.getFileName().toString());
-          pathSelectedJLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
-          uploadButton.setEnabled(true);
-          browseFileJButton.setText("Browse another File");
-        }
-      }
-    });
-  }
-
   @Override
   public void addFeatures(Features features) {
 
-    addShareJButton.addActionListener(evt -> addShare(features, LocalDate.now()));
+    addShareJButton.addActionListener(event -> addShare(features, LocalDate.now()));
 
-    createFixedPortfolioJButton.addActionListener(evt -> addPortfolio(features,
+    createFixedPortfolioJButton.addActionListener(event -> addPortfolio(features,
             PortfolioType.Fixed));
 
-    createFlexiblePortfolioButton.addActionListener(evt -> addPortfolio(features,
+    createFlexiblePortfolioButton.addActionListener(event -> addPortfolio(features,
             PortfolioType.Flexible));
 
-    uploadButton.addActionListener(evt -> uploadPortfolio(features));
+    uploadButton.addActionListener(event -> uploadPortfolio(features));
 
-    showCompositionJButton.addActionListener(evt -> {String composition =
-            features.generateComposition((String) portfolioListComboBox.getSelectedItem());
+    browseFileJButton.addActionListener(event -> browseFiles());
 
+    showCompositionJButton.addActionListener(event -> {
+      String composition =
+              features.generateComposition((String) portfolioListComboBox.getSelectedItem());
       compositionJTextArea.setText(composition);
     });
 
-    showValuationJButton.addActionListener(evt -> {
+    showValuationJButton.addActionListener(event -> {
       String portfolioName = (String) showValuationPortfolioListComboBox.getSelectedItem();
       String date = showValuationDatePickerTextField.getText();
       if (checkValidDate(date)) {
         double valuation = features.getValuation(portfolioName, LocalDate.parse(date));
         valuationTextPane.setText("Valuation: $ " + valuation);
       } else {
-        JOptionPane.showMessageDialog(new JFrame(), INVALID_DATE, "Dialog",
-                JOptionPane.ERROR_MESSAGE);
+        showErrorMessage(INVALID_DATE);
       }
     });
 
-    showCostBasisJButton.addActionListener(evt -> {
+    showCostBasisJButton.addActionListener(event -> {
       String portfolioName = (String) showCostBasisPortfolioListComboBox.getSelectedItem();
       String date = showCostBasisDatePickerTextField.getText();
       if (checkValidDate(date)) {
         double valuation = features.generateCostBasis(portfolioName, LocalDate.parse(date));
         showCostBasisTextPane.setText("Cost Basis: $ " + valuation);
       } else {
-        JOptionPane.showMessageDialog(new JFrame(), INVALID_DATE, "Dialog",
-                JOptionPane.ERROR_MESSAGE);
+        showErrorMessage(INVALID_DATE);
       }
     });
 
-    purchaseShareJButton.addActionListener(evt -> purchaseShareOnMutablePortfolio(features));
+    purchaseShareJButton.addActionListener(event -> purchaseShareOnMutablePortfolio(features));
 
-    sellShareJButton.addActionListener(evt -> sellShareOnMutablePortfolio(features));
+    sellShareJButton.addActionListener(event -> sellShareOnMutablePortfolio(features));
   }
 
   private void sellShareOnMutablePortfolio(Features features) {
@@ -167,31 +145,24 @@ public class HomeScreen extends JFrame implements GUIView {
                   LocalDate.parse(date));
           if (sellingPrice < 0.0) {
             // Give invalid ticker symbol error.
-            JOptionPane.showMessageDialog(new JFrame(), INVALID_TICKER, "Dialog",
-                    JOptionPane.ERROR_MESSAGE);
+            showErrorMessage(INVALID_TICKER);
           } else {
             // Stocks added successfully
             sellShareCompanyTickerJTextField.setText("");
             sellShareNumberSharesJTextField.setText("");
             sellShareDatePickerTextField.setText("");
-            JOptionPane.showMessageDialog(new JFrame(), SOLD_FOR + sellingPrice,
-                    "Dialog", JOptionPane.OK_OPTION);
+            showInformationMessage(SOLD_FOR + sellingPrice);
           }
         } catch (NoSuchElementException noSuchElementException) {
-          JOptionPane.showMessageDialog(new JFrame(), STOCK_INVALID, "Dialog",
-                  JOptionPane.ERROR_MESSAGE);
+          showErrorMessage(STOCK_INVALID);
         } catch (IllegalArgumentException illegalArgumentException) {
-          JOptionPane.showMessageDialog(new JFrame(), SHARE_NUMBER_EXCEEDS, "Dialog",
-                  JOptionPane.ERROR_MESSAGE);
+          showErrorMessage(SHARE_NUMBER_EXCEEDS);
         }
-
       } else {
-        JOptionPane.showMessageDialog(new JFrame(), INVALID_DATE, "Dialog",
-                JOptionPane.ERROR_MESSAGE);
+        showErrorMessage(INVALID_DATE);
       }
     } else {
-      JOptionPane.showMessageDialog(new JFrame(), INVALID_STOCKS, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
+      showErrorMessage(INVALID_STOCKS);
     }
   }
 
@@ -206,23 +177,19 @@ public class HomeScreen extends JFrame implements GUIView {
                 Integer.parseInt(numStocks), LocalDate.parse(date));
         if (buyingPrice < 0.0) {
           // Give invalid ticker symbol error.
-          JOptionPane.showMessageDialog(new JFrame(), INVALID_TICKER, "Dialog",
-                  JOptionPane.ERROR_MESSAGE);
+          showErrorMessage(INVALID_TICKER);
         } else {
           // Stocks added successfully
           purchaseShareCompanyTickerJTextField.setText("");
           purchaseShareNumberSharesJTextField.setText("");
           purchaseShareDatePickerTextField.setText("");
-          JOptionPane.showMessageDialog(new JFrame(), BOUGHT_FOR + buyingPrice,
-                  "Dialog", JOptionPane.OK_OPTION);
+          showInformationMessage(BOUGHT_FOR + buyingPrice);
         }
       } else {
-        JOptionPane.showMessageDialog(new JFrame(), INVALID_DATE, "Dialog",
-                JOptionPane.ERROR_MESSAGE);
+        showErrorMessage(INVALID_DATE);
       }
     } else {
-      JOptionPane.showMessageDialog(new JFrame(), INVALID_STOCKS, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
+      showErrorMessage(INVALID_STOCKS);
     }
   }
 
@@ -244,6 +211,7 @@ public class HomeScreen extends JFrame implements GUIView {
 
   }
 
+  @Override
   public void showView() {
     makeVisible();
     this.setTitle("Stocker");
@@ -265,8 +233,7 @@ public class HomeScreen extends JFrame implements GUIView {
               date);
       if (!companyAdded) {
         // Give invalid ticker symbol error.
-        JOptionPane.showMessageDialog(new JFrame(), INVALID_TICKER, "Dialog",
-                JOptionPane.ERROR_MESSAGE);
+        showErrorMessage(INVALID_TICKER);
       } else {
         // Stocks added successfully
         companyTickerJTextField.setText("");
@@ -277,17 +244,7 @@ public class HomeScreen extends JFrame implements GUIView {
       }
     } else {
       // give invalid stocks exception to user.
-      JOptionPane.showMessageDialog(new JFrame(), INVALID_STOCKS, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
-    }
-  }
-
-  private boolean checkValidStocks(String numStocks) {
-    try {
-      int test = Integer.parseInt(numStocks);
-      return test > 0;
-    } catch (NumberFormatException invalidStock) {
-      return false;
+      showErrorMessage(INVALID_STOCKS);
     }
   }
 
@@ -297,17 +254,14 @@ public class HomeScreen extends JFrame implements GUIView {
     if (portfolioName.length() > 0) {
       portfolioSaved = features.createPortfolio(portfolioName, pType);
     } else {
-      JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_INVALID, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
+      showErrorMessage(PORTFOLIO_INVALID);
     }
     if (!portfolioSaved) {
-      JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_EXISTS, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
+      showErrorMessage(PORTFOLIO_EXISTS);
     } else {
       // Portfolio created successfully
       portfolioNameJTextField.setText("");
-      JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_CREATED, "Dialog",
-              JOptionPane.INFORMATION_MESSAGE);
+      showInformationMessage(PORTFOLIO_CREATED);
       createFlexiblePortfolioButton.setEnabled(false);
       createFixedPortfolioJButton.setEnabled(false);
     }
@@ -319,45 +273,65 @@ public class HomeScreen extends JFrame implements GUIView {
     if (filePath != null && !filePath.getFileName().toString().isEmpty()) {
       absoluteFilePath = filePath.toAbsolutePath().toString();
     }
-    boolean status = features.uploadPortfolio(absoluteFilePath);
-    if (status) {
-      clearPathSelectedLabel();
-    } else {
-      errorPathSelectedLabel();
+    try {
+      int status = features.uploadPortfolio(absoluteFilePath);
+      if (status == 0) {
+        clearPathSelectedLabel();
+      } else if (status == 1) {
+        errorPathSelectedLabel(FILE_UPLOAD_FAIL_FORMAT);
+      } else if (status == 2) {
+        errorPathSelectedLabel(FILE_UPLOAD_FAIL_NOT_FOUND);
+      }
+    } catch (DuplicateFormatFlagsException duplicateFormatFlagsException) {
+      errorPathSelectedLabel(duplicateFormatFlagsException.getMessage());
     }
   }
 
-  public void clearPathSelectedLabel() {
-    pathSelectedJLabel.setText("No Files Selected");
-    notificationJLabel.setText("File uploaded successfully!");
+  private void browseFiles() {
+    JFileChooser jFileChooser = new JFileChooser();
+    int selectedFile = jFileChooser.showOpenDialog(null);
+    if (selectedFile != JFileChooser.APPROVE_OPTION) {
+      return;
+    }
+    filePath = jFileChooser.getSelectedFile().toPath();
+    String fileName = filePath.getFileName().toString();
+    if (checkValidFile(fileName, SUPPORTED_FILE_EXTENSION)) {
+      pathSelectedJLabel.setText(filePath.getFileName().toString());
+      pathSelectedJLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
+      uploadButton.setEnabled(true);
+      browseFileJButton.setText(FILE_UPLOAD_ANOTHER);
+    } else {
+      errorPathSelectedLabel(FILE_UPLOAD_FAIL_EXTENSION + SUPPORTED_FILES
+              + SUPPORTED_FILE_EXTENSION);
+    }
+  }
+
+  private void clearPathSelectedLabel() {
+    pathSelectedJLabel.setText(NO_FILES_SELECTED);
+    notificationJLabel.setText(FILE_UPLOAD_SUCCESS);
     notificationJLabel.setForeground(Color.GREEN);
     uploadButton.setEnabled(false);
   }
 
-
-  private boolean checkValidDate(String date) {
-    try {
-      LocalDate test = LocalDate.parse(date);
-      return test.isAfter(LocalDate.of(1949, 12, 31));
-    } catch (DateTimeParseException dateError) {
-      return false;
-    }
-  }
-
-  public void errorPathSelectedLabel() {
-    pathSelectedJLabel.setText("Try to upload another file");
-    notificationJLabel.setText("File upload failed as either the file did not exist or format is "
-            + "wrong!");
+  private void errorPathSelectedLabel(String error) {
+    pathSelectedJLabel.setText(UPLOAD_ANOTHER_FILE);
+    notificationJLabel.setText(error);
     notificationJLabel.setForeground(Color.RED);
     uploadButton.setEnabled(false);
+    showErrorMessage(error);
   }
 
-  public void refresh() {
+  private void refresh() {
     this.repaint();
   }
 
-  public void showErrorMessage(String error) {
+  private void showErrorMessage(String error) {
     JOptionPane.showMessageDialog(this, error, "Error",
             JOptionPane.ERROR_MESSAGE);
+  }
+
+  private void showInformationMessage(String info) {
+    JOptionPane.showMessageDialog(this, info, "Info",
+            JOptionPane.INFORMATION_MESSAGE);
   }
 }

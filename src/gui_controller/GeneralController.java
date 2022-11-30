@@ -2,6 +2,7 @@ package gui_controller;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -52,8 +53,9 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public boolean uploadPortfolio(String filePath) {
-    boolean validPath;
+  public int uploadPortfolio(String filePath) {
+    boolean validPath = false;
+    int errorCode = 0;
     int idx = filePath.lastIndexOf(FILE_SEPARATOR);
     String folderName = filePath.substring(0, idx);
     String[] file = filePath.substring(idx + 1).split("\\.");
@@ -64,10 +66,12 @@ public class GeneralController implements Features {
     folder = folder.substring(0, idx);
     try {
       validPath = model.addPortfolioByUpload(root, folder, file[0], file[1]);
-    } catch (DataFormatException | FileNotFoundException e) {
-      validPath = false;
+    } catch (DataFormatException dataFormatException) {
+      errorCode = 1;
+    } catch (FileNotFoundException fileNotFoundException) {
+      errorCode = 2;
     }
-    return validPath;
+    return validPath ? 0: errorCode;
   }
 
   @Override

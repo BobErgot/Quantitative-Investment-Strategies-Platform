@@ -30,18 +30,14 @@ public interface Features {
    */
   boolean createPortfolio(String portfolioName, PortfolioType pType);
 
-  // Upload Tab
-
   /**
    * Sends the path from where the portfolio needs to be uploaded to the model interface object and
    * notifies the user if something goes wrong during upload.
    *
    * @param filePath File path to help facilitate uploading a portfolio.
-   * @return If Portfolio was uploaded successfully or not.
+   * @return If Portfolio was uploaded successfully it return 0 or other codes.
    */
-  boolean uploadPortfolio(String filePath);
-
-  // View Tab
+  int uploadPortfolio(String filePath);
 
   /**
    * Asks the user for input of fields namely portfolio, share to be bought and the number of shares
