@@ -36,6 +36,10 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Java Swing implementation of GUIView, implements the GUI & all its features for the Stock
+ * Application.
+ */
 public class HomeScreen extends JFrame implements GUIView {
 
   private JPanel applicationJPanel;
@@ -221,6 +225,7 @@ public class HomeScreen extends JFrame implements GUIView {
     }
   }
 
+  @Override
   public void listAllPortfolios(List<String> portfolios) {
     ComboBoxModel<String> portfolioComboBox = new DefaultComboBoxModel<>(
         portfolios.toArray(new String[0]));

@@ -116,7 +116,7 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public void generatePerformanceGraph() {
+  public List<Double> generatePerformanceGraph(String portfolioName) {
 
   }
 
@@ -126,8 +126,4 @@ public class GeneralController implements Features {
     return this.model.getValuationGivenDate(id, date);
   }
 
-  @Override
-  public void viewPortfolio() {
-
-  }
 }
