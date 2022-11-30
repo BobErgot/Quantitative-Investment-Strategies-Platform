@@ -1,36 +1,43 @@
 package gui_controller;
 
-import gui.GUIView;
-import gui.HomeScreen;
+import static utility.Constants.FILE_SEPARATOR;
 
+import gui.GUIView;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
-
 import model.FlexibleModelImplementation;
 import model.ModelInterface;
 
-import static utility.Constants.FILE_SEPARATOR;
+public class GeneralController implements Features {
 
-public class GeneralController implements Features{
   private ModelInterface model;
   private GUIView view;
-  public GeneralController(ModelInterface model){
+
+  public GeneralController(ModelInterface model) {
     this.model = model;
 
   }
+
   public void setView(GUIView view) {
     this.view = view;
     this.view.addFeatures(this);
+    this.updatePortfolioList();
     this.view.showView();
+  }
+
+  private void updatePortfolioList() {
+    this.view.listAllPortfolios(
+        this.model.getPortfolio().stream().map((inp) -> inp.split("\\|\\|")[2].trim())
+            .collect(Collectors.toList()));
   }
 
   @Override
   public boolean purchaseShare(String shareName, int numShares) {
     try {
       return model.addShareToModel(shareName, LocalDate.now(), numShares, -1);
-    }
-    catch (IllegalArgumentException invalidTicker){
+    } catch (IllegalArgumentException invalidTicker) {
       return false;
     }
   }
@@ -38,9 +45,11 @@ public class GeneralController implements Features{
   @Override
   public boolean createPortfolio(String portfolioName, PortfolioType pType) {
     if (!model.idIsPresent(portfolioName)) {
-      if (pType == PortfolioType.Flexible)
+      if (pType == PortfolioType.Flexible) {
         this.model = new FlexibleModelImplementation();
+      }
       this.model.createPortfolio(portfolioName, LocalDate.now());
+      this.updatePortfolioList();
       return true;
     }
     return false;
@@ -81,8 +90,9 @@ public class GeneralController implements Features{
   }
 
   @Override
-  public void generateComposition() {
-
+  public String generateComposition(String id) {
+    System.out.println(id + this.model.getPortfolioById(id));
+    return this.model.getPortfolioById(id);
   }
 
   @Override
@@ -91,8 +101,9 @@ public class GeneralController implements Features{
   }
 
   @Override
-  public void getValuation() {
+  public double getValuation(String id, LocalDate date) {
 
+    return this.model.getValuationGivenDate(id, date);
   }
 
   @Override

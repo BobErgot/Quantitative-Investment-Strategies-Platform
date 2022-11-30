@@ -1,6 +1,7 @@
 package gui;
 
 import gui_controller.Features;
+import java.util.List;
 
 public interface GUIView {
 
@@ -9,4 +10,6 @@ public interface GUIView {
   void clearText(String id);
 
   void showView();
+
+  void listAllPortfolios(List<String> collect);
 }

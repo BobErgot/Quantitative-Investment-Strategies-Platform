@@ -1,5 +1,7 @@
 package gui_controller;
 
+import java.time.LocalDate;
+
 public interface Features {
   // Create portfolio tab
   boolean purchaseShare(String shareName, int numShares);
@@ -12,8 +14,8 @@ public interface Features {
   void purchaseShare(String portfolioName, String shareName, int numShares);
   void sellShare();
   void generateCostBasis();
-  void generateComposition();
+  String generateComposition(String id);
   void generatePerformanceGraph();
-  void getValuation();
+  double getValuation(String id, LocalDate date);
   void viewPortfolio();
 }

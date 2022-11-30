@@ -1,5 +1,6 @@
 package gui;
 
+import static utility.ViewConstants.INVALID_DATE;
 import static utility.ViewConstants.INVALID_STOCKS;
 import static utility.ViewConstants.INVALID_TICKER;
 import static utility.ViewConstants.PORTFOLIO_CREATED;
@@ -12,14 +13,22 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.List;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
 public class HomeScreen extends JFrame implements GUIView {
@@ -37,20 +46,21 @@ public class HomeScreen extends JFrame implements GUIView {
   private JLabel companyTickerJLabel;
   private JLabel numberSharesJLabel;
   private JLabel pathSelectedJLabel;
-  private JPanel viewPortfolioJPanel;
-  private JButton compositionButton;
-  private JButton valuationButton;
-  private JButton costBasisButton;
-  private JButton buySharesButton;
-  private JButton sellSharesButton;
-  private JButton investmentPerformanceButton;
-  private JButton createNewInvestmentStrategyButton;
   // Create Portfolio
   private JButton createFlexiblePortfolioButton;
   private JButton uploadButton;
   private JTextField portfolioNameJTextField;
-
+  private JTabbedPane showValuationPane;
+  private JComboBox portfolioListComboBox;
+  private JTextArea compositionJTextArea;
+  private JButton showCompositionJButton;
+  private JTextPane valuationTextPane;
+  private JTextField datePickerTextField;
+  private JComboBox portfolioListComboBox2;
+  private JButton showValuationJButton;
+  // Upload
   private Path filePath;
+
   public HomeScreen() {
     browseFileJButton.addActionListener(new ActionListener() {
       @Override
@@ -73,18 +83,45 @@ public class HomeScreen extends JFrame implements GUIView {
 
   @Override
   public void addFeatures(Features features) {
-    addShareJButton.addActionListener(evt -> addShare(features));
-    createFixedPortfolioJButton.addActionListener(evt -> addPortfolio(features,
-            PortfolioType.Fixed));
-    createFlexiblePortfolioButton.addActionListener(evt -> addPortfolio(features,
-            PortfolioType.Flexible));
-    uploadButton.addActionListener(evt -> uploadPortfolio(features));
-  }
 
+    addShareJButton.addActionListener(evt -> addShare(features));
+
+    createFixedPortfolioJButton.addActionListener(
+        evt -> addPortfolio(features, PortfolioType.Fixed));
+
+    createFlexiblePortfolioButton.addActionListener(
+        evt -> addPortfolio(features, PortfolioType.Flexible));
+
+    uploadButton.addActionListener(evt -> uploadPortfolio(features));
+
+    showCompositionJButton.addActionListener(evt -> {
+      String composition = features.generateComposition(
+          (String) portfolioListComboBox.getSelectedItem());
+
+      compositionJTextArea.setText(composition);
+    });
+    showValuationJButton.addActionListener(evt -> {
+      String portfolioName = (String) portfolioListComboBox2.getSelectedItem();
+      String date = datePickerTextField.getText();
+      if (checkDate(date)) {
+        double valuation = features.getValuation(portfolioName, LocalDate.parse(date));
+        valuationTextPane.setText("Valuation: $ " + valuation);
+      } else {
+        JOptionPane.showMessageDialog(new JFrame(), INVALID_DATE, "Dialog",
+            JOptionPane.ERROR_MESSAGE);
+      }
+    });
+  }
 
   @Override
   public void clearText(String id) {
-    return;
+  }
+
+  public void listAllPortfolios(List<String> portfolios) {
+    ComboBoxModel<String> portfolioComboBox = new DefaultComboBoxModel<>(
+        portfolios.toArray(new String[0]));
+    portfolioListComboBox.setModel(portfolioComboBox);
+    portfolioListComboBox2.setModel(portfolioComboBox);
   }
 
   public void showView() {
@@ -108,7 +145,7 @@ public class HomeScreen extends JFrame implements GUIView {
       if (!companyAdded) {
         // Give invalid ticker symbol error.
         JOptionPane.showMessageDialog(new JFrame(), INVALID_TICKER, "Dialog",
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.ERROR_MESSAGE);
       } else {
         // Stocks added successfully
         companyTickerJTextField.setText("");
@@ -120,7 +157,7 @@ public class HomeScreen extends JFrame implements GUIView {
     } else {
       // give invalid stocks exception to user.
       JOptionPane.showMessageDialog(new JFrame(), INVALID_STOCKS, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
+          JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -140,16 +177,16 @@ public class HomeScreen extends JFrame implements GUIView {
       portfolioSaved = features.createPortfolio(portfolioName, pType);
     } else {
       JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_INVALID, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
+          JOptionPane.ERROR_MESSAGE);
     }
     if (!portfolioSaved) {
       JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_EXISTS, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
+          JOptionPane.ERROR_MESSAGE);
     } else {
       // Portfolio created successfully
       portfolioNameJTextField.setText("");
       JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_CREATED, "Dialog",
-              JOptionPane.OK_OPTION);
+          JOptionPane.OK_OPTION);
       createFlexiblePortfolioButton.setEnabled(false);
       createFixedPortfolioJButton.setEnabled(false);
     }
@@ -162,7 +199,7 @@ public class HomeScreen extends JFrame implements GUIView {
       absoluteFilePath = filePath.toAbsolutePath().toString();
     }
     boolean status = features.uploadPortfolio(absoluteFilePath);
-    if (status){
+    if (status) {
       clearPathSelectedLabel();
     } else {
       errorPathSelectedLabel();
@@ -176,10 +213,20 @@ public class HomeScreen extends JFrame implements GUIView {
     uploadButton.setEnabled(false);
   }
 
+
+  private boolean checkDate(String date) {
+    try {
+      LocalDate test = LocalDate.parse(date);
+      return true;
+    } catch (DateTimeParseException dateError) {
+      return false;
+    }
+  }
+
   public void errorPathSelectedLabel() {
     pathSelectedJLabel.setText("Try to upload another file");
-    notificationJLabel.setText("File upload failed as either the file did not exist or format is " +
-        "wrong!");
+    notificationJLabel.setText(
+        "File upload failed as either the file did not exist or format is " + "wrong!");
     notificationJLabel.setForeground(Color.RED);
     uploadButton.setEnabled(false);
   }
