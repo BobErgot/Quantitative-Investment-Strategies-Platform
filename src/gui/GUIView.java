@@ -1,6 +1,7 @@
 package gui;
 
 import gui_controller.Features;
+
 import java.util.List;
 
 /**
@@ -11,6 +12,7 @@ public interface GUIView {
 
   /**
    * Adds action listeners to all buttons and moving parts of the GUI.
+   *
    * @param features Features to use on
    */
   void addFeatures(Features features);

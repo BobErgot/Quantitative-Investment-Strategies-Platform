@@ -13,6 +13,7 @@ import static utility.ViewConstants.STOCK_INVALID;
 
 import gui_controller.Features;
 import gui_controller.PortfolioType;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -60,23 +62,23 @@ public class HomeScreen extends JFrame implements GUIView {
   private JButton uploadButton;
   private JTextField portfolioNameJTextField;
   private JTabbedPane showCostBasisPane;
-  private JComboBox portfolioListComboBox;
+  private JComboBox<String> portfolioListComboBox;
   private JTextArea compositionJTextArea;
   private JButton showCompositionJButton;
   private JTextPane valuationTextPane;
   private JTextField showValuationDatePickerTextField;
-  private JComboBox showValuationPortfolioListComboBox;
+  private JComboBox<String> showValuationPortfolioListComboBox;
   private JButton showValuationJButton;
   private JTextPane showCostBasisTextPane;
-  private JComboBox showCostBasisPortfolioListComboBox;
+  private JComboBox<String> showCostBasisPortfolioListComboBox;
   private JTextField showCostBasisDatePickerTextField;
   private JButton showCostBasisJButton;
-  private JComboBox purchaseSharePortfolioListComboBox;
+  private JComboBox<String> purchaseSharePortfolioListComboBox;
   private JTextField purchaseShareCompanyTickerJTextField;
   private JTextField purchaseShareNumberSharesJTextField;
   private JButton purchaseShareJButton;
   private JTextField purchaseShareDatePickerTextField;
-  private JComboBox sellSharePortfolioListComboBox;
+  private JComboBox<String> sellSharePortfolioListComboBox;
   private JTextField sellShareCompanyTickerJTextField;
   private JTextField sellShareNumberSharesJTextField;
   private JTextField sellShareDatePickerTextField;
@@ -109,17 +111,16 @@ public class HomeScreen extends JFrame implements GUIView {
 
     addShareJButton.addActionListener(evt -> addShare(features, LocalDate.now()));
 
-    createFixedPortfolioJButton.addActionListener(
-        evt -> addPortfolio(features, PortfolioType.Fixed));
+    createFixedPortfolioJButton.addActionListener(evt -> addPortfolio(features,
+            PortfolioType.Fixed));
 
-    createFlexiblePortfolioButton.addActionListener(
-        evt -> addPortfolio(features, PortfolioType.Flexible));
+    createFlexiblePortfolioButton.addActionListener(evt -> addPortfolio(features,
+            PortfolioType.Flexible));
 
     uploadButton.addActionListener(evt -> uploadPortfolio(features));
 
-    showCompositionJButton.addActionListener(evt -> {
-      String composition = features.generateComposition(
-          (String) portfolioListComboBox.getSelectedItem());
+    showCompositionJButton.addActionListener(evt -> {String composition =
+            features.generateComposition((String) portfolioListComboBox.getSelectedItem());
 
       compositionJTextArea.setText(composition);
     });
@@ -132,7 +133,7 @@ public class HomeScreen extends JFrame implements GUIView {
         valuationTextPane.setText("Valuation: $ " + valuation);
       } else {
         JOptionPane.showMessageDialog(new JFrame(), INVALID_DATE, "Dialog",
-            JOptionPane.ERROR_MESSAGE);
+                JOptionPane.ERROR_MESSAGE);
       }
     });
 
@@ -144,7 +145,7 @@ public class HomeScreen extends JFrame implements GUIView {
         showCostBasisTextPane.setText("Cost Basis: $ " + valuation);
       } else {
         JOptionPane.showMessageDialog(new JFrame(), INVALID_DATE, "Dialog",
-            JOptionPane.ERROR_MESSAGE);
+                JOptionPane.ERROR_MESSAGE);
       }
     });
 
@@ -163,34 +164,34 @@ public class HomeScreen extends JFrame implements GUIView {
         double sellingPrice = -1.0;
         try {
           sellingPrice = features.sellShare(portfolioName, shareName, Integer.parseInt(numStocks),
-              LocalDate.parse(date));
+                  LocalDate.parse(date));
           if (sellingPrice < 0.0) {
             // Give invalid ticker symbol error.
             JOptionPane.showMessageDialog(new JFrame(), INVALID_TICKER, "Dialog",
-                JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE);
           } else {
             // Stocks added successfully
             sellShareCompanyTickerJTextField.setText("");
             sellShareNumberSharesJTextField.setText("");
             sellShareDatePickerTextField.setText("");
-            JOptionPane.showMessageDialog(new JFrame(), SOLD_FOR + sellingPrice, "Dialog",
-                JOptionPane.OK_OPTION);
+            JOptionPane.showMessageDialog(new JFrame(), SOLD_FOR + sellingPrice,
+                    "Dialog", JOptionPane.OK_OPTION);
           }
         } catch (NoSuchElementException noSuchElementException) {
           JOptionPane.showMessageDialog(new JFrame(), STOCK_INVALID, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
+                  JOptionPane.ERROR_MESSAGE);
         } catch (IllegalArgumentException illegalArgumentException) {
           JOptionPane.showMessageDialog(new JFrame(), SHARE_NUMBER_EXCEEDS, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
+                  JOptionPane.ERROR_MESSAGE);
         }
 
       } else {
         JOptionPane.showMessageDialog(new JFrame(), INVALID_DATE, "Dialog",
-            JOptionPane.ERROR_MESSAGE);
+                JOptionPane.ERROR_MESSAGE);
       }
     } else {
       JOptionPane.showMessageDialog(new JFrame(), INVALID_STOCKS, "Dialog",
-          JOptionPane.ERROR_MESSAGE);
+              JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -202,33 +203,33 @@ public class HomeScreen extends JFrame implements GUIView {
     if (checkValidStocks(numStocks)) {
       if (checkValidDate(date)) {
         double buyingPrice = features.purchaseShare(portfolioName, shareName,
-            Integer.parseInt(numStocks), LocalDate.parse(date));
+                Integer.parseInt(numStocks), LocalDate.parse(date));
         if (buyingPrice < 0.0) {
           // Give invalid ticker symbol error.
           JOptionPane.showMessageDialog(new JFrame(), INVALID_TICKER, "Dialog",
-              JOptionPane.ERROR_MESSAGE);
+                  JOptionPane.ERROR_MESSAGE);
         } else {
           // Stocks added successfully
           purchaseShareCompanyTickerJTextField.setText("");
           purchaseShareNumberSharesJTextField.setText("");
           purchaseShareDatePickerTextField.setText("");
-          JOptionPane.showMessageDialog(new JFrame(), BOUGHT_FOR + buyingPrice, "Dialog",
-              JOptionPane.OK_OPTION);
+          JOptionPane.showMessageDialog(new JFrame(), BOUGHT_FOR + buyingPrice,
+                  "Dialog", JOptionPane.OK_OPTION);
         }
       } else {
         JOptionPane.showMessageDialog(new JFrame(), INVALID_DATE, "Dialog",
-            JOptionPane.ERROR_MESSAGE);
+                JOptionPane.ERROR_MESSAGE);
       }
     } else {
       JOptionPane.showMessageDialog(new JFrame(), INVALID_STOCKS, "Dialog",
-          JOptionPane.ERROR_MESSAGE);
+              JOptionPane.ERROR_MESSAGE);
     }
   }
 
   @Override
   public void listAllPortfolios(List<String> portfolios) {
-    ComboBoxModel<String> portfolioComboBox = new DefaultComboBoxModel<>(
-        portfolios.toArray(new String[0]));
+    ComboBoxModel<String> portfolioComboBox =
+            new DefaultComboBoxModel<>(portfolios.toArray(new String[0]));
     portfolioListComboBox.setModel(portfolioComboBox);
     showValuationPortfolioListComboBox.setModel(portfolioComboBox);
     showCostBasisPortfolioListComboBox.setModel(portfolioComboBox);
@@ -236,8 +237,8 @@ public class HomeScreen extends JFrame implements GUIView {
 
   @Override
   public void listAllMutablePortfolios(List<String> portfolios) {
-    ComboBoxModel<String> mutablePortfolioComboBox = new DefaultComboBoxModel<>(
-        portfolios.toArray(new String[0]));
+    ComboBoxModel<String> mutablePortfolioComboBox =
+            new DefaultComboBoxModel<>(portfolios.toArray(new String[0]));
     purchaseSharePortfolioListComboBox.setModel(mutablePortfolioComboBox);
     sellSharePortfolioListComboBox.setModel(mutablePortfolioComboBox);
 
@@ -261,11 +262,11 @@ public class HomeScreen extends JFrame implements GUIView {
     String companyStocks = companyTickerJTextField.getText().trim();
     if (checkValidStocks(numStocks)) {
       boolean companyAdded = features.purchaseShare(companyStocks, Integer.parseInt(numStocks),
-          date);
+              date);
       if (!companyAdded) {
         // Give invalid ticker symbol error.
         JOptionPane.showMessageDialog(new JFrame(), INVALID_TICKER, "Dialog",
-            JOptionPane.ERROR_MESSAGE);
+                JOptionPane.ERROR_MESSAGE);
       } else {
         // Stocks added successfully
         companyTickerJTextField.setText("");
@@ -277,7 +278,7 @@ public class HomeScreen extends JFrame implements GUIView {
     } else {
       // give invalid stocks exception to user.
       JOptionPane.showMessageDialog(new JFrame(), INVALID_STOCKS, "Dialog",
-          JOptionPane.ERROR_MESSAGE);
+              JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -297,16 +298,16 @@ public class HomeScreen extends JFrame implements GUIView {
       portfolioSaved = features.createPortfolio(portfolioName, pType);
     } else {
       JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_INVALID, "Dialog",
-          JOptionPane.ERROR_MESSAGE);
+              JOptionPane.ERROR_MESSAGE);
     }
     if (!portfolioSaved) {
       JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_EXISTS, "Dialog",
-          JOptionPane.ERROR_MESSAGE);
+              JOptionPane.ERROR_MESSAGE);
     } else {
       // Portfolio created successfully
       portfolioNameJTextField.setText("");
       JOptionPane.showMessageDialog(new JFrame(), PORTFOLIO_CREATED, "Dialog",
-          JOptionPane.OK_OPTION);
+              JOptionPane.INFORMATION_MESSAGE);
       createFlexiblePortfolioButton.setEnabled(false);
       createFixedPortfolioJButton.setEnabled(false);
     }
@@ -345,8 +346,8 @@ public class HomeScreen extends JFrame implements GUIView {
 
   public void errorPathSelectedLabel() {
     pathSelectedJLabel.setText("Try to upload another file");
-    notificationJLabel.setText(
-        "File upload failed as either the file did not exist or format is " + "wrong!");
+    notificationJLabel.setText("File upload failed as either the file did not exist or format is "
+            + "wrong!");
     notificationJLabel.setForeground(Color.RED);
     uploadButton.setEnabled(false);
   }
@@ -356,6 +357,7 @@ public class HomeScreen extends JFrame implements GUIView {
   }
 
   public void showErrorMessage(String error) {
-    JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
+    JOptionPane.showMessageDialog(this, error, "Error",
+            JOptionPane.ERROR_MESSAGE);
   }
 }

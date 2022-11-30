@@ -1,15 +1,16 @@
 package gui_controller;
 
-import static utility.Constants.FILE_SEPARATOR;
-
-import gui.GUIView;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
+
+import gui.GUIView;
 import model.FlexibleModelImplementation;
 import model.ModelInterface;
+
+import static utility.Constants.FILE_SEPARATOR;
 
 public class GeneralController implements Features {
 
@@ -31,10 +32,10 @@ public class GeneralController implements Features {
   private void updatePortfolioList() {
     List<String> portfolios = new FlexibleModelImplementation().getPortfolio();
     this.view.listAllPortfolios(portfolios.stream().map((inp) -> inp.split("\\|\\|")[2].trim())
-        .collect(Collectors.toList()));
+            .collect(Collectors.toList()));
     this.view.listAllMutablePortfolios(
-        portfolios.stream().filter(inp -> inp.split("\\|\\|").length >= 5)
-            .map((inp) -> inp.split("\\|\\|")[2].trim()).collect(Collectors.toList()));
+            portfolios.stream().filter(inp -> inp.split("\\|\\|").length >= 5)
+                    .map((inp) -> inp.split("\\|\\|")[2].trim()).collect(Collectors.toList()));
   }
 
   @Override
@@ -52,7 +53,7 @@ public class GeneralController implements Features {
 
   @Override
   public boolean uploadPortfolio(String filePath) {
-    boolean validPath = false;
+    boolean validPath;
     int idx = filePath.lastIndexOf(FILE_SEPARATOR);
     String folderName = filePath.substring(0, idx);
     String[] file = filePath.substring(idx + 1).split("\\.");
@@ -80,14 +81,13 @@ public class GeneralController implements Features {
 
   @Override
   public double purchaseShare(String portfolioName, String shareName, int numShares,
-      LocalDate date) {
+                              LocalDate date) {
     if (!this.model.checkTicker(shareName)) {
       return -1.0;
     }
     try {
-      double boughtPrice = new FlexibleModelImplementation().appendPortfolio(portfolioName,
-          shareName, numShares, date);
-      return boughtPrice;
+      return new FlexibleModelImplementation().appendPortfolio(portfolioName,
+              shareName, numShares, date);
     } catch (IllegalArgumentException invalidTicker) {
       return -1.0;
     }
@@ -98,10 +98,8 @@ public class GeneralController implements Features {
     if (!this.model.checkTicker(shareName)) {
       return -1.0;
     }
-    double sellingPrice = new FlexibleModelImplementation().sellStocks(portfolioName, shareName,
-        numShares, date);
-    return sellingPrice;
-
+    return new FlexibleModelImplementation().sellStocks(portfolioName, shareName,
+            numShares, date);
   }
 
   @Override
@@ -117,7 +115,7 @@ public class GeneralController implements Features {
 
   @Override
   public List<Double> generatePerformanceGraph(String portfolioName) {
-
+    return null;
   }
 
   @Override
