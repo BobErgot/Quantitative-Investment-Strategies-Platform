@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.*;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -11,17 +9,17 @@ import javax.swing.*;
 import gui.utility.BarChart;
 import gui.utility.ViewDocumentListener;
 import gui_controller.Features;
-import gui_controller.PortfolioType;
 import model.Periodicity;
 
 import static gui.ViewValidator.checkValidDate;
 import static gui.ViewValidator.checkValidStocks;
+import static gui.ViewValidator.validateDateField;
+import static gui.ViewValidator.validateNumberShareField;
+import static gui.ViewValidator.validateTickerField;
 import static gui.utility.ViewConstants.BOUGHT_FOR;
-import static gui.utility.ViewConstants.INPUT_FIELD_EMPTY;
 import static gui.utility.ViewConstants.INVALID_DATE;
 import static gui.utility.ViewConstants.INVALID_STOCKS;
 import static gui.utility.ViewConstants.INVALID_TICKER;
-import static gui.utility.ViewConstants.PORTFOLIO_EXISTS;
 import static gui.utility.ViewConstants.SHARE_NUMBER_EXCEEDS;
 import static gui.utility.ViewConstants.SOLD_FOR;
 import static gui.utility.ViewConstants.STOCK_INVALID;
@@ -102,7 +100,6 @@ public class HomeScreen extends JFrame implements GUIView {
             (ViewDocumentListener) e -> validateTickerField(features, sellShareCompanyTickerJTextField,
                     sellShareCompanyTickerJLabel));
 
-    // Validate Date Field
     sellShareDatePickerJTextField.getDocument().addDocumentListener(
             (ViewDocumentListener) e -> validateDateField(sellShareDatePickerJTextField,
                     sellShareDatePickerJLabel));
@@ -278,82 +275,5 @@ public class HomeScreen extends JFrame implements GUIView {
   private void showInformationMessage(String info) {
     JOptionPane.showMessageDialog(this, info, "Info",
             JOptionPane.INFORMATION_MESSAGE);
-  }
-
-  private boolean validateCreatePortfolioField(Features features, JTextField portfolioJTextField,
-                                               JLabel portfolioMsgLabel) {
-    String portfolioTextEntered = portfolioJTextField.getText().trim();
-    if (portfolioTextEntered.isEmpty()) {
-      portfolioMsgLabel.setText(INPUT_FIELD_EMPTY);
-      portfolioMsgLabel.setForeground(Color.BLUE);
-      return false;
-    }
-    boolean exists = features.checkPortfolioNameExists(portfolioTextEntered);
-    if (exists) {
-      portfolioMsgLabel.setText(PORTFOLIO_EXISTS);
-      portfolioMsgLabel.setForeground(Color.RED);
-      return false;
-    } else {
-      portfolioMsgLabel.setText("Valid portfolio name!");
-      portfolioMsgLabel.setForeground(Color.GREEN);
-      return true;
-    }
-  }
-
-  private boolean validateTickerField(Features features, JTextField tickerJTextField,
-                                      JLabel tickerMessageJLabel) {
-    String tickerTextEntered = tickerJTextField.getText().trim().toUpperCase();
-    if (tickerTextEntered.isEmpty()) {
-      tickerMessageJLabel.setText(INPUT_FIELD_EMPTY);
-      tickerMessageJLabel.setForeground(Color.BLUE);
-      return false;
-    }
-    boolean exists = features.checkTickerExists(tickerTextEntered);
-    if (!exists) {
-      tickerMessageJLabel.setText(INVALID_TICKER);
-      tickerMessageJLabel.setForeground(Color.RED);
-      return false;
-    } else {
-      tickerMessageJLabel.setText("Valid company ticker!");
-      tickerMessageJLabel.setForeground(Color.GREEN);
-      return true;
-    }
-  }
-
-  private boolean validateNumberShareField(JTextField numSharesJTextField,
-                                           JLabel numStocksMessageJLabel) {
-    String numberShareEntered = numSharesJTextField.getText().trim();
-    if (numberShareEntered.isEmpty()) {
-      numStocksMessageJLabel.setText(INPUT_FIELD_EMPTY);
-      numStocksMessageJLabel.setForeground(Color.BLUE);
-      return false;
-    }
-    if (!checkValidStocks(numberShareEntered)) {
-      numStocksMessageJLabel.setText("Invalid number of shares!");
-      numStocksMessageJLabel.setForeground(Color.RED);
-      return false;
-    } else {
-      numStocksMessageJLabel.setText("Valid shares!");
-      numStocksMessageJLabel.setForeground(Color.GREEN);
-      return true;
-    }
-  }
-
-  private boolean validateDateField(JTextField dateJTextField, JLabel dateMessageJLabel) {
-    String dateEntered = dateJTextField.getText().trim();
-    if (dateEntered.isEmpty()) {
-      dateMessageJLabel.setText(INPUT_FIELD_EMPTY);
-      dateMessageJLabel.setForeground(Color.BLUE);
-      return false;
-    }
-    if (!checkValidDate(dateEntered)) {
-      dateMessageJLabel.setText(INVALID_DATE);
-      dateMessageJLabel.setForeground(Color.RED);
-      return false;
-    } else {
-      dateMessageJLabel.setText("Valid date!");
-      dateMessageJLabel.setForeground(Color.GREEN);
-      return true;
-    }
   }
 }
