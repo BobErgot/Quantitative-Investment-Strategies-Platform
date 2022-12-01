@@ -104,7 +104,7 @@ abstract class ModelAbstract implements ModelInterface {
         for (String stock : stockFileContent) {
           String[] stockFields = stock.trim().split(",");
           Share shareObject = new Share(stockFields[0], LocalDate.parse(stockFields[1]),
-              Double.parseDouble(stockFields[2]), Integer.parseInt(stockFields[3]));
+              Double.parseDouble(stockFields[2]), Double.parseDouble(stockFields[3]));
           shareList.add(shareObject);
         }
       }
@@ -336,11 +336,6 @@ abstract class ModelAbstract implements ModelInterface {
     }
   }
 
-  protected boolean addShareToModel(Share share) {
-    return this.addShareToModel(share.getCompanyName(), share.getPurchaseDate(),
-        share.getNumShares(), share.getShareValue());
-  }
-
   @Override
   public boolean idIsPresent(String selectedId) throws IllegalArgumentException {
     return !(this.getPortfolioById(selectedId).equals(PORTFOLIO_NOT_FOUND));
@@ -454,11 +449,11 @@ abstract class ModelAbstract implements ModelInterface {
     for(Portfolio portfolio: portfolios) {
       if(portfolio.getId().equals(portfolioName)){
         Set<Share> shares= portfolio.getListOfShares();
-        List<String> shareList = new ArrayList<>();
+        Set<String> shareList = new HashSet<>();
         for(Share share: shares) {
           shareList.add(share.getCompanyName());
         }
-        return shareList;
+        return new ArrayList<>(shareList);
       }
     }
     return null;
@@ -466,7 +461,7 @@ abstract class ModelAbstract implements ModelInterface {
 
   @Override
   public boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
-                                ArrayList<String> shares, ArrayList<Integer> weightage) {
+                                ArrayList<String> shares, ArrayList<Integer> weightage, int type) {
     throw new IllegalStateException("Cannot access this function!");
   }
 }

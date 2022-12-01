@@ -160,6 +160,6 @@ public class GeneralController implements Features {
   public boolean createStrategy (String portfolioName, String investmentAmount, LocalDate date,
                                  ArrayList<String> shares, ArrayList<Integer> weightage) {
     this.model = new FlexibleModelImplementation();
-    return this.model.createStrategy(portfolioName, investmentAmount, date, shares, weightage);
+    return this.model.createStrategy(portfolioName, investmentAmount, date, shares, weightage, 0);
   }
 }

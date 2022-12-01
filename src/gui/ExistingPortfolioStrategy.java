@@ -139,7 +139,7 @@ public class ExistingPortfolioStrategy extends JPanel {
         } else {
           stockJTable.setModel(new DefaultTableModel());
           fixedAmountJTextField.setText("");
-          dateOfInvestmentJLabel.setText("");
+          dateOfInvestmentJTextField.setText("");
         }
       }
     }

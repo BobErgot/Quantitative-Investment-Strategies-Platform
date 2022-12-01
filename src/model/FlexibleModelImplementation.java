@@ -1,19 +1,26 @@
 package model;
 
 import static utility.Constants.BROKER_FEES;
+import static utility.Constants.LINE_BREAKER;
 import static utility.Constants.MUTABLE;
 import static utility.Constants.PORTFOLIO_DIRECTORY;
 import static utility.Constants.PORTFOLIO_FILENAME;
+import static utility.Constants.RECORD_FIELD_SEPERATOR;
 import static utility.Constants.RELATIVE_PATH;
+import static utility.Constants.STRATEGY_FILENAME;
+import static utility.Constants.VALUE_SEPERATOR;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * This class behaves as a gateway between model objects and operations and the controller and
@@ -23,12 +30,22 @@ import java.util.UUID;
  */
 public class FlexibleModelImplementation extends ModelAbstract {
 
+  private HashMap<String, String> strategyMap;
+
+  protected Map<String, Share> shares;
+
   public FlexibleModelImplementation() {
     super();
+    strategyMap = new HashMap<>();
+    this.getStrategyList();
+    this.processStrategy();
   }
 
   protected FlexibleModelImplementation(FileInterface fileInterface) {
     super(fileInterface);
+    strategyMap = new HashMap<>();
+    this.getStrategyList();
+    this.processStrategy();
   }
 
   @Override
@@ -152,7 +169,7 @@ public class FlexibleModelImplementation extends ModelAbstract {
       for (String stock : stockFileContent) {
         String[] stockFields = stock.trim().split(",");
         Share shareObject = new Share(stockFields[0], LocalDate.parse(stockFields[1]),
-            Double.parseDouble(stockFields[2]), Integer.parseInt(stockFields[3]));
+            Double.parseDouble(stockFields[2]), Double.parseDouble(stockFields[3]));
         shareList.add(shareObject);
       }
       Portfolio portfolioObject = new Portfolio(portfolioFields[0], shareList,
@@ -174,7 +191,123 @@ public class FlexibleModelImplementation extends ModelAbstract {
 
   @Override
   public boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
-                                ArrayList<String> shares, ArrayList<Integer> weightage) {
+                                ArrayList<String> shares, ArrayList<Integer> weightage, int type) {
+    if (!this.idIsPresent(portfolioName) || date.isBefore(LocalDate.now())) {
+      return false;
+    }
+    Map<String, Integer> map = IntStream.range(0, shares.size())
+            .boxed()
+            .collect(Collectors.toMap(shares::get, weightage::get));
+    System.out.println(map);
+    StringBuilder recordData = new StringBuilder();
+    recordData.append(portfolioName).append(RECORD_FIELD_SEPERATOR);
+    recordData.append(LocalDate.now().toString()).append(RECORD_FIELD_SEPERATOR);
+    recordData.append(date.toString()).append(RECORD_FIELD_SEPERATOR);
+    recordData.append(date.toString()).append(RECORD_FIELD_SEPERATOR);
+    recordData.append(type).append(RECORD_FIELD_SEPERATOR);
+    recordData.append(investmentAmount).append(RECORD_FIELD_SEPERATOR);
+    List<String> sharesList = getShareTickerInPortfolio(portfolioName);
+    for (int i=0;i<sharesList.size()-1;i++){
+      if(map.containsKey(sharesList.get(i))){
+        recordData.append(sharesList.get(i)).append(VALUE_SEPERATOR)
+                .append(map.get(sharesList.get(i))).append(RECORD_FIELD_SEPERATOR);
+      }
+    }
+    if(map.containsKey(sharesList.get(sharesList.size() - 1))) {
+      recordData.append(sharesList.get(sharesList.size() - 1))
+              .append(VALUE_SEPERATOR)
+              .append(map.get(sharesList.get(sharesList.size() - 1)))
+              .append(LINE_BREAKER);
+    }
+    if(strategyMap.containsKey(portfolioName)){
+      strategyMap.replace(portfolioName, recordData.toString().split(",",2)[1]);
+        fileInterface.clearFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME, "csv");
+        fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
+                hashMapToRecordData(strategyMap).toString().getBytes());
+    } else {
+      strategyMap.put(portfolioName, recordData.toString().split(",",2)[1]);
+      fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
+              recordData.toString().getBytes());
+    }
+    this.processStrategy();
+    return true;
+  }
+
+  private StringBuilder hashMapToRecordData (HashMap<String, String> strategyMap) {
+    StringBuilder fileFormatData = new StringBuilder();
+    for( Map.Entry<String, String> entry : strategyMap.entrySet() ){
+      System.out.println( entry.getKey() + " = " + entry.getValue() );
+      fileFormatData.append(entry.getKey())
+              .append(RECORD_FIELD_SEPERATOR)
+              .append(entry.getValue());
+    }
+    return fileFormatData;
+  }
+  private void getStrategyList() {
+    List<String> fileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
+            STRATEGY_FILENAME);
+    for (String strategy : fileContent) {
+      String[] strategyFields = strategy.trim().split(",", 2);
+      strategyMap.put(strategyFields[0], strategyFields[1]);
+    }
+  }
+
+  private void processStrategy() {
+    List<String> fileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
+            STRATEGY_FILENAME);
+    for (String strategy : fileContent) {
+      String[] strategyTodayFields = strategy.trim().split(",", 3);
+      String portfolioName = strategyTodayFields[0];
+      if (this.idIsPresent(portfolioName)) {
+        LocalDate today = LocalDate.now();
+        LocalDate lastUpdateDate = LocalDate.parse(strategyTodayFields[1]);
+        String[] strategyDateComparison = strategyTodayFields[2].trim().split(",", 4);
+        LocalDate startDate = LocalDate.parse(strategyDateComparison[0]);
+        LocalDate endDate = LocalDate.parse(strategyDateComparison[1]);
+        String frequency = strategyDateComparison[2];
+        if (startDate.equals(endDate) && frequency.equals("0")
+                && (startDate.equals(today) || lastUpdateDate.isBefore(today))) {
+          String[] strategyInvestFields = strategyDateComparison[3].trim().split(",");
+          int totalAmount = Integer.parseInt(strategyInvestFields[0]);
+          ArrayList<String> sharesList =  new ArrayList<>();
+          ArrayList<Integer> weightageList =  new ArrayList<>();
+          for (int i = 1; i < strategyInvestFields.length; i++) {
+            String[] tickerData = strategyInvestFields[i].split(":");
+            String ticker = tickerData[0];
+            int weightage = Integer.parseInt(tickerData[1]);
+            if (weightage != 0) {
+              double amountToInvest = (totalAmount * weightage) * 0.01;
+              double stockPrice = this.getStockPrice(ticker, startDate);
+              double numberOfShares = amountToInvest / stockPrice;
+              boolean status = this.buyStrategyShare(portfolioName, ticker, numberOfShares,
+                      startDate);
+              sharesList.add(ticker);
+              weightageList.add(weightage);
+            }
+          }
+          this.createStrategy(portfolioName, strategyInvestFields[0], today, sharesList,
+                  weightageList, -1);
+        }
+      }
+    }
+  }
+
+  private boolean buyStrategyShare(String portfolioName, String symbol, double numShares,
+                                  LocalDate date) {
+    if (!checkTicker(symbol) && numShares < 0 )  {
+      return false;
+    }
+    String stockFileName = null;
+    double currentShareBuyingPrice = this.getStockPrice(symbol, date);
+    stockFileName = getSharesFile(portfolioName);
+    Share addShare = new Share(symbol, date, currentShareBuyingPrice + BROKER_FEES,
+            numShares);
+    if (null != stockFileName && !stockFileName.isEmpty()) {
+      String formattedString = fileInterface.convertObjectIntoString(addShare.toString(),
+              null);
+      fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, stockFileName,
+              formattedString.getBytes());
+    }
     return true;
   }
 }

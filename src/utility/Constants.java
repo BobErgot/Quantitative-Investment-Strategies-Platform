@@ -10,6 +10,8 @@ public final class Constants {
   public static final String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
   public static final String LINE_BREAKER = System.getProperty("line.separator");
   public static final String HOME = System.getProperty("user.dir");
+  public static final String RECORD_FIELD_SEPERATOR = ",";
+  public static final String VALUE_SEPERATOR = ":";
   public static final String RELATIVE_PATH = "~";
   public static final String STOCK_DIRECTORY =  "stocker" + FILE_SEPARATOR + "stock";
   public static final String PORTFOLIO_DIRECTORY = "stocker" + FILE_SEPARATOR + "portfolio";

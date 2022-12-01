@@ -13,7 +13,7 @@ public class Share implements Comparable<Object> {
   private final LocalDate purchaseDate;
   private final String companyName;
   private final double price;
-  private final int numShares;
+  private final double numShares;
 
   /**
    * Construct a Share object that has the provided company ticker, purchase date, price on purchase
@@ -24,7 +24,7 @@ public class Share implements Comparable<Object> {
    * @param price        price of each stock on purchase date
    * @param numShares    number of stocks bought
    */
-  public Share(String companyName, LocalDate purchaseDate, double price, int numShares)
+  public Share(String companyName, LocalDate purchaseDate, double price, double numShares)
           throws IllegalArgumentException {
     if (companyName.length() == 0) {
       throw new IllegalArgumentException("Company name cannot be blank!");
@@ -68,7 +68,7 @@ public class Share implements Comparable<Object> {
    *
    * @return number of stocks as integer
    */
-  public int getNumShares() {
+  public double getNumShares() {
     return this.numShares;
   }
 
