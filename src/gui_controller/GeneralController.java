@@ -45,6 +45,11 @@ public class GeneralController implements Features {
     return this.model.checkTicker(ticker);
   }
 
+  @Override
+  public List<String> getShareTickerInPortfolio (String portfolioName){
+    return this.model.getShareTickerInPortfolio(portfolioName);
+  }
+
   private List<String> getPortfolios(PortfolioType pType) {
     List<String> portfolios = new FlexibleModelImplementation().getPortfolio();
     if(pType == PortfolioType.ALL){

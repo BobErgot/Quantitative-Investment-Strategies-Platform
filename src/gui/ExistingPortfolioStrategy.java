@@ -1,9 +1,14 @@
 package gui;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.text.TableView;
 
 import gui.utility.ViewDocumentListener;
 import gui_controller.Features;
@@ -30,6 +35,7 @@ public class ExistingPortfolioStrategy extends JPanel {
     this.add(applicationJPanel);
     this.enableButtonEvents(features);
     this.enableValidations(features);
+    this.checkTableCondition(features);
   }
 
   private void enableValidations(Features features) {
@@ -44,6 +50,31 @@ public class ExistingPortfolioStrategy extends JPanel {
 
   private void enableButtonEvents(Features features) {
     addStrategyJButton.addActionListener(event -> addStrategy(features, LocalDate.now()));
+    portfolioNameJComboBox.addActionListener(event -> checkTableCondition(features));
+  }
+
+  public void checkTableCondition (Features features){
+    String selectedPortfolioName = (String) portfolioNameJComboBox.getSelectedItem();
+    if(null != selectedPortfolioName && !selectedPortfolioName.isEmpty()){
+      generateStockTable(selectedPortfolioName, features);
+    }
+  }
+
+  private void generateStockTable (String portfolioName, Features features) {
+    stockJTable.setShowGrid(true);
+    DefaultTableModel model = new DefaultTableModel() {
+      @Override
+      public boolean isCellEditable(int row, int column) {return column == 1;}
+    };
+    stockJTable.setModel(model);
+    model.addColumn("Stocks");
+    model.addColumn("Weightage %");
+
+    List<String> sharesList = new ArrayList<>();
+    sharesList.addAll(features.getShareTickerInPortfolio(portfolioName));
+    for (String share: sharesList){
+      model.addRow(new Object[]{share, "0",});
+    }
   }
 
   public void listAllMutablePortfolios(List<String> portfolios) {

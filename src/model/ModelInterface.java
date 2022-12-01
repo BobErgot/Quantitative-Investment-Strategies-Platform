@@ -133,4 +133,6 @@ public interface ModelInterface {
    * @return Amount of money paid to buy the shares
    */
   double appendPortfolio(String portfolioName, String symbol, int numShares, LocalDate date);
+
+  List<String> getShareTickerInPortfolio(String portfolioName);
 }

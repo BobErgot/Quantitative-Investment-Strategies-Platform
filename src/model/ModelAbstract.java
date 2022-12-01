@@ -448,4 +448,19 @@ abstract class ModelAbstract implements ModelInterface {
                                 LocalDate date) {
     throw new IllegalStateException("Cannot access this function!");
   }
+
+  @Override
+  public List<String> getShareTickerInPortfolio(String portfolioName){
+    for(Portfolio portfolio: portfolios) {
+      if(portfolio.getId().equals(portfolioName)){
+        Set<Share> shares= portfolio.getListOfShares();
+        List<String> shareList = new ArrayList<>();
+        for(Share share: shares) {
+          shareList.add(share.getCompanyName());
+        }
+        return shareList;
+      }
+    }
+    return null;
+  }
 }

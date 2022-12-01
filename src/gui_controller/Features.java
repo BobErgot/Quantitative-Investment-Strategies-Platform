@@ -109,4 +109,6 @@ public interface Features {
   boolean checkPortfolioNameExists(String portfolioName);
 
   boolean checkTickerExists(String ticker);
+
+  List<String> getShareTickerInPortfolio (String portfolioName);
 }
