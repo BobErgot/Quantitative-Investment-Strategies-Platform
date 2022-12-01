@@ -138,5 +138,6 @@ public interface ModelInterface {
   List<String> getShareTickerInPortfolio(String portfolioName);
 
   boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
-                         ArrayList<String> shares, ArrayList<Integer> weightage, int type);
+                         LocalDate endDate, ArrayList<String> shares, ArrayList<Integer> weightage,
+                         int type);
 }

@@ -114,5 +114,5 @@ public interface Features {
   List<String> getShareTickerInPortfolio (String portfolioName);
 
   boolean createStrategy (String portfolioName, String investmentAmount, LocalDate date,
-                          ArrayList<String> shares, ArrayList<Integer> weightage);
+                          LocalDate endDate, ArrayList<String> shares, ArrayList<Integer> weightage);
 }

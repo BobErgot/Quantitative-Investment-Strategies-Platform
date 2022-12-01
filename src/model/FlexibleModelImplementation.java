@@ -191,7 +191,8 @@ public class FlexibleModelImplementation extends ModelAbstract {
 
   @Override
   public boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
-                                ArrayList<String> shares, ArrayList<Integer> weightage, int type) {
+                                LocalDate endDate, ArrayList<String> shares,
+                                ArrayList<Integer> weightage, int type) {
     if (!this.idIsPresent(portfolioName) || date.isBefore(LocalDate.now())) {
       return false;
     }
@@ -202,7 +203,6 @@ public class FlexibleModelImplementation extends ModelAbstract {
     StringBuilder recordData = new StringBuilder();
     recordData.append(portfolioName).append(RECORD_FIELD_SEPERATOR);
     recordData.append(LocalDate.now().toString()).append(RECORD_FIELD_SEPERATOR);
-    recordData.append(date.toString()).append(RECORD_FIELD_SEPERATOR);
     recordData.append(date.toString()).append(RECORD_FIELD_SEPERATOR);
     recordData.append(type).append(RECORD_FIELD_SEPERATOR);
     recordData.append(investmentAmount).append(RECORD_FIELD_SEPERATOR);
@@ -285,7 +285,7 @@ public class FlexibleModelImplementation extends ModelAbstract {
               weightageList.add(weightage);
             }
           }
-          this.createStrategy(portfolioName, strategyInvestFields[0], today, sharesList,
+          this.createStrategy(portfolioName, strategyInvestFields[0], today, endDate, sharesList,
                   weightageList, -1);
         }
       }

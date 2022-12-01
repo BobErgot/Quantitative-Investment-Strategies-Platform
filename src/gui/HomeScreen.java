@@ -91,6 +91,8 @@ public class HomeScreen extends JFrame implements GUIView {
 
   private ExistingPortfolioStrategy existingPortfolioStrategy;
 
+  private CreateStrategyPortfolio createStrategyPortfolio;
+
   @Override
   public void addFeatures(Features features) {
     this.enableButtonEvents(features);
@@ -104,6 +106,9 @@ public class HomeScreen extends JFrame implements GUIView {
 
     existingPortfolioStrategy = new ExistingPortfolioStrategy(features);
     homeScreenTabbedPane.addTab("Existing Portfolio Strategy", existingPortfolioStrategy);
+
+    createStrategyPortfolio = new CreateStrategyPortfolio(features);
+    homeScreenTabbedPane.addTab("Create Strategy Portfolio", createStrategyPortfolio);
   }
 
   private void enableValidations(Features features) {

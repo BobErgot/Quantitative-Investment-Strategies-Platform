@@ -1,6 +1,5 @@
 package gui;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,78 +10,94 @@ import javax.swing.table.TableCellEditor;
 import gui.utility.ViewDocumentListener;
 import gui_controller.Features;
 
-import static gui.ViewValidator.createJComboBox;
 import static gui.ViewValidator.showErrorMessage;
+import static gui.ViewValidator.validateCreatePortfolioField;
 import static gui.ViewValidator.validateNumberField;
 import static gui.ViewValidator.validateTimelineField;
 
-public class ExistingPortfolioStrategy extends JPanel {
+public class CreateStrategyPortfolio extends JPanel{
   private JPanel applicationJPanel;
   private JLabel portfolioJLabel;
   private JButton addStrategyJButton;
-  private JComboBox<String> portfolioNameJComboBox;
   private JLabel fixedAmountJLabel;
   private JTextField fixedAmountJTextField;
   private JLabel dateOfInvestmentJLabel;
   private JTextField dateOfInvestmentJTextField;
   private JTable stockJTable;
   private JLabel fixedAmountMessageJLabel;
-  private JLabel dateInvestmentJLabel;
+  private JLabel dateInvestmentMessageJLabel;
   private JScrollPane stockTableJScrollPane;
+  private JTextField portfolioNameJTextField;
+  private JLabel portfolioNameMessageJLabel;
+  private JTextField endDateOfInvestmentJTextField;
+  private JLabel endDateInvestmentMessageJLabel;
+  private JLabel endDateOfInvestmentJLabel;
+  private JLabel frequencyJLabel;
+  private JTextField frequencyJTextField;
+  private JLabel frequencyMessageJLabel;
+  private JTextField countLabelJTextField;
+  private JLabel countJLabel;
+  private JLabel countMessageJLabel;
 
-  public ExistingPortfolioStrategy(Features features) {
+  public CreateStrategyPortfolio(Features features) {
     this.add(applicationJPanel);
     this.enableButtonEvents(features);
     this.enableValidations(features);
-    this.checkTableCondition(features);
   }
 
   private void enableValidations(Features features) {
+    portfolioNameJTextField.getDocument().addDocumentListener((ViewDocumentListener) e
+            -> validateCreatePortfolioField(features, portfolioNameJTextField,
+            portfolioNameMessageJLabel));
+
     fixedAmountJTextField.getDocument().addDocumentListener(
             (ViewDocumentListener) e -> validateNumberField(fixedAmountJTextField,
                     fixedAmountMessageJLabel, "amount"));
 
     dateOfInvestmentJTextField.getDocument().addDocumentListener(
             (ViewDocumentListener) e -> validateTimelineField(dateOfInvestmentJTextField,
-                    dateInvestmentJLabel));
+                    dateInvestmentMessageJLabel));
+
+    endDateOfInvestmentJTextField.getDocument().addDocumentListener(
+            (ViewDocumentListener) e -> validateTimelineField(endDateOfInvestmentJTextField,
+                    endDateInvestmentMessageJLabel));
+
+    frequencyJTextField.getDocument().addDocumentListener(
+            (ViewDocumentListener) e -> validateNumberField(frequencyJTextField,
+                    frequencyMessageJLabel, "days"));
+
+    countLabelJTextField.getDocument().addDocumentListener(
+            (ViewDocumentListener) e -> {
+              boolean flag = validateNumberField(frequencyJTextField,
+                      frequencyMessageJLabel, "count of companies");
+              if (flag) {
+                int count = Integer.parseInt(countLabelJTextField.getText());
+                this.generateStockTable(count, features);
+              }
+            });
   }
 
   private void enableButtonEvents(Features features) {
-    addStrategyJButton.addActionListener(event -> addStrategy(features));
-    portfolioNameJComboBox.addActionListener(event -> checkTableCondition(features));
+    addStrategyJButton.addActionListener(event -> addPortfolioStrategy(features));
   }
 
-  public void checkTableCondition(Features features) {
-    String selectedPortfolioName = (String) portfolioNameJComboBox.getSelectedItem();
-    if (null != selectedPortfolioName && !selectedPortfolioName.isEmpty()) {
-      generateStockTable(selectedPortfolioName, features);
-    }
-  }
-
-  private void generateStockTable(String portfolioName, Features features) {
+  private void generateStockTable(int count, Features features) {
     stockJTable.setShowGrid(true);
     DefaultTableModel model = new DefaultTableModel() {
       @Override
       public boolean isCellEditable(int row, int column) {
-        return column == 1;
+        return true;
       }
     };
     stockJTable.setModel(model);
     model.addColumn("Stocks");
     model.addColumn("Weightage %");
-
-    List<String> sharesList = new ArrayList<>();
-    sharesList.addAll(features.getShareTickerInPortfolio(portfolioName));
-    for (String share : sharesList) {
-      model.addRow(new Object[]{share, "0",});
+    for (int i = 0; i<count;i++) {
+      model.addRow(new Object[]{"", "0",});
     }
   }
 
-  public void listAllMutablePortfolios(List<String> portfolios) {
-    createJComboBox(portfolios, portfolioNameJComboBox);
-  }
-
-  private void addStrategy(Features features) {
+  private void addPortfolioStrategy(Features features) {
     if (stockJTable.isEditing()) {
       TableCellEditor editor = stockJTable.getCellEditor();
       if (editor != null) {
@@ -120,23 +135,6 @@ public class ExistingPortfolioStrategy extends JPanel {
       showErrorMessage(this, "Sum of all weightage percentage should be 100. " +
               "Please reassign the weightage.");
       return;
-    } else {
-      String selectedPortfolioName = (String) portfolioNameJComboBox.getSelectedItem();
-      if (null != selectedPortfolioName && !selectedPortfolioName.isEmpty()
-              && validateNumberField(fixedAmountJTextField, fixedAmountMessageJLabel, "amount")
-              && validateTimelineField(dateOfInvestmentJTextField, dateInvestmentJLabel)) {
-        String investmentAmount = fixedAmountJTextField.getText();
-        LocalDate date = LocalDate.parse(dateOfInvestmentJTextField.getText());
-        boolean status = features.createStrategy(selectedPortfolioName, investmentAmount, date,
-                date, companyTickerList, weightageList);
-        if (!status) {
-          showErrorMessage(this, "Something went wrong. Please try again!");
-        } else {
-          stockJTable.setModel(new DefaultTableModel());
-          fixedAmountJTextField.setText("");
-          dateOfInvestmentJTextField.setText("");
-        }
-      }
     }
   }
 }
