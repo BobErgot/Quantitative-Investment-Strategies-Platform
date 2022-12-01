@@ -2,6 +2,7 @@ package model;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
@@ -135,4 +136,7 @@ public interface ModelInterface {
   double appendPortfolio(String portfolioName, String symbol, int numShares, LocalDate date);
 
   List<String> getShareTickerInPortfolio(String portfolioName);
+
+  boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
+                         ArrayList<String> shares, ArrayList<Integer> weightage);
 }

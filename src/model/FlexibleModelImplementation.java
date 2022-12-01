@@ -171,4 +171,10 @@ public class FlexibleModelImplementation extends ModelAbstract {
     }
     return portfolioOutput;
   }
+
+  @Override
+  public boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
+                                ArrayList<String> shares, ArrayList<Integer> weightage) {
+    return true;
+  }
 }

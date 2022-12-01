@@ -7,13 +7,17 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import javax.swing.text.TableView;
 
 import gui.utility.ViewDocumentListener;
 import gui_controller.Features;
 
 import static gui.ViewValidator.createJComboBox;
+import static gui.ViewValidator.showErrorMessage;
 import static gui.ViewValidator.validateDateField;
 import static gui.ViewValidator.validateNumberField;
 import static gui.ViewValidator.validateTimelineField;
@@ -30,6 +34,7 @@ public class ExistingPortfolioStrategy extends JPanel {
   private JTable stockJTable;
   private JLabel fixedAmountMessageJLabel;
   private JLabel dateInvestmentJLabel;
+  private JScrollPane stockTableJScrollPane;
 
   public ExistingPortfolioStrategy(Features features) {
     this.add(applicationJPanel);
@@ -49,7 +54,7 @@ public class ExistingPortfolioStrategy extends JPanel {
   }
 
   private void enableButtonEvents(Features features) {
-    addStrategyJButton.addActionListener(event -> addStrategy(features, LocalDate.now()));
+    addStrategyJButton.addActionListener(event -> addStrategy(features));
     portfolioNameJComboBox.addActionListener(event -> checkTableCondition(features));
   }
 
@@ -81,28 +86,63 @@ public class ExistingPortfolioStrategy extends JPanel {
     createJComboBox(portfolios, portfolioNameJComboBox);
   }
 
-  private void addStrategy(Features features, LocalDate date) {
-//    String numStocks = numberSharesJTextField.getText().trim();
-//    String companyStocks = companyTickerJTextField.getText().trim().toUpperCase();
-//    if (validateCreatePortfolioField(features, portfolioNameJTextField, portfolioMessageLabel)
-//            && validateTickerField(features, companyTickerJTextField, companyTickerMessageJLabel)
-//            && validateNumberShareField(numberSharesJTextField, numberOfStocksMessageJLabel)) {
-//      boolean companyAdded = features.purchaseShare(companyStocks, Integer.parseInt(numStocks),
-//              date);
-//      if (!companyAdded) {
-//        // Give invalid ticker symbol error.
-//        showErrorMessage(INVALID_TICKER);
-//      } else {
-//        // Stocks added successfully
-//        companyTickerJTextField.setText("");
-//        numberSharesJTextField.setText("");
-//        portfolioNameJTextField.setEnabled(false);
-//        createFlexiblePortfolioButton.setEnabled(true);
-//        createFixedPortfolioJButton.setEnabled(true);
-//      }
-//    } else {
-//      // give invalid stocks exception to user.
-//      showErrorMessage(INVALID_STOCKS);
-//    }
+  private void addStrategy(Features features) {
+    if (stockJTable.isEditing()) {
+      TableCellEditor editor = stockJTable.getCellEditor();
+      if (editor != null) {
+        if (!editor.stopCellEditing()) {
+          editor.cancelCellEditing();
+        }
+      }
+    }
+    ArrayList<Integer> weightageList = new ArrayList<>();
+    ArrayList<String> companyTickerList = new ArrayList<>();
+    for(int i = 0;i<stockJTable.getModel().getRowCount();i++)
+    {
+      int numberOfStocks = -1;
+      try {
+        numberOfStocks = Integer.parseInt((String) stockJTable.getModel().getValueAt(i,1));
+        companyTickerList.add((String) stockJTable.getModel().getValueAt(i,0));
+      } catch (NumberFormatException invalidStock) {
+         showErrorMessage(this, "Not a valid number at line " + (i+1)
+                 + " under stock weightage percentage. Input only positive numeric values from " +
+                 "0-100.");
+         return;
+      }
+      if (numberOfStocks < 0 || numberOfStocks > 100) {
+        showErrorMessage(this, "Enter whole numbers from 0-100 at line " + (i+1)
+                + " under stock weightage percentage. ");
+        return;
+      } else {
+        weightageList.add(numberOfStocks);
+      }
+    }
+    int weightageSum = 0;
+    for(int weightage: weightageList){
+      weightageSum += weightage;
+    }
+    if(weightageSum != 100){
+      showErrorMessage(this, "Sum of all weightage percentage should be 100. " +
+              "Please reassign the weightage.");
+      return;
+    } else {
+      String selectedPortfolioName = (String) portfolioNameJComboBox.getSelectedItem();
+      if(null != selectedPortfolioName && !selectedPortfolioName.isEmpty()
+              && validateNumberField(fixedAmountJTextField, fixedAmountMessageJLabel, "amount")
+              && validateTimelineField(dateOfInvestmentJTextField, dateInvestmentJLabel)){
+        String investmentAmount = fixedAmountJTextField.getText();
+        LocalDate date = LocalDate.parse(dateOfInvestmentJTextField.getText());
+        boolean status = features.createStrategy(selectedPortfolioName, investmentAmount, date,
+                companyTickerList, weightageList);
+        if (!status) {
+          showErrorMessage(this, "Something went wrong. Please try again!");
+        } else {
+          stockJTable.setModel(new DefaultTableModel());
+          fixedAmountJTextField.setText("");
+          dateOfInvestmentJLabel.setText("");
+        }
+      }
+    }
+    return;
   }
 }

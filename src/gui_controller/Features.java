@@ -1,6 +1,7 @@
 package gui_controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import model.Periodicity;
 
@@ -111,4 +112,7 @@ public interface Features {
   boolean checkTickerExists(String ticker);
 
   List<String> getShareTickerInPortfolio (String portfolioName);
+
+  boolean createStrategy (String portfolioName, String investmentAmount, LocalDate date,
+                          ArrayList<String> shares, ArrayList<Integer> weightage);
 }

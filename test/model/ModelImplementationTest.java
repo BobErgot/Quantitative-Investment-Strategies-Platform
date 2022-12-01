@@ -373,7 +373,6 @@ public class ModelImplementationTest {
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
         LocalDate.parse("2020-11-01"), LocalDate.parse("2022-01-01"),
         Periodicity.YEAR);
-    System.out.println(actual);
     assertEquals(3, actual.size());
     for (int i = 0; i <= 1; i++) {
       assertEquals(answer[i], actual.get(i), 0.0);

@@ -2,6 +2,7 @@ package gui_controller;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -153,5 +154,12 @@ public class GeneralController implements Features {
   @Override
   public double getValuation(String id, LocalDate date) {
     return this.model.getValuationGivenDate(id, date);
+  }
+
+  @Override
+  public boolean createStrategy (String portfolioName, String investmentAmount, LocalDate date,
+                                 ArrayList<String> shares, ArrayList<Integer> weightage) {
+    this.model = new FlexibleModelImplementation();
+    return this.model.createStrategy(portfolioName, investmentAmount, date, shares, weightage);
   }
 }
