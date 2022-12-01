@@ -28,8 +28,17 @@ public class UploadPortfolioPanel extends JPanel {
 
   public UploadPortfolioPanel(Features features) {
     this.add(applicationJPanel);
+    this.enableButtonEvents(features);
+    this.enableValidations(features);
+  }
+
+  private void enableButtonEvents(Features features) {
     uploadButton.addActionListener(event -> uploadPortfolio(features));
     browseFileJButton.addActionListener(event -> browseFiles());
+  }
+
+  private void enableValidations(Features features) {
+    return;
   }
 
   private void browseFiles() {

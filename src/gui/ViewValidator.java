@@ -3,6 +3,7 @@ package gui;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.*;
@@ -82,8 +83,8 @@ public class ViewValidator {
     }
   }
 
-  static boolean validateNumberShareField(JTextField numSharesJTextField,
-                                          JLabel numStocksMessageJLabel) {
+  static boolean validateNumberField(JTextField numSharesJTextField,
+                                          JLabel numStocksMessageJLabel, String object) {
     String numberShareEntered = numSharesJTextField.getText().trim();
     if (numberShareEntered.isEmpty()) {
       numStocksMessageJLabel.setText(INPUT_FIELD_EMPTY);
@@ -91,11 +92,11 @@ public class ViewValidator {
       return false;
     }
     if (!checkValidStocks(numberShareEntered)) {
-      numStocksMessageJLabel.setText("Invalid number of shares!");
+      numStocksMessageJLabel.setText("Invalid number for " + object + "!");
       numStocksMessageJLabel.setForeground(Color.RED);
       return false;
     } else {
-      numStocksMessageJLabel.setText("Valid shares!");
+      numStocksMessageJLabel.setText("Valid " + object + "!");
       numStocksMessageJLabel.setForeground(Color.GREEN);
       return true;
     }
@@ -117,5 +118,11 @@ public class ViewValidator {
       dateMessageJLabel.setForeground(Color.GREEN);
       return true;
     }
+  }
+
+  static void createJComboBox(List<String> portfolios, JComboBox<String> jComboBox) {
+    ComboBoxModel<String> mutablePortfolioComboBox = new DefaultComboBoxModel<>(
+            portfolios.toArray(new String[0]));
+    jComboBox.setModel(mutablePortfolioComboBox);
   }
 }

@@ -13,8 +13,9 @@ import model.Periodicity;
 
 import static gui.ViewValidator.checkValidDate;
 import static gui.ViewValidator.checkValidStocks;
+import static gui.ViewValidator.createJComboBox;
 import static gui.ViewValidator.validateDateField;
-import static gui.ViewValidator.validateNumberShareField;
+import static gui.ViewValidator.validateNumberField;
 import static gui.ViewValidator.validateTickerField;
 import static gui.utility.ViewConstants.BOUGHT_FOR;
 import static gui.utility.ViewConstants.INVALID_DATE;
@@ -71,26 +72,35 @@ public class HomeScreen extends JFrame implements GUIView {
   private JLabel performanceFromDatePickerJLabel;
   private JLabel showValuationDatePickerJLabel;
 
+  private CreatePortfolioPanel createPortfolioPanel;
+
+  private UploadPortfolioPanel uploadPortfolioPanel;
+
+  private ExistingPortfolioStrategy existingPortfolioStrategy;
+
   @Override
   public void addFeatures(Features features) {
     this.enableButtonEvents(features);
     this.enableValidations(features);
 
-    CreatePortfolioPanel createPortfolioPanel = new CreatePortfolioPanel(features);
+    createPortfolioPanel = new CreatePortfolioPanel(features);
     homeScreenTabbedPane.addTab("Create Portfolio", createPortfolioPanel);
 
-    UploadPortfolioPanel uploadPortfolioPanel = new UploadPortfolioPanel(features);
+    uploadPortfolioPanel = new UploadPortfolioPanel(features);
     homeScreenTabbedPane.addTab("Upload Portfolio", uploadPortfolioPanel);
+
+    existingPortfolioStrategy = new ExistingPortfolioStrategy(features);
+    homeScreenTabbedPane.addTab("Existing Portfolio Strategy", existingPortfolioStrategy);
   }
 
   private void enableValidations(Features features) {
     purchaseShareNumberSharesJTextField.getDocument().addDocumentListener(
-            (ViewDocumentListener) e -> validateNumberShareField(purchaseShareNumberSharesJTextField,
-                    purchaseShareNumberSharesJLabel));
+            (ViewDocumentListener) e -> validateNumberField(purchaseShareNumberSharesJTextField,
+                    purchaseShareNumberSharesJLabel, "shares"));
 
     sellShareNumberSharesJTextField.getDocument().addDocumentListener(
-            (ViewDocumentListener) e -> validateNumberShareField(sellShareNumberSharesJTextField,
-                    sellShareNumberSharesJLabel));
+            (ViewDocumentListener) e -> validateNumberField(sellShareNumberSharesJTextField,
+                    sellShareNumberSharesJLabel, "shares"));
 
     purchaseShareCompanyTickerJTextField.getDocument().addDocumentListener(
             (ViewDocumentListener) e -> validateTickerField(features,
@@ -234,20 +244,16 @@ public class HomeScreen extends JFrame implements GUIView {
 
   @Override
   public void listAllPortfolios(List<String> portfolios) {
-    ComboBoxModel<String> portfolioComboBox = new DefaultComboBoxModel<>(
-            portfolios.toArray(new String[0]));
-    portfolioListComboBox.setModel(portfolioComboBox);
-    showValuationPortfolioListComboBox.setModel(portfolioComboBox);
-    showCostBasisPortfolioListComboBox.setModel(portfolioComboBox);
+    createJComboBox(portfolios, portfolioListComboBox);
+    createJComboBox(portfolios, showValuationPortfolioListComboBox);
+    createJComboBox(portfolios, showCostBasisPortfolioListComboBox);
   }
 
   @Override
   public void listAllMutablePortfolios(List<String> portfolios) {
-    ComboBoxModel<String> mutablePortfolioComboBox = new DefaultComboBoxModel<>(
-            portfolios.toArray(new String[0]));
-    purchaseSharePortfolioListComboBox.setModel(mutablePortfolioComboBox);
-    sellSharePortfolioListComboBox.setModel(mutablePortfolioComboBox);
-
+    createJComboBox(portfolios, purchaseSharePortfolioListComboBox);
+    createJComboBox(portfolios, sellSharePortfolioListComboBox);
+    existingPortfolioStrategy.listAllMutablePortfolios(portfolios);
   }
 
   @Override

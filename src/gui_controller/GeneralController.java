@@ -31,14 +31,8 @@ public class GeneralController implements Features {
   }
 
   private void updatePortfolioList() {
-    List<String> portfolios = new FlexibleModelImplementation().getPortfolio();
-    this.view.listAllPortfolios(portfolios.stream().
-            map((inp) -> inp.split("\\|\\|")[2].trim())
-            .collect(Collectors.toList()));
-    this.view.listAllMutablePortfolios(portfolios.stream()
-            .filter(inp -> inp.split("\\|\\|").length >= 5)
-            .map((inp) -> inp.split("\\|\\|")[2].trim())
-            .collect(Collectors.toList()));
+    this.view.listAllPortfolios(getPortfolios(PortfolioType.ALL));
+    this.view.listAllMutablePortfolios(getPortfolios(PortfolioType.FLEXIBLE));
   }
 
   @Override
@@ -51,10 +45,27 @@ public class GeneralController implements Features {
     return this.model.checkTicker(ticker);
   }
 
+  private List<String> getPortfolios(PortfolioType pType) {
+    List<String> portfolios = new FlexibleModelImplementation().getPortfolio();
+    if(pType == PortfolioType.ALL){
+      return portfolios.stream()
+              .map((inp) -> inp.split("\\|\\|")[2].trim())
+              .collect(Collectors.toList());
+    } else if (pType == PortfolioType.FIXED) {
+      // Add logic for fixed if required
+    } else if (pType == PortfolioType.FLEXIBLE){
+      return portfolios.stream()
+              .filter(inp -> inp.split("\\|\\|").length >= 5)
+              .map((inp) -> inp.split("\\|\\|")[2].trim())
+              .collect(Collectors.toList());
+    }
+    return null;
+  }
+
   @Override
   public boolean createPortfolio(String portfolioName, PortfolioType pType) {
     if (!checkPortfolioNameExists(portfolioName)) {
-      if (pType == PortfolioType.Flexible) {
+      if (pType == PortfolioType.FLEXIBLE) {
         this.model = new FlexibleModelImplementation();
       }
       this.model.createPortfolio(portfolioName, LocalDate.now());

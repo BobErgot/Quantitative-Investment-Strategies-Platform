@@ -7,11 +7,10 @@ import gui.GUIView;
 import java.time.LocalDate;
 import model.ModelImplementation;
 import model.ModelInterface;
+
 import org.junit.Test;
 
 public class GeneralControllerTest {
-
-
   @Test
   public void testValidCreatePortfolio() {
     StringBuilder log = new StringBuilder();
@@ -19,7 +18,7 @@ public class GeneralControllerTest {
     GeneralController gc = new GeneralController(mockModel);
     GUIView view = new MockView();
     gc.setView(view);
-    gc.createPortfolio("test123",PortfolioType.Fixed);
+    gc.createPortfolio("test123", PortfolioType.FIXED);
     assertEquals("createPortfolio,test123,2022-11-30",log.toString());
   }
   @Test
@@ -30,7 +29,7 @@ public class GeneralControllerTest {
     GUIView view = new MockView();
     gc.setView(view);
     try {
-      gc.createPortfolio("", PortfolioType.Fixed);
+      gc.createPortfolio("", PortfolioType.FIXED);
       fail("Blank portfolio cannot be created");
     }
     catch(IllegalArgumentException e){
@@ -71,7 +70,8 @@ public class GeneralControllerTest {
     GeneralController gc = new GeneralController(mockModel);
     GUIView view = new MockView();
     gc.setView(view);
-    boolean sharePurchased = gc.purchaseShare("IBM",-1, LocalDate.parse("2022-02-02"));
+    boolean sharePurchased = gc.purchaseShare("IBM",-1,
+            LocalDate.parse("2022-02-02"));
     assertFalse(sharePurchased);
   }
   @Test
@@ -102,7 +102,8 @@ public class GeneralControllerTest {
     GeneralController gc = new GeneralController(mockModel);
     GUIView view = new MockView();
     gc.setView(view);
-    double output = gc.sellShare("test123","xyzdoesntexist!",20, LocalDate.parse("2022-02-02"));
+    double output = gc.sellShare("test123","xyzdoesntexist!",
+            20, LocalDate.parse("2022-02-02"));
     assertEquals(-1.0, output,0.0);
   }
   @Test
@@ -112,7 +113,8 @@ public class GeneralControllerTest {
     GeneralController gc = new GeneralController(mockModel);
     GUIView view = new MockView();
     gc.setView(view);
-    double output = gc.sellShare("test123","IBM",-20, LocalDate.parse("2022-02-02"));
+    double output = gc.sellShare("test123","IBM",-20,
+            LocalDate.parse("2022-02-02"));
     assertEquals(-1.0, output,0.0);
   }
 
