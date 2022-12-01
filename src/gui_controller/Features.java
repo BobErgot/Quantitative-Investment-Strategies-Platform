@@ -2,6 +2,7 @@ package gui_controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import model.Periodicity;
 
 /**
  * Lists all the features & user operations possible from this application.
@@ -87,9 +88,13 @@ public interface Features {
    * dates specified by the user and generates chart with dynamic x-axis and y-axis scaling.
    *
    * @param portfolioName Portfolio ID to generate graph of.
+   * @param from
+   * @param to
+   * @param group
    * @return List of points to plot (Tentative).
    */
-  List<Double> generatePerformanceGraph(String portfolioName);
+  List<Double> generatePerformanceGraph(String portfolioName, LocalDate from, LocalDate to,
+      Periodicity group);
 
   /**
    * Interacts with the model interface object to get valuation of a specific portfolio on a

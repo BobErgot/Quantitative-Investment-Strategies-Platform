@@ -9,6 +9,7 @@ import java.util.zip.DataFormatException;
 import gui.GUIView;
 import model.FlexibleModelImplementation;
 import model.ModelInterface;
+import model.Periodicity;
 
 import static utility.Constants.FILE_SEPARATOR;
 
@@ -31,13 +32,13 @@ public class GeneralController implements Features {
 
   private void updatePortfolioList() {
     List<String> portfolios = new FlexibleModelImplementation().getPortfolio();
-    this.view.listAllPortfolios(portfolios.stream()
-            .map((inp) -> inp.split("\\|\\|")[2].trim())
+    this.view.listAllPortfolios(portfolios.stream().
+            map((inp) -> inp.split("\\|\\|")[2].trim())
             .collect(Collectors.toList()));
     this.view.listAllMutablePortfolios(portfolios.stream()
-                    .filter(inp -> inp.split("\\|\\|").length >= 5)
-                    .map((inp) -> inp.split("\\|\\|")[2].trim())
-                    .collect(Collectors.toList()));
+            .filter(inp -> inp.split("\\|\\|").length >= 5)
+            .map((inp) -> inp.split("\\|\\|")[2].trim())
+            .collect(Collectors.toList()));
   }
 
   @Override
@@ -87,8 +88,7 @@ public class GeneralController implements Features {
 
   @Override
   public boolean purchaseShare(String shareName, int numShares, LocalDate date) {
-    if (numShares <= 0)
-      return false;
+    if (numShares <= 0) return false;
     try {
       return model.addShareToModel(shareName, date, numShares, -1);
     } catch (IllegalArgumentException invalidTicker) {
@@ -103,8 +103,8 @@ public class GeneralController implements Features {
       return -1.0;
     }
     try {
-      return new FlexibleModelImplementation().appendPortfolio(portfolioName,
-              shareName, numShares, date);
+      return new FlexibleModelImplementation().appendPortfolio(portfolioName, shareName,
+              numShares, date);
     } catch (IllegalArgumentException invalidTicker) {
       return -1.0;
     }
@@ -115,8 +115,7 @@ public class GeneralController implements Features {
     if (!checkTickerExists(shareName) || numShares <= 0.0) {
       return -1.0;
     }
-    return new FlexibleModelImplementation().sellStocks(portfolioName, shareName,
-            numShares, date);
+    return new FlexibleModelImplementation().sellStocks(portfolioName, shareName, numShares, date);
   }
 
   @Override
@@ -130,14 +129,13 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public List<Double> generatePerformanceGraph(String portfolioName) {
-    return null;
+  public List<Double> generatePerformanceGraph(String portfolioName, LocalDate from,
+                                               LocalDate to, Periodicity group) {
+    return this.model.getPortfolioPerformance(portfolioName, from, to, group);
   }
 
   @Override
   public double getValuation(String id, LocalDate date) {
-
     return this.model.getValuationGivenDate(id, date);
   }
-
 }
