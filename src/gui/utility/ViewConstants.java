@@ -33,4 +33,6 @@ public final class ViewConstants {
   public static final String FILE_UPLOAD_FAIL_NOT_FOUND = "Unable to locate the file at specified" +
           " path. ";
   public static final String FILE_UPLOAD_ANOTHER = "Browse and upload another file";
+
+  public static final String INPUT_FIELD_EMPTY = "Field cannot be empty!";
 }
