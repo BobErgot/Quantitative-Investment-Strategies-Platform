@@ -28,13 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -111,12 +108,12 @@ public class HomeScreen extends JFrame implements GUIView {
 
   private void enableValidations(Features features) {
     purchaseShareNumberSharesJTextField.getDocument().addDocumentListener(
-            (ViewDocumentListener) e -> validateNumberField(purchaseShareNumberSharesJTextField,
-                    purchaseShareNumberSharesJLabel, "shares"));
+        (ViewDocumentListener) e -> validateNumberField(purchaseShareNumberSharesJTextField,
+            purchaseShareNumberSharesJLabel, "shares"));
 
     sellShareNumberSharesJTextField.getDocument().addDocumentListener(
-            (ViewDocumentListener) e -> validateNumberField(sellShareNumberSharesJTextField,
-                    sellShareNumberSharesJLabel, "shares"));
+        (ViewDocumentListener) e -> validateNumberField(sellShareNumberSharesJTextField,
+            sellShareNumberSharesJLabel, "shares"));
 
     purchaseShareCompanyTickerJTextField.getDocument().addDocumentListener(
         (ViewDocumentListener) e -> validateTickerField(features,
@@ -164,6 +161,7 @@ public class HomeScreen extends JFrame implements GUIView {
       if (checkValidDate(date)) {
         double valuation = features.getValuation(portfolioName, LocalDate.parse(date));
         valuationTextPane.setText("Valuation: $ " + valuation);
+        showValuationDatePickerJTextField.setText("");
       } else {
         showErrorMessage(this, INVALID_DATE);
       }
@@ -175,6 +173,7 @@ public class HomeScreen extends JFrame implements GUIView {
       if (checkValidDate(date)) {
         double valuation = features.generateCostBasis(portfolioName, LocalDate.parse(date));
         showCostBasisTextPane.setText("Cost Basis: $ " + valuation);
+        showCostBasisDatePickerJTextField.setText("");
       } else {
         showErrorMessage(this, INVALID_DATE);
       }
@@ -202,7 +201,7 @@ public class HomeScreen extends JFrame implements GUIView {
                 "Performance graph"));
         frame.setVisible(true);
       } else {
-        showErrorMessage(this,INVALID_DATE);
+        showErrorMessage(this, INVALID_DATE);
       }
 
     });
