@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import gui_controller.Features;
 
 import static gui.ViewValidator.checkValidFile;
+import static gui.ViewValidator.showErrorMessage;
+import static gui.ViewValidator.showInformationMessage;
 import static gui.utility.ViewConstants.FILE_UPLOAD_ANOTHER;
 import static gui.utility.ViewConstants.FILE_UPLOAD_FAIL_EXTENSION;
 import static gui.utility.ViewConstants.FILE_UPLOAD_FAIL_FORMAT;
@@ -83,22 +85,12 @@ public class UploadPortfolioPanel extends JPanel {
   private void clearPathSelectedLabel() {
     pathSelectedJLabel.setText(NO_FILES_SELECTED);
     uploadButton.setEnabled(false);
-    showInformationMessage(FILE_UPLOAD_SUCCESS);
+    showInformationMessage(this, FILE_UPLOAD_SUCCESS);
   }
 
   private void errorPathSelectedLabel(String error) {
     pathSelectedJLabel.setText(UPLOAD_ANOTHER_FILE);
     uploadButton.setEnabled(false);
-    showErrorMessage(error);
-  }
-
-  private void showErrorMessage(String error) {
-    JOptionPane.showMessageDialog(this, error, "Error",
-            JOptionPane.ERROR_MESSAGE);
-  }
-
-  private void showInformationMessage(String info) {
-    JOptionPane.showMessageDialog(this, info, "Info",
-            JOptionPane.INFORMATION_MESSAGE);
+    showErrorMessage(this, error);
   }
 }

@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import gui_controller.Features;
 
+import static gui.utility.ViewConstants.DATE_IS_IN_PAST;
 import static gui.utility.ViewConstants.INPUT_FIELD_EMPTY;
 import static gui.utility.ViewConstants.INVALID_DATE;
 import static gui.utility.ViewConstants.INVALID_TICKER;
@@ -120,9 +121,43 @@ public class ViewValidator {
     }
   }
 
+  static boolean validateTimelineField(JTextField dateJTextField, JLabel dateMessageJLabel) {
+    boolean dateValidator = validateDateField(dateJTextField, dateMessageJLabel);
+    String dateEntered = dateJTextField.getText().trim();
+    if (!dateValidator) {
+      return false;
+    }
+    try {
+      LocalDate localDate = LocalDate.parse(dateEntered);
+      if (localDate.isEqual(LocalDate.now()) || localDate.isAfter(LocalDate.now())) {
+        dateMessageJLabel.setText("Valid date!");
+        dateMessageJLabel.setForeground(Color.GREEN);
+        return true;
+      } else {
+        dateMessageJLabel.setText(DATE_IS_IN_PAST);
+        dateMessageJLabel.setForeground(Color.RED);
+        return false;
+      }
+    } catch (DateTimeParseException dateError) {
+      dateMessageJLabel.setText(INVALID_DATE);
+      dateMessageJLabel.setForeground(Color.RED);
+      return false;
+    }
+  }
+
   static void createJComboBox(List<String> portfolios, JComboBox<String> jComboBox) {
     ComboBoxModel<String> mutablePortfolioComboBox = new DefaultComboBoxModel<>(
             portfolios.toArray(new String[0]));
     jComboBox.setModel(mutablePortfolioComboBox);
+  }
+
+  static void showErrorMessage(Component component, String error) {
+    JOptionPane.showMessageDialog(component, error, "Error",
+            JOptionPane.ERROR_MESSAGE);
+  }
+
+  static void showInformationMessage(Component component, String info) {
+    JOptionPane.showMessageDialog(component, info, "Info",
+            JOptionPane.INFORMATION_MESSAGE);
   }
 }

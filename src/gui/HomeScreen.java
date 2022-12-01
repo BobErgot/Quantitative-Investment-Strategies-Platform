@@ -14,6 +14,8 @@ import model.Periodicity;
 import static gui.ViewValidator.checkValidDate;
 import static gui.ViewValidator.checkValidStocks;
 import static gui.ViewValidator.createJComboBox;
+import static gui.ViewValidator.showErrorMessage;
+import static gui.ViewValidator.showInformationMessage;
 import static gui.ViewValidator.validateDateField;
 import static gui.ViewValidator.validateNumberField;
 import static gui.ViewValidator.validateTickerField;
@@ -149,7 +151,7 @@ public class HomeScreen extends JFrame implements GUIView {
         double valuation = features.getValuation(portfolioName, LocalDate.parse(date));
         valuationTextPane.setText("Valuation: $ " + valuation);
       } else {
-        showErrorMessage(INVALID_DATE);
+        showErrorMessage(this, INVALID_DATE);
       }
     });
 
@@ -160,7 +162,7 @@ public class HomeScreen extends JFrame implements GUIView {
         double valuation = features.generateCostBasis(portfolioName, LocalDate.parse(date));
         showCostBasisTextPane.setText("Cost Basis: $ " + valuation);
       } else {
-        showErrorMessage(INVALID_DATE);
+        showErrorMessage(this, INVALID_DATE);
       }
     });
 
@@ -194,24 +196,24 @@ public class HomeScreen extends JFrame implements GUIView {
                   LocalDate.parse(date));
           if (sellingPrice < 0.0) {
             // Give invalid ticker symbol error.
-            showErrorMessage(INVALID_TICKER);
+            showErrorMessage(this, INVALID_TICKER);
           } else {
             // Stocks added successfully
             sellShareCompanyTickerJTextField.setText("");
             sellShareNumberSharesJTextField.setText("");
             sellShareDatePickerJTextField.setText("");
-            showInformationMessage(SOLD_FOR + sellingPrice);
+            showInformationMessage(this, SOLD_FOR + sellingPrice);
           }
         } catch (NoSuchElementException noSuchElementException) {
-          showErrorMessage(STOCK_INVALID);
+          showErrorMessage(this, STOCK_INVALID);
         } catch (IllegalArgumentException illegalArgumentException) {
-          showErrorMessage(SHARE_NUMBER_EXCEEDS);
+          showErrorMessage(this, SHARE_NUMBER_EXCEEDS);
         }
       } else {
-        showErrorMessage(INVALID_DATE);
+        showErrorMessage(this, INVALID_DATE);
       }
     } else {
-      showErrorMessage(INVALID_STOCKS);
+      showErrorMessage(this, INVALID_STOCKS);
     }
   }
 
@@ -226,19 +228,19 @@ public class HomeScreen extends JFrame implements GUIView {
                 Integer.parseInt(numStocks), LocalDate.parse(date));
         if (buyingPrice < 0.0) {
           // Give invalid ticker symbol error.
-          showErrorMessage(INVALID_TICKER);
+          showErrorMessage(this, INVALID_TICKER);
         } else {
           // Stocks added successfully
           purchaseShareCompanyTickerJTextField.setText("");
           purchaseShareNumberSharesJTextField.setText("");
           purchaseShareDatePickerJTextField.setText("");
-          showInformationMessage(BOUGHT_FOR + buyingPrice);
+          showInformationMessage(this, BOUGHT_FOR + buyingPrice);
         }
       } else {
-        showErrorMessage(INVALID_DATE);
+        showErrorMessage(this, INVALID_DATE);
       }
     } else {
-      showErrorMessage(INVALID_STOCKS);
+      showErrorMessage(this, INVALID_STOCKS);
     }
   }
 
@@ -271,15 +273,5 @@ public class HomeScreen extends JFrame implements GUIView {
 
   private void refresh() {
     this.repaint();
-  }
-
-  private void showErrorMessage(String error) {
-    JOptionPane.showMessageDialog(this, error, "Error",
-            JOptionPane.ERROR_MESSAGE);
-  }
-
-  private void showInformationMessage(String info) {
-    JOptionPane.showMessageDialog(this, info, "Info",
-            JOptionPane.INFORMATION_MESSAGE);
   }
 }

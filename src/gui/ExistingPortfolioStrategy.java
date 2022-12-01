@@ -11,6 +11,7 @@ import gui_controller.Features;
 import static gui.ViewValidator.createJComboBox;
 import static gui.ViewValidator.validateDateField;
 import static gui.ViewValidator.validateNumberField;
+import static gui.ViewValidator.validateTimelineField;
 
 public class ExistingPortfolioStrategy extends JPanel {
   private JPanel applicationJPanel;
@@ -37,7 +38,7 @@ public class ExistingPortfolioStrategy extends JPanel {
                     fixedAmountMessageJLabel, "amount"));
 
     dateOfInvestmentJTextField.getDocument().addDocumentListener(
-            (ViewDocumentListener) e -> validateDateField(dateOfInvestmentJTextField,
+            (ViewDocumentListener) e -> validateTimelineField(dateOfInvestmentJTextField,
                     dateInvestmentJLabel));
   }
 
@@ -72,15 +73,5 @@ public class ExistingPortfolioStrategy extends JPanel {
 //      // give invalid stocks exception to user.
 //      showErrorMessage(INVALID_STOCKS);
 //    }
-  }
-
-  private void showErrorMessage(String error) {
-    JOptionPane.showMessageDialog(this, error, "Error",
-            JOptionPane.ERROR_MESSAGE);
-  }
-
-  private void showInformationMessage(String info) {
-    JOptionPane.showMessageDialog(this, info, "Info",
-            JOptionPane.INFORMATION_MESSAGE);
   }
 }

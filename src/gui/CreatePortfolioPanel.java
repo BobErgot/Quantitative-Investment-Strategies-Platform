@@ -8,6 +8,8 @@ import gui.utility.ViewDocumentListener;
 import gui_controller.Features;
 import gui_controller.PortfolioType;
 
+import static gui.ViewValidator.showErrorMessage;
+import static gui.ViewValidator.showInformationMessage;
 import static gui.ViewValidator.validateCreatePortfolioField;
 import static gui.ViewValidator.validateNumberField;
 import static gui.ViewValidator.validateTickerField;
@@ -72,7 +74,7 @@ public class CreatePortfolioPanel extends JPanel {
               date);
       if (!companyAdded) {
         // Give invalid ticker symbol error.
-        showErrorMessage(INVALID_TICKER);
+        showErrorMessage(this, INVALID_TICKER);
       } else {
         // Stocks added successfully
         companyTickerJTextField.setText("");
@@ -83,7 +85,7 @@ public class CreatePortfolioPanel extends JPanel {
       }
     } else {
       // give invalid stocks exception to user.
-      showErrorMessage(INVALID_STOCKS);
+      showErrorMessage(this, INVALID_STOCKS);
     }
   }
 
@@ -94,33 +96,23 @@ public class CreatePortfolioPanel extends JPanel {
       portfolioSaved = features.createPortfolio(portfolioName, pType);
       portfolioNameJTextField.setEnabled(true);
     } else {
-      showErrorMessage(PORTFOLIO_INVALID);
+      showErrorMessage(this, PORTFOLIO_INVALID);
       portfolioNameJTextField.setText("");
       portfolioNameJTextField.setEnabled(true);
       createFlexiblePortfolioButton.setEnabled(false);
       createFixedPortfolioJButton.setEnabled(false);
     }
     if (!portfolioSaved) {
-      showErrorMessage(PORTFOLIO_EXISTS);
+      showErrorMessage(this, PORTFOLIO_EXISTS);
       portfolioNameJTextField.setText("");
       portfolioNameJTextField.setEnabled(true);
     } else {
       // Portfolio created successfully
       portfolioNameJTextField.setText("");
-      showInformationMessage(PORTFOLIO_CREATED);
+      showInformationMessage(this, PORTFOLIO_CREATED);
       createFlexiblePortfolioButton.setEnabled(false);
       createFixedPortfolioJButton.setEnabled(false);
       portfolioNameJTextField.setEnabled(true);
     }
-  }
-
-  private void showErrorMessage(String error) {
-    JOptionPane.showMessageDialog(this, error, "Error",
-            JOptionPane.ERROR_MESSAGE);
-  }
-
-  private void showInformationMessage(String info) {
-    JOptionPane.showMessageDialog(this, info, "Info",
-            JOptionPane.INFORMATION_MESSAGE);
   }
 }
