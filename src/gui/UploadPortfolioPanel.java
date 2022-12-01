@@ -1,13 +1,5 @@
 package gui;
 
-import java.nio.file.Path;
-import java.util.DuplicateFormatFlagsException;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import gui_controller.Features;
-
 import static gui.ViewValidator.checkValidFile;
 import static gui.ViewValidator.showErrorMessage;
 import static gui.ViewValidator.showInformationMessage;
@@ -21,7 +13,18 @@ import static gui.utility.ViewConstants.SUPPORTED_FILES;
 import static gui.utility.ViewConstants.SUPPORTED_FILE_EXTENSION;
 import static gui.utility.ViewConstants.UPLOAD_ANOTHER_FILE;
 
+import gui_controller.Features;
+import java.nio.file.Path;
+import java.util.DuplicateFormatFlagsException;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
 public class UploadPortfolioPanel extends JPanel {
+
   private JPanel applicationJPanel;
   private JButton browseFileJButton;
   private JButton uploadButton;
@@ -58,7 +61,7 @@ public class UploadPortfolioPanel extends JPanel {
       browseFileJButton.setText(FILE_UPLOAD_ANOTHER);
     } else {
       errorPathSelectedLabel(FILE_UPLOAD_FAIL_EXTENSION + SUPPORTED_FILES
-              + SUPPORTED_FILE_EXTENSION);
+          + SUPPORTED_FILE_EXTENSION);
     }
   }
 
