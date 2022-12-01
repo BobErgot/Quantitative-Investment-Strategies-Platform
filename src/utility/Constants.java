@@ -17,7 +17,7 @@ public final class Constants {
   public static final String PORTFOLIO_DIRECTORY = "stocker" + FILE_SEPARATOR + "portfolio";
   public static final String PORTFOLIO_FILENAME = "portfolio";
 
-  public static final String STRATEGY_FILENAME = "portfolio-strategy-";
+  public static final String STRATEGY_FILENAME = "strategy-";
   public static final String TICKER_DIRECTORY = "stocker" + FILE_SEPARATOR + "ticker";
   public static final String STOCK_ENDPOINT = "https://www.alphavantage.co/query";
   public static final String STOCK_API_KEY = "T5770I9RBI1FTSXJ";

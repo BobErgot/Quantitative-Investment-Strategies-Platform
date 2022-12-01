@@ -1,18 +1,18 @@
 package gui_controller;
 
+import static utility.Constants.FILE_SEPARATOR;
+
+import gui.GUIView;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
-
-import gui.GUIView;
 import model.FlexibleModelImplementation;
+import model.ModelImplementation;
 import model.ModelInterface;
 import model.Periodicity;
-
-import static utility.Constants.FILE_SEPARATOR;
 
 public class GeneralController implements Features {
 
@@ -47,23 +47,20 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public List<String> getShareTickerInPortfolio (String portfolioName){
+  public List<String> getShareTickerInPortfolio(String portfolioName) {
     return this.model.getShareTickerInPortfolio(portfolioName);
   }
 
   private List<String> getPortfolios(PortfolioType pType) {
     List<String> portfolios = new FlexibleModelImplementation().getPortfolio();
-    if(pType == PortfolioType.ALL){
-      return portfolios.stream()
-              .map((inp) -> inp.split("\\|\\|")[2].trim())
-              .collect(Collectors.toList());
+    if (pType == PortfolioType.ALL) {
+      return portfolios.stream().map((inp) -> inp.split("\\|\\|")[2].trim())
+          .collect(Collectors.toList());
     } else if (pType == PortfolioType.FIXED) {
       // Add logic for fixed if required
-    } else if (pType == PortfolioType.FLEXIBLE){
-      return portfolios.stream()
-              .filter(inp -> inp.split("\\|\\|").length >= 5)
-              .map((inp) -> inp.split("\\|\\|")[2].trim())
-              .collect(Collectors.toList());
+    } else if (pType == PortfolioType.FLEXIBLE) {
+      return portfolios.stream().filter(inp -> inp.split("\\|\\|").length >= 5)
+          .map((inp) -> inp.split("\\|\\|")[2].trim()).collect(Collectors.toList());
     }
     return null;
   }
@@ -72,9 +69,11 @@ public class GeneralController implements Features {
   public boolean createPortfolio(String portfolioName, PortfolioType pType) {
     if (!checkPortfolioNameExists(portfolioName)) {
       if (pType == PortfolioType.FLEXIBLE) {
-        this.model = new FlexibleModelImplementation();
+        new FlexibleModelImplementation((ModelImplementation) this.model).createPortfolio(
+            portfolioName, LocalDate.now());
+      } else {
+        this.model.createPortfolio(portfolioName, LocalDate.now());
       }
-      this.model.createPortfolio(portfolioName, LocalDate.now());
       this.updatePortfolioList();
       return true;
     }
@@ -105,7 +104,9 @@ public class GeneralController implements Features {
 
   @Override
   public boolean purchaseShare(String shareName, int numShares, LocalDate date) {
-    if (numShares <= 0) return false;
+    if (numShares <= 0) {
+      return false;
+    }
     try {
       return model.addShareToModel(shareName, date, numShares, -1);
     } catch (IllegalArgumentException invalidTicker) {
@@ -115,13 +116,13 @@ public class GeneralController implements Features {
 
   @Override
   public double purchaseShare(String portfolioName, String shareName, int numShares,
-                              LocalDate date) {
+      LocalDate date) {
     if (!checkTickerExists(shareName)) {
       return -1.0;
     }
     try {
-      return new FlexibleModelImplementation().appendPortfolio(portfolioName, shareName,
-              numShares, date);
+      return new FlexibleModelImplementation().appendPortfolio(portfolioName, shareName, numShares,
+          date);
     } catch (IllegalArgumentException invalidTicker) {
       return -1.0;
     }
@@ -146,8 +147,8 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public List<Double> generatePerformanceGraph(String portfolioName, LocalDate from,
-                                               LocalDate to, Periodicity group) {
+  public List<Double> generatePerformanceGraph(String portfolioName, LocalDate from, LocalDate to,
+      Periodicity group) {
     return this.model.getPortfolioPerformance(portfolioName, from, to, group);
   }
 
@@ -157,9 +158,8 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public boolean createStrategy (String portfolioName, String investmentAmount, LocalDate date,
-                                 ArrayList<String> shares, ArrayList<Integer> weightage) {
-    this.model = new FlexibleModelImplementation();
-    return this.model.createStrategy(portfolioName, investmentAmount, date, shares, weightage, 0);
+  public boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
+      ArrayList<String> shares, ArrayList<Integer> weightage) {
+    return  new FlexibleModelImplementation().createStrategy(portfolioName, investmentAmount, date, shares, weightage, 0);
   }
 }
