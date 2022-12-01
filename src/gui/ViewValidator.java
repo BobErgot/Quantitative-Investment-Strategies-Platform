@@ -26,7 +26,7 @@ public class ViewValidator {
             supportedFileExtension.contains(fileComponents[1].trim().toLowerCase());
   }
 
-  static boolean checkValidDate(String date) {
+  public static boolean checkValidDate(String date) {
     try {
       LocalDate localDate = LocalDate.parse(date);
       return localDate.isAfter(LocalDate.of(1949, 12, 31));
@@ -35,7 +35,7 @@ public class ViewValidator {
     }
   }
 
-  static boolean checkValidStocks(String numStocks) {
+  public static boolean checkValidStocks(String numStocks) {
     try {
       int numberOfStocks = Integer.parseInt(numStocks);
       return numberOfStocks > 0;
@@ -64,8 +64,8 @@ public class ViewValidator {
     }
   }
 
-  static boolean validateTickerField(Features features, JTextField tickerJTextField,
-                                     JLabel tickerMessageJLabel) {
+  public static boolean validateTickerField(Features features, JTextField tickerJTextField,
+      JLabel tickerMessageJLabel) {
     String tickerTextEntered = tickerJTextField.getText().trim().toUpperCase();
     if (tickerTextEntered.isEmpty()) {
       tickerMessageJLabel.setText(INPUT_FIELD_EMPTY);
@@ -103,7 +103,7 @@ public class ViewValidator {
     }
   }
 
-  static boolean validateDateField(JTextField dateJTextField, JLabel dateMessageJLabel) {
+  public static boolean validateDateField(JTextField dateJTextField, JLabel dateMessageJLabel) {
     String dateEntered = dateJTextField.getText().trim();
     if (dateEntered.isEmpty()) {
       dateMessageJLabel.setText(INPUT_FIELD_EMPTY);
