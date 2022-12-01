@@ -100,4 +100,8 @@ public interface Features {
    * @return Valuation of given portfolio on given date.
    */
   double getValuation(String id, LocalDate date);
+
+  boolean checkPortfolioNameExists(String portfolioName);
+
+  boolean checkTickerExists(String ticker);
 }

@@ -2,7 +2,6 @@ package gui_controller;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
-import java.util.DuplicateFormatFlagsException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -32,11 +31,27 @@ public class GeneralController implements Features {
 
   private void updatePortfolioList() {
     List<String> portfolios = new FlexibleModelImplementation().getPortfolio();
-    this.view.listAllPortfolios(portfolios.stream().map((inp) -> inp.split("\\|\\|")[2].trim())
+    this.view.listAllPortfolios(portfolios.stream()
+            .map((inp) -> inp.split("\\|\\|")[2].trim())
             .collect(Collectors.toList()));
-    this.view.listAllMutablePortfolios(
-            portfolios.stream().filter(inp -> inp.split("\\|\\|").length >= 5)
-                    .map((inp) -> inp.split("\\|\\|")[2].trim()).collect(Collectors.toList()));
+    this.view.listAllMutablePortfolios(portfolios.stream()
+                    .filter(inp -> inp.split("\\|\\|").length >= 5)
+                    .map((inp) -> inp.split("\\|\\|")[2].trim())
+                    .collect(Collectors.toList()));
+  }
+
+  @Override
+  public boolean checkPortfolioNameExists(String portfolioName) {
+    List<String> portfolioRecords = new FlexibleModelImplementation().getPortfolio();
+    List<String> portfolioNames = portfolioRecords.stream()
+            .map((inp) -> inp.split("\\|\\|")[2].trim())
+            .collect(Collectors.toList());
+    return portfolioNames.contains(portfolioName);
+  }
+
+  @Override
+  public boolean checkTickerExists(String ticker) {
+    return this.model.checkTicker(ticker);
   }
 
   @Override
@@ -71,12 +86,12 @@ public class GeneralController implements Features {
     } catch (FileNotFoundException fileNotFoundException) {
       errorCode = 2;
     }
-    return validPath ? 0: errorCode;
+    return validPath ? 0 : errorCode;
   }
 
   @Override
   public boolean purchaseShare(String shareName, int numShares, LocalDate date) {
-    if(numShares<=0)
+    if (numShares <= 0)
       return false;
     try {
       return model.addShareToModel(shareName, date, numShares, -1);
@@ -101,7 +116,7 @@ public class GeneralController implements Features {
 
   @Override
   public double sellShare(String portfolioName, String shareName, int numShares, LocalDate date) {
-    if (!this.model.checkTicker(shareName) || numShares<=0.0) {
+    if (!this.model.checkTicker(shareName) || numShares <= 0.0) {
       return -1.0;
     }
     return new FlexibleModelImplementation().sellStocks(portfolioName, shareName,

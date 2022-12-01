@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import gui.utility.ViewDocumentListener;
 import gui_controller.Features;
 import gui_controller.PortfolioType;
 
@@ -81,6 +82,10 @@ public class HomeScreen extends JFrame implements GUIView {
   private JTextField sellShareNumberSharesJTextField;
   private JTextField sellShareDatePickerTextField;
   private JButton sellShareJButton;
+  private JLabel portfolioMessageLabel;
+  private JLabel companyTickerMessageJLabel;
+  private JLabel portfolioJLabel;
+  private JLabel numberOfStocksMessageJLabel;
   // Upload
   private Path filePath;
 
@@ -127,9 +132,74 @@ public class HomeScreen extends JFrame implements GUIView {
       }
     });
 
+    portfolioNameJTextField.getDocument().addDocumentListener((ViewDocumentListener) e
+            -> validateCreatePortfolioField(features));
+
+    numberSharesJTextField.getDocument().addDocumentListener((ViewDocumentListener) e
+            -> validateNumberShareField());
+
+    companyTickerJTextField.getDocument().addDocumentListener((ViewDocumentListener) e
+            -> validateTickerField(features));
+
     purchaseShareJButton.addActionListener(event -> purchaseShareOnMutablePortfolio(features));
 
     sellShareJButton.addActionListener(event -> sellShareOnMutablePortfolio(features));
+  }
+
+  private boolean validateCreatePortfolioField(Features features) {
+    String portfolioTextEntered = portfolioNameJTextField.getText().trim();
+    if (portfolioTextEntered.isEmpty()) {
+      portfolioMessageLabel.setText("Field cannot be empty!");
+      portfolioMessageLabel.setForeground(Color.BLUE);
+      return false;
+    }
+    boolean exists = features.checkPortfolioNameExists(portfolioTextEntered);
+    if (exists) {
+      portfolioMessageLabel.setText("Portfolio name already exists!");
+      portfolioMessageLabel.setForeground(Color.RED);
+      return false;
+    } else {
+      portfolioMessageLabel.setText("Valid portfolio name!");
+      portfolioMessageLabel.setForeground(Color.GREEN);
+      return true;
+    }
+  }
+
+  private boolean validateTickerField(Features features) {
+    String tickerTextEntered = companyTickerJTextField.getText().trim().toUpperCase();
+    if (tickerTextEntered.isEmpty()) {
+      companyTickerMessageJLabel.setText("Field cannot be empty!");
+      companyTickerMessageJLabel.setForeground(Color.BLUE);
+      return false;
+    }
+    boolean exists = features.checkTickerExists(tickerTextEntered);
+    if (!exists) {
+      companyTickerMessageJLabel.setText("Invalid company Ticker!");
+      companyTickerMessageJLabel.setForeground(Color.RED);
+      return false;
+    } else {
+      companyTickerMessageJLabel.setText("Valid company ticker!");
+      companyTickerMessageJLabel.setForeground(Color.GREEN);
+      return true;
+    }
+  }
+
+  private boolean validateNumberShareField() {
+    String numberShareEntered = numberSharesJTextField.getText().trim();
+    if (numberShareEntered.isEmpty()) {
+      numberOfStocksMessageJLabel.setText("Field cannot be empty!");
+      numberOfStocksMessageJLabel.setForeground(Color.BLUE);
+      return false;
+    }
+    if (!checkValidStocks(numberShareEntered)) {
+      numberOfStocksMessageJLabel.setText("Invalid number of shares!");
+      numberOfStocksMessageJLabel.setForeground(Color.RED);
+      return false;
+    } else {
+      numberOfStocksMessageJLabel.setText("Valid shares!");
+      numberOfStocksMessageJLabel.setForeground(Color.GREEN);
+      return true;
+    }
   }
 
   private void sellShareOnMutablePortfolio(Features features) {
@@ -227,8 +297,9 @@ public class HomeScreen extends JFrame implements GUIView {
 
   private void addShare(Features features, LocalDate date) {
     String numStocks = numberSharesJTextField.getText().trim();
-    String companyStocks = companyTickerJTextField.getText().trim();
-    if (checkValidStocks(numStocks)) {
+    String companyStocks = companyTickerJTextField.getText().trim().toUpperCase();
+    if (validateCreatePortfolioField(features) && validateTickerField(features)
+            && validateNumberShareField()) {
       boolean companyAdded = features.purchaseShare(companyStocks, Integer.parseInt(numStocks),
               date);
       if (!companyAdded) {
@@ -238,9 +309,9 @@ public class HomeScreen extends JFrame implements GUIView {
         // Stocks added successfully
         companyTickerJTextField.setText("");
         numberSharesJTextField.setText("");
+        portfolioNameJTextField.setEnabled(false);
         createFlexiblePortfolioButton.setEnabled(true);
         createFixedPortfolioJButton.setEnabled(true);
-
       }
     } else {
       // give invalid stocks exception to user.
@@ -253,17 +324,25 @@ public class HomeScreen extends JFrame implements GUIView {
     boolean portfolioSaved = true;
     if (portfolioName.length() > 0) {
       portfolioSaved = features.createPortfolio(portfolioName, pType);
+      portfolioNameJTextField.setEnabled(true);
     } else {
       showErrorMessage(PORTFOLIO_INVALID);
+      portfolioNameJTextField.setText("");
+      portfolioNameJTextField.setEnabled(true);
+      createFlexiblePortfolioButton.setEnabled(false);
+      createFixedPortfolioJButton.setEnabled(false);
     }
     if (!portfolioSaved) {
       showErrorMessage(PORTFOLIO_EXISTS);
+      portfolioNameJTextField.setText("");
+      portfolioNameJTextField.setEnabled(true);
     } else {
       // Portfolio created successfully
       portfolioNameJTextField.setText("");
       showInformationMessage(PORTFOLIO_CREATED);
       createFlexiblePortfolioButton.setEnabled(false);
       createFixedPortfolioJButton.setEnabled(false);
+      portfolioNameJTextField.setEnabled(true);
     }
   }
 
