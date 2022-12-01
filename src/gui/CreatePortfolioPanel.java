@@ -21,7 +21,6 @@ import static gui.utility.ViewConstants.PORTFOLIO_INVALID;
 
 public class CreatePortfolioPanel extends JPanel {
   private JPanel applicationJPanel;
-  private JPanel createPortfolioJPanel;
   private JLabel portfolioJLabel;
   private JLabel companyTickerJLabel;
   private JLabel numberSharesJLabel;
