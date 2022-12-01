@@ -42,11 +42,7 @@ public class GeneralController implements Features {
 
   @Override
   public boolean checkPortfolioNameExists(String portfolioName) {
-    List<String> portfolioRecords = new FlexibleModelImplementation().getPortfolio();
-    List<String> portfolioNames = portfolioRecords.stream()
-            .map((inp) -> inp.split("\\|\\|")[2].trim())
-            .collect(Collectors.toList());
-    return portfolioNames.contains(portfolioName);
+    return model.idIsPresent(portfolioName);
   }
 
   @Override
@@ -56,7 +52,7 @@ public class GeneralController implements Features {
 
   @Override
   public boolean createPortfolio(String portfolioName, PortfolioType pType) {
-    if (!model.idIsPresent(portfolioName)) {
+    if (!checkPortfolioNameExists(portfolioName)) {
       if (pType == PortfolioType.Flexible) {
         this.model = new FlexibleModelImplementation();
       }
@@ -103,7 +99,7 @@ public class GeneralController implements Features {
   @Override
   public double purchaseShare(String portfolioName, String shareName, int numShares,
                               LocalDate date) {
-    if (!this.model.checkTicker(shareName)) {
+    if (!checkTickerExists(shareName)) {
       return -1.0;
     }
     try {
@@ -116,7 +112,7 @@ public class GeneralController implements Features {
 
   @Override
   public double sellShare(String portfolioName, String shareName, int numShares, LocalDate date) {
-    if (!this.model.checkTicker(shareName) || numShares <= 0.0) {
+    if (!checkTickerExists(shareName) || numShares <= 0.0) {
       return -1.0;
     }
     return new FlexibleModelImplementation().sellStocks(portfolioName, shareName,
