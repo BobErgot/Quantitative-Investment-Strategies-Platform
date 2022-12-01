@@ -37,6 +37,31 @@ import static gui.utility.ViewConstants.SUPPORTED_FILES;
 import static gui.utility.ViewConstants.SUPPORTED_FILE_EXTENSION;
 import static gui.utility.ViewConstants.UPLOAD_ANOTHER_FILE;
 
+import gui.utility.BarChart;
+import gui_controller.Features;
+import gui_controller.PortfolioType;
+import java.awt.Color;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.DuplicateFormatFlagsException;
+import java.util.List;
+import java.util.NoSuchElementException;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.border.EmptyBorder;
+import model.Periodicity;
+
 /**
  * Java Swing implementation of GUIView, implements the GUI & all its features for the Stock
  * Application.
@@ -86,6 +111,11 @@ public class HomeScreen extends JFrame implements GUIView {
   private JLabel companyTickerMessageJLabel;
   private JLabel portfolioJLabel;
   private JLabel numberOfStocksMessageJLabel;
+  private JComboBox showGraphPerformancePortfolioListComboBox;
+  private JComboBox periodicityListComboBox;
+  private JTextField performanceFromDatePickerTextField;
+  private JTextField performanceToDatePickerTextField;
+  private JButton performanceGraphJButton;
   // Upload
   private Path filePath;
 
@@ -94,19 +124,19 @@ public class HomeScreen extends JFrame implements GUIView {
 
     addShareJButton.addActionListener(event -> addShare(features, LocalDate.now()));
 
-    createFixedPortfolioJButton.addActionListener(event -> addPortfolio(features,
-            PortfolioType.Fixed));
+    createFixedPortfolioJButton.addActionListener(
+        event -> addPortfolio(features, PortfolioType.Fixed));
 
-    createFlexiblePortfolioButton.addActionListener(event -> addPortfolio(features,
-            PortfolioType.Flexible));
+    createFlexiblePortfolioButton.addActionListener(
+        event -> addPortfolio(features, PortfolioType.Flexible));
 
     uploadButton.addActionListener(event -> uploadPortfolio(features));
 
     browseFileJButton.addActionListener(event -> browseFiles());
 
     showCompositionJButton.addActionListener(event -> {
-      String composition =
-              features.generateComposition((String) portfolioListComboBox.getSelectedItem());
+      String composition = features.generateComposition(
+          (String) portfolioListComboBox.getSelectedItem());
       compositionJTextArea.setText(composition);
     });
 
@@ -144,6 +174,18 @@ public class HomeScreen extends JFrame implements GUIView {
     purchaseShareJButton.addActionListener(event -> purchaseShareOnMutablePortfolio(features));
 
     sellShareJButton.addActionListener(event -> sellShareOnMutablePortfolio(features));
+
+    performanceGraphJButton.addActionListener(event -> {
+      List<Double> graph = features.generatePerformanceGraph("portland",
+          LocalDate.parse("2020-11-26"), LocalDate.parse("2022-11-26"), Periodicity.YEAR);
+      String[] test = {"2020", "2021", "2022"};
+      JFrame frame = new JFrame();
+      frame.setSize(350, 300);
+      frame.getContentPane().add(
+          new BarChart(graph.stream().mapToDouble(Double::doubleValue).toArray(), test,
+              "Performance graph"));
+      frame.setVisible(true);
+    });
   }
 
   private boolean validateCreatePortfolioField(Features features) {
@@ -212,7 +254,7 @@ public class HomeScreen extends JFrame implements GUIView {
         double sellingPrice = -1.0;
         try {
           sellingPrice = features.sellShare(portfolioName, shareName, Integer.parseInt(numStocks),
-                  LocalDate.parse(date));
+              LocalDate.parse(date));
           if (sellingPrice < 0.0) {
             // Give invalid ticker symbol error.
             showErrorMessage(INVALID_TICKER);
@@ -244,7 +286,7 @@ public class HomeScreen extends JFrame implements GUIView {
     if (checkValidStocks(numStocks)) {
       if (checkValidDate(date)) {
         double buyingPrice = features.purchaseShare(portfolioName, shareName,
-                Integer.parseInt(numStocks), LocalDate.parse(date));
+            Integer.parseInt(numStocks), LocalDate.parse(date));
         if (buyingPrice < 0.0) {
           // Give invalid ticker symbol error.
           showErrorMessage(INVALID_TICKER);
@@ -265,8 +307,8 @@ public class HomeScreen extends JFrame implements GUIView {
 
   @Override
   public void listAllPortfolios(List<String> portfolios) {
-    ComboBoxModel<String> portfolioComboBox =
-            new DefaultComboBoxModel<>(portfolios.toArray(new String[0]));
+    ComboBoxModel<String> portfolioComboBox = new DefaultComboBoxModel<>(
+        portfolios.toArray(new String[0]));
     portfolioListComboBox.setModel(portfolioComboBox);
     showValuationPortfolioListComboBox.setModel(portfolioComboBox);
     showCostBasisPortfolioListComboBox.setModel(portfolioComboBox);
@@ -274,8 +316,8 @@ public class HomeScreen extends JFrame implements GUIView {
 
   @Override
   public void listAllMutablePortfolios(List<String> portfolios) {
-    ComboBoxModel<String> mutablePortfolioComboBox =
-            new DefaultComboBoxModel<>(portfolios.toArray(new String[0]));
+    ComboBoxModel<String> mutablePortfolioComboBox = new DefaultComboBoxModel<>(
+        portfolios.toArray(new String[0]));
     purchaseSharePortfolioListComboBox.setModel(mutablePortfolioComboBox);
     sellSharePortfolioListComboBox.setModel(mutablePortfolioComboBox);
 
@@ -301,7 +343,7 @@ public class HomeScreen extends JFrame implements GUIView {
     if (validateCreatePortfolioField(features) && validateTickerField(features)
             && validateNumberShareField()) {
       boolean companyAdded = features.purchaseShare(companyStocks, Integer.parseInt(numStocks),
-              date);
+          date);
       if (!companyAdded) {
         // Give invalid ticker symbol error.
         showErrorMessage(INVALID_TICKER);
@@ -380,8 +422,8 @@ public class HomeScreen extends JFrame implements GUIView {
       uploadButton.setEnabled(true);
       browseFileJButton.setText(FILE_UPLOAD_ANOTHER);
     } else {
-      errorPathSelectedLabel(FILE_UPLOAD_FAIL_EXTENSION + SUPPORTED_FILES
-              + SUPPORTED_FILE_EXTENSION);
+      errorPathSelectedLabel(
+          FILE_UPLOAD_FAIL_EXTENSION + SUPPORTED_FILES + SUPPORTED_FILE_EXTENSION);
     }
   }
 
@@ -405,12 +447,10 @@ public class HomeScreen extends JFrame implements GUIView {
   }
 
   private void showErrorMessage(String error) {
-    JOptionPane.showMessageDialog(this, error, "Error",
-            JOptionPane.ERROR_MESSAGE);
+    JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
   }
 
   private void showInformationMessage(String info) {
-    JOptionPane.showMessageDialog(this, info, "Info",
-            JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(this, info, "Info", JOptionPane.INFORMATION_MESSAGE);
   }
 }

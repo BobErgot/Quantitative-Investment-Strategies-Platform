@@ -9,6 +9,7 @@ import java.util.zip.DataFormatException;
 import gui.GUIView;
 import model.FlexibleModelImplementation;
 import model.ModelInterface;
+import model.Periodicity;
 
 import static utility.Constants.FILE_SEPARATOR;
 
@@ -134,8 +135,9 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public List<Double> generatePerformanceGraph(String portfolioName) {
-    return null;
+  public List<Double> generatePerformanceGraph(String portfolioName, LocalDate from, LocalDate to,
+      Periodicity group) {
+    return this.model.getPortfolioPerformance(portfolioName,from,to,group);
   }
 
   @Override
