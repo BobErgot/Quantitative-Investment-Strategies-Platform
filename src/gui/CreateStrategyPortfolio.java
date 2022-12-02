@@ -1,7 +1,11 @@
 package gui;
 
+import java.awt.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -68,10 +72,16 @@ public class CreateStrategyPortfolio extends JPanel{
 
     countLabelJTextField.getDocument().addDocumentListener(
             (ViewDocumentListener) e -> {
-              boolean flag = validateNumberField(frequencyJTextField,
-                      frequencyMessageJLabel, "count of companies");
+              boolean flag = validateNumberField(countLabelJTextField,
+                      countMessageJLabel, "count of companies");
               if (flag) {
-                int count = Integer.parseInt(countLabelJTextField.getText());
+                int count = 0;
+                try {
+                   count = Integer.parseInt(countLabelJTextField.getText());
+                } catch (NumberFormatException numberFormatException) {
+                  count = 0;
+                }
+                countLabelJTextField.setEnabled(false);
                 this.generateStockTable(count, features);
               }
             });
@@ -95,9 +105,11 @@ public class CreateStrategyPortfolio extends JPanel{
     for (int i = 0; i<count;i++) {
       model.addRow(new Object[]{"", "0",});
     }
+    countLabelJTextField.setEnabled(true);
   }
 
   private void addPortfolioStrategy(Features features) {
+    Set<String> sharesSet = new HashSet<>();
     if (stockJTable.isEditing()) {
       TableCellEditor editor = stockJTable.getCellEditor();
       if (editor != null) {
@@ -109,6 +121,20 @@ public class CreateStrategyPortfolio extends JPanel{
     ArrayList<Integer> weightageList = new ArrayList<>();
     ArrayList<String> companyTickerList = new ArrayList<>();
     for (int i = 0; i < stockJTable.getModel().getRowCount(); i++) {
+      String companyTickerData = (String) stockJTable.getModel().getValueAt(i, 0);
+      sharesSet.add(companyTickerData);
+    }
+    if(sharesSet.size() != stockJTable.getModel().getRowCount()){
+      showErrorMessage(this, "Remove duplicate values from stock column.");
+      return;
+    }
+    for (int i = 0; i < stockJTable.getModel().getRowCount(); i++) {
+      String companyTickerData = (String) stockJTable.getModel().getValueAt(i, 0);
+      if(!features.checkTickerExists(companyTickerData.toUpperCase())){
+        showErrorMessage(this, "Not a valid ticker at line " + (i + 1)
+                + " under stocks column.");
+        return;
+      }
       int numberOfStocks = -1;
       try {
         numberOfStocks = Integer.parseInt((String) stockJTable.getModel().getValueAt(i, 1));
@@ -135,6 +161,34 @@ public class CreateStrategyPortfolio extends JPanel{
       showErrorMessage(this, "Sum of all weightage percentage should be 100. " +
               "Please reassign the weightage.");
       return;
+    } else {
+      String selectedPortfolioName = (String) portfolioNameJTextField.getText();
+      if (validateCreatePortfolioField(features, portfolioNameJTextField, portfolioNameMessageJLabel)
+              && validateNumberField(fixedAmountJTextField, fixedAmountMessageJLabel, "amount")
+              && validateTimelineField(dateOfInvestmentJTextField, dateInvestmentMessageJLabel)
+              && validateTimelineField(endDateOfInvestmentJTextField, endDateInvestmentMessageJLabel)
+      && validateNumberField(frequencyJTextField, frequencyMessageJLabel, "days")) {
+        LocalDate startDate = LocalDate.parse(dateOfInvestmentJTextField.getText());
+        LocalDate endDate = LocalDate.parse(endDateOfInvestmentJTextField.getText());
+        if (endDate.isBefore(startDate)){
+          showErrorMessage(this, "End date cannot be before start date.");
+          endDateInvestmentMessageJLabel.setText("Invalid date. Cannot be before start date.");
+          endDateInvestmentMessageJLabel.setForeground(Color.RED);
+          return;
+        }
+        String investmentAmount = fixedAmountJTextField.getText();
+        LocalDate date = LocalDate.parse(dateOfInvestmentJTextField.getText());
+        LocalDate enDate = LocalDate.parse(endDateOfInvestmentJTextField.getText());
+        boolean status = features.createStrategy(selectedPortfolioName, investmentAmount, date,
+                enDate, companyTickerList, weightageList);
+        if (!status) {
+          showErrorMessage(this, "Something went wrong. Please try again!");
+        } else {
+          stockJTable.setModel(new DefaultTableModel());
+          fixedAmountJTextField.setText("");
+          dateOfInvestmentJTextField.setText("");
+        }
+      }
     }
   }
 }
