@@ -11,7 +11,9 @@ import static utility.Constants.STRATEGY_FILENAME;
 import static utility.Constants.VALUE_SEPERATOR;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -297,7 +299,6 @@ public class FlexibleModelImplementation extends ModelAbstract {
     for (String strategy : fileContent) {
       String[] strategyTodayFields = strategy.trim().split(",", 3);
       String portfolioName = strategyTodayFields[0];
-      if (this.idIsPresent(portfolioName)) {
         LocalDate today = LocalDate.now();
         LocalDate lastUpdateDate = LocalDate.parse(strategyTodayFields[1]);
         if (!isValidDate(strategyTodayFields[2])) {
@@ -308,7 +309,8 @@ public class FlexibleModelImplementation extends ModelAbstract {
         LocalDate endDate = LocalDate.parse(strategyDateComparison[1]);
         String frequency = strategyDateComparison[2];
         if (startDate.equals(endDate) && frequency.equals("0")
-            && (startDate.equals(today) || lastUpdateDate.isBefore(today))) {
+            && (startDate.equals(today) || lastUpdateDate.isBefore(today))
+                && this.idIsPresent(portfolioName)) {
           String[] strategyInvestFields = strategyDateComparison[3].trim().split(",");
           int totalAmount = Integer.parseInt(strategyInvestFields[0]);
           ArrayList<String> sharesList = new ArrayList<>();
@@ -322,15 +324,44 @@ public class FlexibleModelImplementation extends ModelAbstract {
               double stockPrice = this.getStockPrice(ticker, startDate);
               double numberOfShares = amountToInvest / stockPrice;
               boolean status = this.buyStrategyShare(portfolioName, ticker, numberOfShares,
-                  startDate);
+                  startDate, false);
               sharesList.add(ticker);
               weightageList.add(weightage);
             }
           }
           this.createStrategy(portfolioName, strategyInvestFields[0], today, endDate, sharesList,
                   weightageList, -1);
+        } else if (!endDate.isBefore(startDate) && !frequency.equals("-1")
+                && !startDate.isAfter(today) && !this.idIsPresent(portfolioName)){
+          System.out.println("hello");
+          LocalDateTime startDateTime = startDate.atStartOfDay();
+          LocalDateTime todayDateTime = LocalDate.now().atStartOfDay();
+          long days = startDateTime.until(todayDateTime, ChronoUnit.DAYS );
+          if (days % Integer.parseInt(frequency) != 0) {
+            continue;
+          }
+          System.out.println("hello");
+          String[] strategyInvestFields = strategyDateComparison[3].trim().split(",");
+          int totalAmount = Integer.parseInt(strategyInvestFields[0]);
+          ArrayList<String> sharesList = new ArrayList<>();
+          ArrayList<Integer> weightageList = new ArrayList<>();
+          for (int i = 1; i < strategyInvestFields.length; i++) {
+            String[] tickerData = strategyInvestFields[i].split(":");
+            String ticker = tickerData[0];
+            int weightage = Integer.parseInt(tickerData[1]);
+            if (weightage != 0) {
+              double amountToInvest = (totalAmount * weightage) * 0.01;
+              double stockPrice = this.getStockPrice(ticker, startDate);
+              double numberOfShares = amountToInvest / stockPrice;
+              boolean status = this.buyStrategyShare(portfolioName, ticker, numberOfShares,
+                      startDate, true);
+              sharesList.add(ticker);
+              weightageList.add(weightage);
+            }
+          }
+          this.createStrategy(portfolioName, strategyInvestFields[0], today, endDate, sharesList,
+                  weightageList, Integer.parseInt(frequency));
         }
-      }
     }
   }
 
@@ -344,20 +375,40 @@ public class FlexibleModelImplementation extends ModelAbstract {
   }
 
   private boolean buyStrategyShare(String portfolioName, String symbol, double numShares,
-      LocalDate date) {
+      LocalDate date, boolean create) {
     if (!checkTicker(symbol) && numShares < 0) {
       return false;
     }
-    String stockFileName = null;
-    double currentShareBuyingPrice = this.getStockPrice(symbol, date);
-    stockFileName = getSharesFile(portfolioName);
-    Share addShare = new Share(symbol, date, currentShareBuyingPrice + BROKER_FEES,
-        numShares);
-    if (null != stockFileName && !stockFileName.isEmpty()) {
-      String formattedString = fileInterface.convertObjectIntoString(addShare.toString(),
-          null);
-      fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, stockFileName,
-          formattedString.getBytes());
+    Map<String, Share> shares = new HashMap<>();
+    shares.put(symbol, new Share(symbol, LocalDate.now(),
+            this.getStockPrice(symbol, date), numShares));
+    if(create) {
+      Set<Share> sharesSet = new HashSet<>(shares.values());
+      Portfolio portfolioObject = new Portfolio(portfolioName, sharesSet, date);
+      String formattedString = fileInterface.convertObjectListIntoString(new ArrayList<>(sharesSet));
+      String shareFileName = UUID.randomUUID().toString();
+      List<String> referenceList = new ArrayList<>();
+      referenceList.add(shareFileName);
+      if (fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
+              formattedString.getBytes())) {
+        fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_FILENAME,
+                (fileInterface.convertObjectIntoString(portfolioObject.toString(), referenceList)
+                        + MUTABLE).getBytes());
+      }
+      shares = new HashMap<>();
+      portfolios.add(portfolioObject);
+    } else {
+      String stockFileName = null;
+      double currentShareBuyingPrice = this.getStockPrice(symbol, date);
+      stockFileName = getSharesFile(portfolioName);
+      Share addShare = new Share(symbol, date, currentShareBuyingPrice + BROKER_FEES,
+              numShares);
+      if (null != stockFileName && !stockFileName.isEmpty()) {
+        String formattedString = fileInterface.convertObjectIntoString(addShare.toString(),
+                null);
+        fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, stockFileName,
+                formattedString.getBytes());
+      }
     }
     return true;
   }
