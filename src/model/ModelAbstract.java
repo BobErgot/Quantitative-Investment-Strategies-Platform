@@ -465,4 +465,11 @@ abstract class ModelAbstract implements ModelInterface {
                                 ArrayList<Integer> weightage, int type) {
     throw new IllegalStateException("Cannot access this function!");
   }
+
+  @Override
+  public boolean createPortfolioStrategy(String portfolioName, String investmentAmount, LocalDate date,
+                                LocalDate endDate, ArrayList<String> shares,
+                                ArrayList<Integer> weightage, int type) {
+    throw new IllegalStateException("Cannot access this function!");
+  }
 }

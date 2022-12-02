@@ -115,4 +115,8 @@ public interface Features {
 
   boolean createStrategy (String portfolioName, String investmentAmount, LocalDate date,
                           LocalDate endDate, ArrayList<String> shares, ArrayList<Integer> weightage);
+
+  boolean createPortfolioStrategy (String portfolioName, String investmentAmount, LocalDate date,
+                          LocalDate endDate, ArrayList<String> shares,
+                                   ArrayList<Integer> weightage, String frequency);
 }

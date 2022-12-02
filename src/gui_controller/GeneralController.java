@@ -164,4 +164,12 @@ public class GeneralController implements Features {
     return  new FlexibleModelImplementation().createStrategy(portfolioName, investmentAmount,
             date, endDate, shares, weightage, 0);
   }
+
+  @Override
+  public boolean createPortfolioStrategy (String portfolioName, String investmentAmount, LocalDate date,
+                                 LocalDate endDate, ArrayList<String> shares,
+                                 ArrayList<Integer> weightage, String frequency) {
+    return  new FlexibleModelImplementation().createPortfolioStrategy(portfolioName, investmentAmount,
+            date, endDate, shares, weightage, Integer.parseInt(frequency));
+  }
 }

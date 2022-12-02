@@ -179,14 +179,16 @@ public class CreateStrategyPortfolio extends JPanel{
         String investmentAmount = fixedAmountJTextField.getText();
         LocalDate date = LocalDate.parse(dateOfInvestmentJTextField.getText());
         LocalDate enDate = LocalDate.parse(endDateOfInvestmentJTextField.getText());
-        boolean status = features.createStrategy(selectedPortfolioName, investmentAmount, date,
-                enDate, companyTickerList, weightageList);
+        String frequency = frequencyJTextField.getText();
+        boolean status = features.createPortfolioStrategy(selectedPortfolioName, investmentAmount,
+                date, enDate, companyTickerList, weightageList, frequency);
         if (!status) {
           showErrorMessage(this, "Something went wrong. Please try again!");
         } else {
           stockJTable.setModel(new DefaultTableModel());
           fixedAmountJTextField.setText("");
           dateOfInvestmentJTextField.setText("");
+          endDateOfInvestmentJTextField.setText("");
         }
       }
     }

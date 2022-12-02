@@ -203,7 +203,6 @@ public class FlexibleModelImplementation extends ModelAbstract {
     Map<String, Integer> map = IntStream.range(0, shares.size())
         .boxed()
         .collect(Collectors.toMap(shares::get, weightage::get));
-    System.out.println(map);
     StringBuilder recordData = new StringBuilder();
     recordData.append(portfolioName).append(RECORD_FIELD_SEPERATOR);
     recordData.append(LocalDate.now()).append(RECORD_FIELD_SEPERATOR);
@@ -233,6 +232,40 @@ public class FlexibleModelImplementation extends ModelAbstract {
       strategyMap.put(portfolioName, recordData.toString().split(",", 2)[1]);
       fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
           recordData.toString().getBytes());
+    }
+    this.processStrategy();
+    return true;
+  }
+
+  @Override
+  public boolean createPortfolioStrategy(String portfolioName, String investmentAmount, LocalDate date,
+                                LocalDate endDate, ArrayList<String> shares,
+                                ArrayList<Integer> weightage, int type) {
+    if (date.isBefore(LocalDate.now())) {
+      return false;
+    }
+    StringBuilder recordData = new StringBuilder();
+    recordData.append(portfolioName).append(RECORD_FIELD_SEPERATOR);
+    recordData.append(LocalDate.now()).append(RECORD_FIELD_SEPERATOR);
+    recordData.append(date).append(RECORD_FIELD_SEPERATOR);
+    recordData.append(endDate).append(RECORD_FIELD_SEPERATOR);
+    recordData.append(type).append(RECORD_FIELD_SEPERATOR);
+    recordData.append(investmentAmount).append(RECORD_FIELD_SEPERATOR);
+    for (int i = 0; i < shares.size() - 1; i++) {
+        recordData.append(shares.get(i)).append(VALUE_SEPERATOR)
+                .append(weightage.get(i)).append(RECORD_FIELD_SEPERATOR);
+    }
+    recordData.append(shares.get(shares.size() - 1)).append(VALUE_SEPERATOR)
+            .append(weightage.get(shares.size() - 1)).append(LINE_BREAKER);
+    if (strategyMap.containsKey(portfolioName)) {
+      strategyMap.replace(portfolioName, recordData.toString().split(",", 2)[1]);
+      fileInterface.clearFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME, "csv");
+      fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
+              hashMapToRecordData(strategyMap).toString().getBytes());
+    } else {
+      strategyMap.put(portfolioName, recordData.toString().split(",", 2)[1]);
+      fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
+              recordData.toString().getBytes());
     }
     this.processStrategy();
     return true;
