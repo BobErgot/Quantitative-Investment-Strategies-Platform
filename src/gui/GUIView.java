@@ -1,6 +1,6 @@
 package gui;
 
-import gui_controller.Features;
+import generalcontroller.Features;
 
 import java.util.List;
 

@@ -18,3 +18,8 @@ The Program has the following features:
     d. Purchase a share and add to portfolio
     e. Sell a share from portfolio
     f. Performance of portfolio over time
+
+4. Existing Portfolio Strategy - Add dollar-cost averaging weightage to existing flexible portfolio
+
+5. Create Strategy Portfolio - Create portfolio with dollar-cost averaging strategy by assigning
+weights to each company ticker/symbol the user wants to invest in.

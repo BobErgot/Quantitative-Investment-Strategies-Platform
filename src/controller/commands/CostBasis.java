@@ -1,11 +1,10 @@
 package controller.commands;
 
+import controller.StockPortfolioCommand;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-
-import controller.StockPortfolioCommand;
 import model.ModelInterface;
 import view.View;
 
@@ -45,7 +44,7 @@ public class CostBasis implements StockPortfolioCommand {
    * @return "true" if cost basis exists else return "false"
    */
   private boolean showCostBasisOfPortfolio(String selectedId, View view, Scanner scanner,
-                                           ModelInterface model) {
+      ModelInterface model) {
     if (!model.idIsPresent(selectedId)) {
       return false;
     }
@@ -64,12 +63,8 @@ public class CostBasis implements StockPortfolioCommand {
           view.printInvalidDateError();
         }
       }
-      if (date.isAfter(LocalDate.of(1949, 12, 31))
-              && date.isBefore(LocalDate.now())) {
-        invalidDate = false;
-      } else {
-        invalidDate = true;
-      }
+      invalidDate = !date.isAfter(LocalDate.of(1949, 12, 31))
+          || !date.isBefore(LocalDate.now());
       if (invalidDate) {
         view.printInvalidInputMessage();
       }

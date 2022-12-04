@@ -1,13 +1,5 @@
 package gui;
 
-import java.time.LocalDate;
-
-import javax.swing.*;
-
-import gui.utility.ViewDocumentListener;
-import gui_controller.Features;
-import gui_controller.PortfolioType;
-
 import static gui.ViewValidator.showErrorMessage;
 import static gui.ViewValidator.showInformationMessage;
 import static gui.ViewValidator.validateCreatePortfolioField;
@@ -19,7 +11,20 @@ import static gui.utility.ViewConstants.PORTFOLIO_CREATED;
 import static gui.utility.ViewConstants.PORTFOLIO_EXISTS;
 import static gui.utility.ViewConstants.PORTFOLIO_INVALID;
 
+import gui.utility.ViewDocumentListener;
+import generalcontroller.Features;
+import generalcontroller.PortfolioType;
+import java.time.LocalDate;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+/**
+ * GUI Swing to support Creation of Fixed and Flexible Portfolios.
+ */
 public class CreatePortfolioPanel extends JPanel {
+
   private JPanel applicationJPanel;
   private JLabel portfolioJLabel;
   private JLabel companyTickerJLabel;
@@ -34,6 +39,11 @@ public class CreatePortfolioPanel extends JPanel {
   private JButton createFlexiblePortfolioButton;
   private JButton createFixedPortfolioJButton;
 
+  /**
+   * Constructor to support create portfolio class.
+   *
+   * @param features Features accessible to action listeners.
+   */
   public CreatePortfolioPanel(Features features) {
     this.add(applicationJPanel);
     this.enableButtonEvents(features);
@@ -41,24 +51,25 @@ public class CreatePortfolioPanel extends JPanel {
   }
 
   private void enableValidations(Features features) {
-    portfolioNameJTextField.getDocument().addDocumentListener((ViewDocumentListener) e
-            -> validateCreatePortfolioField(features, portfolioNameJTextField,
+    portfolioNameJTextField.getDocument().addDocumentListener(
+        (ViewDocumentListener) e -> validateCreatePortfolioField(features, portfolioNameJTextField,
             portfolioMessageLabel));
 
-    numberSharesJTextField.getDocument().addDocumentListener((ViewDocumentListener) e
-            -> validateNumberField(numberSharesJTextField, numberOfStocksMessageJLabel
-            , "shares"));
+    numberSharesJTextField.getDocument().addDocumentListener(
+        (ViewDocumentListener) e -> validateNumberField(numberSharesJTextField,
+            numberOfStocksMessageJLabel, "shares"));
 
-    companyTickerJTextField.getDocument().addDocumentListener((ViewDocumentListener) e
-            -> validateTickerField(features, companyTickerJTextField, companyTickerMessageJLabel));
+    companyTickerJTextField.getDocument().addDocumentListener(
+        (ViewDocumentListener) e -> validateTickerField(features, companyTickerJTextField,
+            companyTickerMessageJLabel));
   }
 
   private void enableButtonEvents(Features features) {
-    createFlexiblePortfolioButton.addActionListener(event -> addPortfolio(features,
-            PortfolioType.FLEXIBLE));
+    createFlexiblePortfolioButton.addActionListener(
+        event -> addPortfolio(features, PortfolioType.FLEXIBLE));
 
-    createFixedPortfolioJButton.addActionListener(event -> addPortfolio(features,
-            PortfolioType.FIXED));
+    createFixedPortfolioJButton.addActionListener(
+        event -> addPortfolio(features, PortfolioType.FIXED));
 
     addShareJButton.addActionListener(event -> addShare(features, LocalDate.now()));
   }
@@ -67,11 +78,10 @@ public class CreatePortfolioPanel extends JPanel {
     String numStocks = numberSharesJTextField.getText().trim();
     String companyStocks = companyTickerJTextField.getText().trim().toUpperCase();
     if (validateCreatePortfolioField(features, portfolioNameJTextField, portfolioMessageLabel)
-            && validateTickerField(features, companyTickerJTextField, companyTickerMessageJLabel)
-            && validateNumberField(numberSharesJTextField, numberOfStocksMessageJLabel
-            , "shares")) {
+        && validateTickerField(features, companyTickerJTextField, companyTickerMessageJLabel)
+        && validateNumberField(numberSharesJTextField, numberOfStocksMessageJLabel, "shares")) {
       boolean companyAdded = features.purchaseShare(companyStocks, Integer.parseInt(numStocks),
-              date);
+          date);
       if (!companyAdded) {
         // Give invalid ticker symbol error.
         showErrorMessage(this, INVALID_TICKER);

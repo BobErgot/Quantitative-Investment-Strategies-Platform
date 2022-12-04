@@ -7,18 +7,34 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
+/**
+ * Bar chart to show performance of the graph. Reference:
+ * <a href="https://www.roseindia.net/java/example/java/swing/draw-simple-bar-chart.shtml">Ref</a>
+ */
 public class BarChart extends JPanel {
 
   private final double[] value;
   private final String[] dates;
   private final String title;
 
+  /**
+   * Initialize barchart class.
+   *
+   * @param val   Values to be plotted.
+   * @param dates Dates to be shown.
+   * @param t     Title of bar graph.
+   */
   public BarChart(double[] val, String[] dates, String t) {
     this.dates = dates;
     value = val;
     title = t;
   }
 
+  /**
+   * Paints the bargraph component.
+   *
+   * @param graphics Graphics class that will help us show the component.
+   */
   public void paintComponent(Graphics graphics) {
     super.paintComponent(graphics);
     if (value == null || value.length == 0) {

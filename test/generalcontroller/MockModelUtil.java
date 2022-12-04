@@ -1,4 +1,4 @@
-package gui_controller;
+package generalcontroller;
 
 /**
  * Mock model util class to provide additional functionality to mock objects.
@@ -15,7 +15,6 @@ class MockModelUtil {
   }
 
   public static boolean compareStringContents(String a, String b) {
-    return a.replaceAll("\\s+", "")
-            .equalsIgnoreCase(b.replaceAll("\\s+", ""));
+    return a.replaceAll("\\s+", "").equalsIgnoreCase(b.replaceAll("\\s+", ""));
   }
 }

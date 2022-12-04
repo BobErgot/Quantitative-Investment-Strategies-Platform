@@ -1,4 +1,4 @@
-package gui_controller;
+package generalcontroller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,6 +22,18 @@ public interface Features {
   boolean purchaseShare(String shareName, int numShares, LocalDate date);
 
   /**
+   * Asks the user for input of fields namely portfolio, share to be bought and the number of shares
+   * to buy. Based on the information collected, it interacts with model interface to get the value
+   * of the shares and store it in the specified portfolio.
+   *
+   * @param portfolioName Portfolio ID to generate composition of.
+   * @param numShares     Number of shares to purchase.
+   * @param date          Date to purchase a share.
+   * @return Price share was purchased for.
+   */
+  double purchaseShare(String portfolioName, String shareName, int numShares, LocalDate date);
+
+  /**
    * Asks the user for input like if he wants to add shares, once a share is added the user get the
    * option to create the portfolio. On receiving confirmation from the user the function interacts
    * with the model interface object to transmit the portfolio information to be created.
@@ -41,17 +53,6 @@ public interface Features {
    */
   int uploadPortfolio(String filePath);
 
-  /**
-   * Asks the user for input of fields namely portfolio, share to be bought and the number of shares
-   * to buy. Based on the information collected, it interacts with model interface to get the value
-   * of the shares and store it in the specified portfolio.
-   *
-   * @param portfolioName Portfolio ID to generate composition of.
-   * @param numShares     Number of shares to purchase.
-   * @param date          Date to purchase a share.
-   * @return Price share was purchased for.
-   */
-  double purchaseShare(String portfolioName, String shareName, int numShares, LocalDate date);
 
   /**
    * Asks the user for input of fields namely portfolio, share to be sold from that portfolio and
@@ -89,10 +90,10 @@ public interface Features {
    * dates specified by the user and generates chart with dynamic x-axis and y-axis scaling.
    *
    * @param portfolioName Portfolio ID to generate graph of.
-   * @param from
-   * @param to
-   * @param group
-   * @return List of points to plot (Tentative).
+   * @param from          From date to get graph.
+   * @param to            To date to get graph.
+   * @param group         Whether to group by day month or year.
+   * @return List of points to plot.
    */
   List<Double> generatePerformanceGraph(String portfolioName, LocalDate from, LocalDate to,
       Periodicity group);
@@ -107,16 +108,56 @@ public interface Features {
    */
   double getValuation(String id, LocalDate date);
 
+  /**
+   * Check if the portfolio name exists.
+   *
+   * @param portfolioName Portfolio name to check.
+   * @return True if portfolio name exists else false.
+   */
   boolean checkPortfolioNameExists(String portfolioName);
 
+  /**
+   * Check if the ticker name exists.
+   *
+   * @param ticker Ticker name to check.
+   * @return True if ticker name exists else false.
+   */
   boolean checkTickerExists(String ticker);
 
-  List<String> getShareTickerInPortfolio (String portfolioName);
+  /**
+   * Gets a share from a portfolio.
+   *
+   * @param portfolioName Portfolio name to get share from.
+   * @return List of share tickers.
+   */
+  List<String> getShareTickerInPortfolio(String portfolioName);
 
-  boolean createStrategy (String portfolioName, String investmentAmount, LocalDate date,
-                          LocalDate endDate, ArrayList<String> shares, ArrayList<Integer> weightage);
+  /**
+   * Creates a strategy to invest stocks.
+   *
+   * @param portfolioName    Portfolio name to add strategy to.
+   * @param investmentAmount Investment amount for strategy.
+   * @param date             Date start of strategy.
+   * @param endDate          End date of strategy.
+   * @param shares           Shares the strategy is to be added to.
+   * @param weightage        Weightages of each share.
+   * @return if strategy was created successfully or not.
+   */
+  boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
+      LocalDate endDate, ArrayList<String> shares, ArrayList<Integer> weightage);
 
-  boolean createPortfolioStrategy (String portfolioName, String investmentAmount, LocalDate date,
-                          LocalDate endDate, ArrayList<String> shares,
-                                   ArrayList<Integer> weightage, String frequency);
+  /**
+   * Creates a strategy & the portfolio to invest stocks.
+   *
+   * @param portfolioName    Portfolio name to add strategy to.
+   * @param investmentAmount Investment amount for strategy.
+   * @param date             Date start of strategy.
+   * @param endDate          End date of strategy.
+   * @param shares           Shares the strategy is to be added to.
+   * @param weightage        Weightages of each share.
+   * @param frequency        The number of times the share should be bought.
+   * @return if strategy and portfolio was created successfully or not.
+   */
+  boolean createPortfolioStrategy(String portfolioName, String investmentAmount, LocalDate date,
+      LocalDate endDate, ArrayList<String> shares, ArrayList<Integer> weightage, String frequency);
 }

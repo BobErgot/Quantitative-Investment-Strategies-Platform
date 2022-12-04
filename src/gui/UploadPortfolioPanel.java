@@ -13,16 +13,18 @@ import static gui.utility.ViewConstants.SUPPORTED_FILES;
 import static gui.utility.ViewConstants.SUPPORTED_FILE_EXTENSION;
 import static gui.utility.ViewConstants.UPLOAD_ANOTHER_FILE;
 
-import gui_controller.Features;
+import generalcontroller.Features;
 import java.nio.file.Path;
 import java.util.DuplicateFormatFlagsException;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * GUI Swing to support uploading portfolios from file system.
+ */
 public class UploadPortfolioPanel extends JPanel {
 
   private JPanel applicationJPanel;
@@ -31,6 +33,11 @@ public class UploadPortfolioPanel extends JPanel {
   private JLabel pathSelectedJLabel;
   private Path filePath;
 
+  /**
+   * Constructor to support upload portfolio class.
+   *
+   * @param features Features accessible to action listeners.
+   */
   public UploadPortfolioPanel(Features features) {
     this.add(applicationJPanel);
     this.enableButtonEvents(features);
@@ -43,7 +50,7 @@ public class UploadPortfolioPanel extends JPanel {
   }
 
   private void enableValidations(Features features) {
-    return;
+    //
   }
 
   private void browseFiles() {
@@ -60,8 +67,8 @@ public class UploadPortfolioPanel extends JPanel {
       uploadButton.setEnabled(true);
       browseFileJButton.setText(FILE_UPLOAD_ANOTHER);
     } else {
-      errorPathSelectedLabel(FILE_UPLOAD_FAIL_EXTENSION + SUPPORTED_FILES
-          + SUPPORTED_FILE_EXTENSION);
+      errorPathSelectedLabel(
+          FILE_UPLOAD_FAIL_EXTENSION + SUPPORTED_FILES + SUPPORTED_FILE_EXTENSION);
     }
   }
 
