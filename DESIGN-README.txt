@@ -19,7 +19,13 @@ Controller:
 3. Although the controller design was remodelled there is no logical change in the way features were
    implemented and the logic was simply moved to the individual command classes.
 
-
+General Controller:
+1. The New general controller now implements a feature interface that can now be used for GUI
+based Views and Text based views.
+2. In the future any programmer wanting to add a new text based or GUI based view will only need to
+implement the feature interface.
+3. This interface contains generalized functions that any type of controller can use to work with
+the model and view.
 
 General Design -
 
@@ -67,13 +73,18 @@ Other are low level model classes whose access is hidden from the user and can o
 3. Periodicity - This is an enum class that has possible filters for performance graph.
 
 
-View Folder:
-We have 2 classes grouped under view.
+View Folder: (Text based view)
 1. View - This interface represents all the operations to be supported by a view implementation.
     a. ViewImpl - The view implementation that simply shows appropriate message to the user based on
                   the method call from the controller. It has absolutely no visibility of controller
                    or model implementation or working and simply behaves based on the arguments
                    received from the controller.
+GUI Folder:
+1. GUI View: This interface represents all views that can be coded using swings, or any other type
+of GUI.
+2. CreatePortfolioPanel, CreateStrategyPortfolio, ExisitingStrategyPortfolio, HomeScreen,
+UploadPortfolioPanel - all of these design and give functionality to various tabs of the view.
+3. ViewValidatator - A generalized validation file for views.
 
 Controller Folder:
 The controller folder has 12 classes where 9 classes implement the "StockPortfolioCommand" interface
@@ -84,3 +95,8 @@ The controller folder has 12 classes where 9 classes implement the "StockPortfol
     a. ControllerImpl - The controller implementation that receives all its inputs from an
                         InputStream object and transmits all outputs to a PrintStream object. It
                         also interacts with the model based on the received input from the user.
+2. Features - This interface has various modular functions to have any generalized flow of operation
+for any type of application.
+    a. GeneralController - The controller implementation is designed for implementing GUI View. All
+       the features from the interface is implemented and it dynamically calls functions that,
+       in this use case assigns action listeners in the view.
