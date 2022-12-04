@@ -276,7 +276,6 @@ public class FlexibleModelImplementation extends ModelAbstract {
   private StringBuilder hashMapToRecordData(HashMap<String, String> strategyMap) {
     StringBuilder fileFormatData = new StringBuilder();
     for (Map.Entry<String, String> entry : strategyMap.entrySet()) {
-      System.out.println(entry.getKey() + " = " + entry.getValue());
       fileFormatData.append(entry.getKey())
           .append(RECORD_FIELD_SEPERATOR)
           .append(entry.getValue());
@@ -301,9 +300,6 @@ public class FlexibleModelImplementation extends ModelAbstract {
       String portfolioName = strategyTodayFields[0];
         LocalDate today = LocalDate.now();
         LocalDate lastUpdateDate = LocalDate.parse(strategyTodayFields[1]);
-        if (!isValidDate(strategyTodayFields[2])) {
-          continue;
-        }
         String[] strategyDateComparison = strategyTodayFields[2].trim().split(",", 4);
         LocalDate startDate = LocalDate.parse(strategyDateComparison[0]);
         LocalDate endDate = LocalDate.parse(strategyDateComparison[1]);
@@ -333,14 +329,12 @@ public class FlexibleModelImplementation extends ModelAbstract {
                   weightageList, -1);
         } else if (!endDate.isBefore(startDate) && !frequency.equals("-1")
                 && !startDate.isAfter(today) && !this.idIsPresent(portfolioName)){
-          System.out.println("hello");
           LocalDateTime startDateTime = startDate.atStartOfDay();
           LocalDateTime todayDateTime = LocalDate.now().atStartOfDay();
           long days = startDateTime.until(todayDateTime, ChronoUnit.DAYS );
           if (days % Integer.parseInt(frequency) != 0) {
             continue;
           }
-          System.out.println("hello");
           String[] strategyInvestFields = strategyDateComparison[3].trim().split(",");
           int totalAmount = Integer.parseInt(strategyInvestFields[0]);
           ArrayList<String> sharesList = new ArrayList<>();
@@ -362,15 +356,6 @@ public class FlexibleModelImplementation extends ModelAbstract {
           this.createStrategy(portfolioName, strategyInvestFields[0], today, endDate, sharesList,
                   weightageList, Integer.parseInt(frequency));
         }
-    }
-  }
-
-  private boolean isValidDate(String date) {
-    try {
-      LocalDate.parse(date);
-      return true;
-    } catch (DateTimeParseException e) {
-      return false;
     }
   }
 

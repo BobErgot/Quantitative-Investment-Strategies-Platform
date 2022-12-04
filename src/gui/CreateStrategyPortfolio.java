@@ -186,9 +186,12 @@ public class CreateStrategyPortfolio extends JPanel{
           showErrorMessage(this, "Something went wrong. Please try again!");
         } else {
           stockJTable.setModel(new DefaultTableModel());
+          portfolioNameJTextField.setText("");
           fixedAmountJTextField.setText("");
           dateOfInvestmentJTextField.setText("");
           endDateOfInvestmentJTextField.setText("");
+          frequencyJTextField.setText("");
+          countLabelJTextField.setText("");
         }
       }
     }
