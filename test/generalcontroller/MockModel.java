@@ -1,6 +1,6 @@
-package gui_controller;
+package generalcontroller;
 
-import static gui_controller.MockModelUtil.merge;
+import static generalcontroller.MockModelUtil.merge;
 
 import java.time.LocalDate;
 import model.ModelImplementation;
@@ -34,17 +34,19 @@ class MockModel extends ModelImplementation {
 
   @Override
   public double sellStocks(String portfolioName, String symbol, int numShares, LocalDate date) {
-    log.append(merge(portfolioName, symbol, ""+numShares, date.toString()));
+    log.append(merge(portfolioName, symbol, "" + numShares, date.toString()));
     return 1.0;
   }
+
   @Override
   public double getCostBasis(String id, LocalDate date) {
-    log.append(merge(id,date.toString()));
+    log.append(merge(id, date.toString()));
     return 1.0;
   }
+
   @Override
-  public double getValuationGivenDate(String id, LocalDate date){
-    log.append(merge(id,date.toString()));
+  public double getValuationGivenDate(String id, LocalDate date) {
+    log.append(merge(id, date.toString()));
     return 1.0;
   }
 }

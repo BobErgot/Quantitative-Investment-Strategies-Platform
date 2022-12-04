@@ -18,9 +18,9 @@ import static gui.utility.ViewConstants.STOCK_INVALID;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MONTHS;
 
+import generalcontroller.Features;
 import gui.utility.BarChart;
 import gui.utility.ViewDocumentListener;
-import gui_controller.Features;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,29 +85,23 @@ public class HomeScreen extends JFrame implements GUIView {
   private JLabel performanceFromDatePickerJLabel;
   private JLabel showValuationDatePickerJLabel;
 
-  private CreatePortfolioPanel createPortfolioPanel;
-
-  private UploadPortfolioPanel uploadPortfolioPanel;
-
   private ExistingPortfolioStrategy existingPortfolioStrategy;
-
-  private CreateStrategyPortfolio createStrategyPortfolio;
 
   @Override
   public void addFeatures(Features features) {
     this.enableButtonEvents(features);
     this.enableValidations(features);
 
-    createPortfolioPanel = new CreatePortfolioPanel(features);
+    CreatePortfolioPanel createPortfolioPanel = new CreatePortfolioPanel(features);
     homeScreenTabbedPane.addTab("Create Portfolio", createPortfolioPanel);
 
-    uploadPortfolioPanel = new UploadPortfolioPanel(features);
+    UploadPortfolioPanel uploadPortfolioPanel = new UploadPortfolioPanel(features);
     homeScreenTabbedPane.addTab("Upload Portfolio", uploadPortfolioPanel);
 
     existingPortfolioStrategy = new ExistingPortfolioStrategy(features);
     homeScreenTabbedPane.addTab("Existing Portfolio Strategy", existingPortfolioStrategy);
 
-    createStrategyPortfolio = new CreateStrategyPortfolio(features);
+    CreateStrategyPortfolio createStrategyPortfolio = new CreateStrategyPortfolio(features);
     homeScreenTabbedPane.addTab("Create Strategy Portfolio", createStrategyPortfolio);
   }
 

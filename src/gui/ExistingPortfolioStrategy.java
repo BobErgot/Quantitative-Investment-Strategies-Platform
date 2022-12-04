@@ -1,22 +1,30 @@
 package gui;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-
-import gui.utility.ViewDocumentListener;
-import gui_controller.Features;
-
 import static gui.ViewValidator.createJComboBox;
 import static gui.ViewValidator.showErrorMessage;
 import static gui.ViewValidator.validateNumberField;
 import static gui.ViewValidator.validateTimelineField;
 
+import gui.utility.ViewDocumentListener;
+import generalcontroller.Features;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+
+/**
+ * GUI Swing to support Creation of  Existing Portfolio strategies.
+ */
 public class ExistingPortfolioStrategy extends JPanel {
+
   private JPanel applicationJPanel;
   private JLabel portfolioJLabel;
   private JButton addStrategyJButton;
@@ -30,6 +38,11 @@ public class ExistingPortfolioStrategy extends JPanel {
   private JLabel dateInvestmentJLabel;
   private JScrollPane stockTableJScrollPane;
 
+  /**
+   * Constructor to support update existing portfolio strategies class.
+   *
+   * @param features Features accessible to action listeners.
+   */
   public ExistingPortfolioStrategy(Features features) {
     this.add(applicationJPanel);
     this.enableButtonEvents(features);
@@ -39,12 +52,12 @@ public class ExistingPortfolioStrategy extends JPanel {
 
   private void enableValidations(Features features) {
     fixedAmountJTextField.getDocument().addDocumentListener(
-            (ViewDocumentListener) e -> validateNumberField(fixedAmountJTextField,
-                    fixedAmountMessageJLabel, "amount"));
+        (ViewDocumentListener) e -> validateNumberField(fixedAmountJTextField,
+            fixedAmountMessageJLabel, "amount"));
 
     dateOfInvestmentJTextField.getDocument().addDocumentListener(
-            (ViewDocumentListener) e -> validateTimelineField(dateOfInvestmentJTextField,
-                    dateInvestmentJLabel));
+        (ViewDocumentListener) e -> validateTimelineField(dateOfInvestmentJTextField,
+            dateInvestmentJLabel));
   }
 
   private void enableButtonEvents(Features features) {
@@ -52,6 +65,11 @@ public class ExistingPortfolioStrategy extends JPanel {
     portfolioNameJComboBox.addActionListener(event -> checkTableCondition(features));
   }
 
+  /**
+   * Checks if the table is present or not, if no then it is generated.
+   *
+   * @param features Features accessible to action listeners.
+   */
   public void checkTableCondition(Features features) {
     String selectedPortfolioName = (String) portfolioNameJComboBox.getSelectedItem();
     if (null != selectedPortfolioName && !selectedPortfolioName.isEmpty()) {
@@ -78,6 +96,11 @@ public class ExistingPortfolioStrategy extends JPanel {
     }
   }
 
+  /**
+   * List mutable portfolios into combo box.
+   *
+   * @param portfolios List of portfolios.
+   */
   public void listAllMutablePortfolios(List<String> portfolios) {
     createJComboBox(portfolios, portfolioNameJComboBox);
   }
@@ -100,13 +123,13 @@ public class ExistingPortfolioStrategy extends JPanel {
         companyTickerList.add((String) stockJTable.getModel().getValueAt(i, 0));
       } catch (NumberFormatException invalidStock) {
         showErrorMessage(this, "Not a valid number at line " + (i + 1)
-                + " under stock weightage percentage. Input only positive numeric values from " +
-                "0-100.");
+            + " under stock weightage percentage. Input only positive numeric values from "
+            + "0-100.");
         return;
       }
       if (numberOfStocks < 0 || numberOfStocks > 100) {
         showErrorMessage(this, "Enter whole numbers from 0-100 at line " + (i + 1)
-                + " under stock weightage percentage. ");
+            + " under stock weightage percentage. ");
         return;
       } else {
         weightageList.add(numberOfStocks);
@@ -117,18 +140,17 @@ public class ExistingPortfolioStrategy extends JPanel {
       weightageSum += weightage;
     }
     if (weightageSum != 100) {
-      showErrorMessage(this, "Sum of all weightage percentage should be 100. " +
-              "Please reassign the weightage.");
-      return;
+      showErrorMessage(this,
+          "Sum of all weightage percentage should be 100. " + "Please reassign the weightage.");
     } else {
       String selectedPortfolioName = (String) portfolioNameJComboBox.getSelectedItem();
-      if (null != selectedPortfolioName && !selectedPortfolioName.isEmpty()
-              && validateNumberField(fixedAmountJTextField, fixedAmountMessageJLabel, "amount")
-              && validateTimelineField(dateOfInvestmentJTextField, dateInvestmentJLabel)) {
+      if (null != selectedPortfolioName && !selectedPortfolioName.isEmpty() && validateNumberField(
+          fixedAmountJTextField, fixedAmountMessageJLabel, "amount") && validateTimelineField(
+          dateOfInvestmentJTextField, dateInvestmentJLabel)) {
         String investmentAmount = fixedAmountJTextField.getText();
         LocalDate date = LocalDate.parse(dateOfInvestmentJTextField.getText());
         boolean status = features.createStrategy(selectedPortfolioName, investmentAmount, date,
-                date, companyTickerList, weightageList);
+            date, companyTickerList, weightageList);
         if (!status) {
           showErrorMessage(this, "Something went wrong. Please try again!");
         } else {

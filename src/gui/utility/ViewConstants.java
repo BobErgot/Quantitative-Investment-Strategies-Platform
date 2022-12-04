@@ -1,10 +1,12 @@
 package gui.utility;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Common constants that views might require to validate and give messages to users.
+ */
 public final class ViewConstants {
 
   public static final String INVALID_TICKER = "You've entered an invalid ticker symbol!";
@@ -22,16 +24,16 @@ public final class ViewConstants {
   public static final String SOLD_FOR = "Stocks sold for:\t";
 
   public static final Set<String> SUPPORTED_FILE_EXTENSION =
-          new HashSet<>(Collections.singletonList("csv"));
+      new HashSet<>(Collections.singletonList("csv"));
   public static final String FILE_UPLOAD_FAIL_EXTENSION = "File upload failed as file extension " +
-          "is not supported. ";
+      "is not supported. ";
   public static final String SUPPORTED_FILES = "Supported file extensions: ";
   public static final String UPLOAD_ANOTHER_FILE = "Try to upload another file!";
   public static final String NO_FILES_SELECTED = "No Files Selected";
   public static final String FILE_UPLOAD_SUCCESS = "File uploaded successfully!";
   public static final String FILE_UPLOAD_FAIL_FORMAT = "Data in file is not in correct format. ";
   public static final String FILE_UPLOAD_FAIL_NOT_FOUND = "Unable to locate the file at specified" +
-          " path. ";
+      " path. ";
   public static final String FILE_UPLOAD_ANOTHER = "Browse and upload another file";
   public static final String INPUT_FIELD_EMPTY = "Field cannot be empty!";
   public static final String DATE_IS_IN_PAST = "Invalid date as it is in past!";

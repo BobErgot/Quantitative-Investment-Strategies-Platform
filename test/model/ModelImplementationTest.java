@@ -1,13 +1,5 @@
 package model;
 
-import org.junit.Test;
-
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Random;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -16,6 +8,13 @@ import static utility.Constants.PORTFOLIO_DIRECTORY;
 import static utility.Constants.PORTFOLIO_FILENAME;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
 import static utility.Constants.RELATIVE_PATH;
+
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Random;
+import org.junit.Test;
 
 /**
  * Classes to test model in MVC.
@@ -41,7 +40,7 @@ public class ModelImplementationTest {
     String[] companies = {"AAPL", "MSFT", "GOOG", "AMZN", "NFLX", "META", "CTSH", "CRM", "TSLA"};
     for (String company : companies) {
       model.addShareToModel(company, LocalDate.now(), Math.abs(new Random()
-              .nextInt(10)) + 1, -1);
+          .nextInt(10)) + 1, -1);
     }
     try {
       model.createPortfolio("port5", LocalDate.now());
@@ -52,7 +51,7 @@ public class ModelImplementationTest {
 
   private boolean compareStringContents(String a, String b) {
     return a.replaceAll("\\s+", "")
-            .equalsIgnoreCase(b.replaceAll("\\s+", ""));
+        .equalsIgnoreCase(b.replaceAll("\\s+", ""));
   }
 
   // test correct ticker
@@ -79,10 +78,10 @@ public class ModelImplementationTest {
     }
     model.createPortfolio("port1", LocalDate.now());
     assertEquals("+id:port1\ncreationDate:2022-11-17\n"
-                    + "*shares:+companyName:AAPL,purchaseDate:2022-11-17,price:20.0,numShares:2|"
-                    + "+companyName:MSFT,purchaseDate:2022-11-17,price:20.0,numShares:2|"
-                    + "+companyName:GOOG,purchaseDate:2022-11-17,price:20.0,numShares:2"
-            , model.getPortfolioById("port1"));
+            + "*shares:+companyName:AAPL,purchaseDate:2022-11-17,price:20.0,numShares:2|"
+            + "+companyName:MSFT,purchaseDate:2022-11-17,price:20.0,numShares:2|"
+            + "+companyName:GOOG,purchaseDate:2022-11-17,price:20.0,numShares:2"
+        , model.getPortfolioById("port1"));
 
   }
 
@@ -93,7 +92,7 @@ public class ModelImplementationTest {
     String[] companies = {"AAPL", "MSFT", "GOOG", "AMZN", "NFLX", "META", "CTSH", "CRM", "TSLA"};
     for (String company : companies) {
       model.addShareToModel(company, LocalDate.now(),
-              Math.abs(new Random().nextInt(10)) + 1, -1);
+          Math.abs(new Random().nextInt(10)) + 1, -1);
     }
     model.createPortfolio("porttest", LocalDate.now());
     assertEquals(PORTFOLIO_NOT_FOUND, model.getPortfolioById("Yapple"));
@@ -120,7 +119,7 @@ public class ModelImplementationTest {
   public void testBlankGetValuations() {
     ModelInterface model = new MockModel();
     model.addShareToModel("WAVC", LocalDate.now(),
-            Math.abs(new Random().nextInt(10)) + 1, -1);
+        Math.abs(new Random().nextInt(10)) + 1, -1);
     try {
       model.getValuationGivenDate("", LocalDate.parse("2021-11-02"));
       fail("Test case passed even though invalid Id was given");
@@ -134,7 +133,7 @@ public class ModelImplementationTest {
   public void testInvalidGetValuations() {
     ModelInterface model = new MockModel();
     model.addShareToModel("YELP", LocalDate.now(),
-            Math.abs(new Random().nextInt(10)) + 1, 20);
+        Math.abs(new Random().nextInt(10)) + 1, 20);
     try {
       model.getValuationGivenDate("NOTYELP", LocalDate.parse("2021-11-02"));
       fail("Test case passed even though invalid Id was given");
@@ -148,13 +147,13 @@ public class ModelImplementationTest {
   public void testValidGetValuations() {
     ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.parse("2021-11-02"),
-            22, -1);
+        22, -1);
 
     model.createPortfolio("blipblop", LocalDate.parse("2021-11-02"));
     assertEquals(220, model.getValuationGivenDate("blipblop",
-            LocalDate.parse("2021-11-02")), 1);
+        LocalDate.parse("2021-11-02")), 1);
     assertEquals(0, model.getValuationGivenDate("blipblop",
-            LocalDate.parse("2021-11-01")), 0);
+        LocalDate.parse("2021-11-01")), 0);
   }
 
   // test blank ID present
@@ -162,7 +161,7 @@ public class ModelImplementationTest {
   public void testBlankIdIsPresents() {
     ModelInterface model = new MockModel();
     model.addShareToModel("TAGS", LocalDate.now(),
-            Math.abs(new Random().nextInt(10)) + 1, -1);
+        Math.abs(new Random().nextInt(10)) + 1, -1);
     try {
       model.idIsPresent("");
       fail("Test case passed even though blank Id was given");
@@ -176,7 +175,7 @@ public class ModelImplementationTest {
   public void testInvalidIdIsPresents() {
     ModelInterface model = new MockModel();
     model.addShareToModel("AADR", LocalDate.now(),
-            Math.abs(new Random().nextInt(10)) + 1, -1);
+        Math.abs(new Random().nextInt(10)) + 1, -1);
     assertFalse(model.idIsPresent("notPresent"));
   }
 
@@ -201,7 +200,7 @@ public class ModelImplementationTest {
   public void testCanCreateShares() {
     ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.now(),
-            Math.abs(new Random().nextInt(10)) + 1, -1);
+        Math.abs(new Random().nextInt(10)) + 1, -1);
     assertTrue(model.canCreateShare());
   }
 
@@ -209,29 +208,29 @@ public class ModelImplementationTest {
   public void testValidSellShares() {
     ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.of(2022, 11, 14),
-            20, 30);
+        20, 30);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.of(2020, 12, 12));
     assertEquals("+id:Porttest\n" + "creationDate:2020-12-12\n"
-                    + "*shares:+companyName:IBM,purchaseDate:2022-11-14,price:31.0,numShares:20",
-            model.getPortfolioById(portfolioName));
+            + "*shares:+companyName:IBM,purchaseDate:2022-11-14,price:31.0,numShares:20",
+        model.getPortfolioById(portfolioName));
     assertEquals(170.0, model.sellStocks(portfolioName, "IBM", 19,
-            LocalDate.now()), 0.0);
+        LocalDate.now()), 0.0);
     assertEquals("+id:Porttest\n" + "creationDate:2020-12-12\n"
-                    + "*shares:+companyName:IBM,purchaseDate:2022-11-14,price:31.0,numShares:1",
-            model.getPortfolioById(portfolioName));
+            + "*shares:+companyName:IBM,purchaseDate:2022-11-14,price:31.0,numShares:1",
+        model.getPortfolioById(portfolioName));
   }
 
   @Test
   public void testDataPersistsInFile() {
     ModelInterface model = new ModelImplementation();
     model.addShareToModel("IBM", LocalDate.of(2022, 11, 14),
-            20, 30);
+        20, 30);
     String portfolioName = "Porttest" + Math.random();
     model.createPortfolio(portfolioName, LocalDate.of(2020, 12, 12));
     FileInterface fileInterface = new CSVFile();
     List<String> ports = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
-            PORTFOLIO_FILENAME);
+        PORTFOLIO_FILENAME);
     boolean portfolioPersists = false;
     for (String port : ports) {
       if (port.contains("Porttest")) {
@@ -249,7 +248,7 @@ public class ModelImplementationTest {
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.now());
     assertEquals(600, model.sellStocks(portfolioName, "IBM", 20,
-            LocalDate.now()));
+        LocalDate.now()));
   }
 
   // To sell share is greater than number of present shares
@@ -274,7 +273,7 @@ public class ModelImplementationTest {
 
     try {
       model.addShareToModel("IBM", LocalDate.parse("20-20-20200"), 20,
-              30);
+          30);
       fail("Share added even though date was incorrectly formatted");
     } catch (DateTimeException e) {
       // Test passed
@@ -286,11 +285,11 @@ public class ModelImplementationTest {
   public void testValidGetCostBasis() {
     ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20,
-            30);
+        30);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.now());
     assertEquals(620.0, model.getCostBasis(portfolioName,
-            LocalDate.parse("2021-11-01")), 1);
+        LocalDate.parse("2021-11-01")), 1);
   }
 
 
@@ -298,17 +297,17 @@ public class ModelImplementationTest {
   public void testDailyDifferentGetPortfolioPerformance() {
     ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20,
-            -1);
+        -1);
     model.addShareToModel("AAPL", LocalDate.parse("2021-11-02"), 20,
-            -1);
+        -1);
     model.addShareToModel("MSFT", LocalDate.parse("2021-11-03"), 20,
-            -1);
+        -1);
     String portfolioName = "Porttest2";
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
     double[] answer = {200.0, 400.0, 600.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
-            LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"),
-            Periodicity.DAY);
+        LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"),
+        Periodicity.DAY);
     assertEquals(3, actual.size());
     for (int i = 0; i <= 2; i++) {
       assertEquals(answer[i], actual.get(i), 0.0);
@@ -320,17 +319,17 @@ public class ModelImplementationTest {
   public void testDailySameGetPortfolioPerformance() {
     ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20,
-            -1);
+        -1);
     model.addShareToModel("AAPL", LocalDate.parse("2021-11-01"), 20,
-            -1);
+        -1);
     model.addShareToModel("MSFT", LocalDate.parse("2021-11-03"), 20,
-            -1);
+        -1);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
     double[] answer = {400.0, 400.0, 600.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
-            LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"),
-            Periodicity.DAY);
+        LocalDate.parse("2021-11-01"), LocalDate.parse("2021-11-03"),
+        Periodicity.DAY);
     assertEquals(3, actual.size());
     for (int i = 0; i <= 2; i++) {
       assertEquals(answer[i], actual.get(i), 0.0);
@@ -341,23 +340,24 @@ public class ModelImplementationTest {
   public void testMonthlyGetPortfolioPerformance() {
     ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20,
-            -1);
+        -1);
     model.addShareToModel("AAPL", LocalDate.parse("2021-11-01"), 20,
-            -1);
+        -1);
     model.addShareToModel("MSFT", LocalDate.parse("2021-12-03"), 20,
-            -1);
+        -1);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
     double[] answer = {400.0, 600.0, 600.0};
     List<Double> actual = model.getPortfolioPerformance(portfolioName,
-            LocalDate.parse("2020-11-01"), LocalDate.parse("2022-01-01"),
-            Periodicity.MONTH);
+        LocalDate.parse("2020-11-01"), LocalDate.parse("2022-01-01"),
+        Periodicity.MONTH);
     assertEquals(3, actual.size());
     for (int i = 0; i <= 1; i++) {
       assertEquals(answer[i], actual.get(i), 0.0);
     }
 
   }
+
   @Test
   public void testYearlyGetPortfolioPerformance() {
     ModelInterface model = new MockModel();
@@ -384,22 +384,22 @@ public class ModelImplementationTest {
   public void testValidAppendPortfolios() {
     ModelInterface model = new MockModel();
     model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20,
-            -1);
+        -1);
     model.addShareToModel("AAPL", LocalDate.parse("2021-11-01"), 20,
-            -1);
+        -1);
     String portfolioName = "Porttest";
     model.createPortfolio(portfolioName, LocalDate.parse("2020-11-02"));
     assertEquals("+id:Porttest\n" + "creationDate:2020-11-02\n"
-                    + "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:11.0,numShares:20|"
-                    + "+companyName:AAPL,purchaseDate:2021-11-01,price:11.0,numShares:20",
-            model.getPortfolioById(portfolioName));
+            + "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:11.0,numShares:20|"
+            + "+companyName:AAPL,purchaseDate:2021-11-01,price:11.0,numShares:20",
+        model.getPortfolioById(portfolioName));
     model.addShareToModel("MSFT", LocalDate.parse("2021-12-03"), 20,
-            -1);
+        -1);
     assertEquals("+id:Porttest\n" + "creationDate:2020-11-02\n"
-                    + "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:11.0,numShares:20|"
-                    + "+companyName:AAPL,purchaseDate:2021-11-01,price:11.0,numShares:20|"
-                    + "+companyName:MSFT,purchaseDate:2021-12-03,price:11.0,numShares:20",
-            model.getPortfolioById(portfolioName));
+            + "*shares:+companyName:IBM,purchaseDate:2021-11-01,price:11.0,numShares:20|"
+            + "+companyName:AAPL,purchaseDate:2021-11-01,price:11.0,numShares:20|"
+            + "+companyName:MSFT,purchaseDate:2021-12-03,price:11.0,numShares:20",
+        model.getPortfolioById(portfolioName));
 
   }
 
@@ -409,7 +409,7 @@ public class ModelImplementationTest {
     String portfolioName = "Porttest";
     try {
       model.appendPortfolio(portfolioName, "AZDESS", 20,
-              LocalDate.parse("2020/01/01"));
+          LocalDate.parse("2020/01/01"));
       fail("Invalid appending operation & function did not throw any error");
     } catch (NoSuchElementException e) {
       // accepted

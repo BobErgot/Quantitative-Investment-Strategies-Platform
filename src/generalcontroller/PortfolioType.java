@@ -1,4 +1,4 @@
-package gui_controller;
+package generalcontroller;
 
 /**
  * Enum describing the portfolio type.

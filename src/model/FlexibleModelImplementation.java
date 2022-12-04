@@ -12,7 +12,6 @@ import static utility.Constants.VALUE_SEPERATOR;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +35,9 @@ public class FlexibleModelImplementation extends ModelAbstract {
   protected Map<String, Share> shares;
   private HashMap<String, String> strategyMap;
 
+  /**
+   * Constructor that allows for processing of all strategies on startup.
+   */
   public FlexibleModelImplementation() {
     super();
     strategyMap = new HashMap<>();
@@ -43,6 +45,11 @@ public class FlexibleModelImplementation extends ModelAbstract {
     this.processStrategy();
   }
 
+  /**
+   * Copy constructor for flexible implementation class.
+   *
+   * @param other Model to copy.
+   */
   public FlexibleModelImplementation(ModelAbstract other) {
     this.shares = other.shares;
   }
@@ -197,8 +204,8 @@ public class FlexibleModelImplementation extends ModelAbstract {
 
   @Override
   public boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
-                                LocalDate endDate, ArrayList<String> shares,
-                                ArrayList<Integer> weightage, int type) {
+      LocalDate endDate, ArrayList<String> shares,
+      ArrayList<Integer> weightage, int type) {
     if (!this.idIsPresent(portfolioName) || date.isBefore(LocalDate.now())) {
       return false;
     }
@@ -240,9 +247,10 @@ public class FlexibleModelImplementation extends ModelAbstract {
   }
 
   @Override
-  public boolean createPortfolioStrategy(String portfolioName, String investmentAmount, LocalDate date,
-                                LocalDate endDate, ArrayList<String> shares,
-                                ArrayList<Integer> weightage, int type) {
+  public boolean createPortfolioStrategy(String portfolioName, String investmentAmount,
+      LocalDate date,
+      LocalDate endDate, ArrayList<String> shares,
+      ArrayList<Integer> weightage, int type) {
     if (date.isBefore(LocalDate.now())) {
       return false;
     }
@@ -254,20 +262,20 @@ public class FlexibleModelImplementation extends ModelAbstract {
     recordData.append(type).append(RECORD_FIELD_SEPERATOR);
     recordData.append(investmentAmount).append(RECORD_FIELD_SEPERATOR);
     for (int i = 0; i < shares.size() - 1; i++) {
-        recordData.append(shares.get(i)).append(VALUE_SEPERATOR)
-                .append(weightage.get(i)).append(RECORD_FIELD_SEPERATOR);
+      recordData.append(shares.get(i)).append(VALUE_SEPERATOR)
+          .append(weightage.get(i)).append(RECORD_FIELD_SEPERATOR);
     }
     recordData.append(shares.get(shares.size() - 1)).append(VALUE_SEPERATOR)
-            .append(weightage.get(shares.size() - 1)).append(LINE_BREAKER);
+        .append(weightage.get(shares.size() - 1)).append(LINE_BREAKER);
     if (strategyMap.containsKey(portfolioName)) {
       strategyMap.replace(portfolioName, recordData.toString().split(",", 2)[1]);
       fileInterface.clearFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME, "csv");
       fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
-              hashMapToRecordData(strategyMap).toString().getBytes());
+          hashMapToRecordData(strategyMap).toString().getBytes());
     } else {
       strategyMap.put(portfolioName, recordData.toString().split(",", 2)[1]);
       fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
-              recordData.toString().getBytes());
+          recordData.toString().getBytes());
     }
     this.processStrategy();
     return true;
@@ -298,64 +306,64 @@ public class FlexibleModelImplementation extends ModelAbstract {
     for (String strategy : fileContent) {
       String[] strategyTodayFields = strategy.trim().split(",", 3);
       String portfolioName = strategyTodayFields[0];
-        LocalDate today = LocalDate.now();
-        LocalDate lastUpdateDate = LocalDate.parse(strategyTodayFields[1]);
-        String[] strategyDateComparison = strategyTodayFields[2].trim().split(",", 4);
-        LocalDate startDate = LocalDate.parse(strategyDateComparison[0]);
-        LocalDate endDate = LocalDate.parse(strategyDateComparison[1]);
-        String frequency = strategyDateComparison[2];
-        if (startDate.equals(endDate) && frequency.equals("0")
-            && (startDate.equals(today) || lastUpdateDate.isBefore(today))
-                && this.idIsPresent(portfolioName)) {
-          String[] strategyInvestFields = strategyDateComparison[3].trim().split(",");
-          int totalAmount = Integer.parseInt(strategyInvestFields[0]);
-          ArrayList<String> sharesList = new ArrayList<>();
-          ArrayList<Integer> weightageList = new ArrayList<>();
-          for (int i = 1; i < strategyInvestFields.length; i++) {
-            String[] tickerData = strategyInvestFields[i].split(":");
-            String ticker = tickerData[0];
-            int weightage = Integer.parseInt(tickerData[1]);
-            if (weightage != 0) {
-              double amountToInvest = (totalAmount * weightage) * 0.01;
-              double stockPrice = this.getStockPrice(ticker, startDate);
-              double numberOfShares = amountToInvest / stockPrice;
-              boolean status = this.buyStrategyShare(portfolioName, ticker, numberOfShares,
-                  startDate, false);
-              sharesList.add(ticker);
-              weightageList.add(weightage);
-            }
+      LocalDate today = LocalDate.now();
+      LocalDate lastUpdateDate = LocalDate.parse(strategyTodayFields[1]);
+      String[] strategyDateComparison = strategyTodayFields[2].trim().split(",", 4);
+      LocalDate startDate = LocalDate.parse(strategyDateComparison[0]);
+      LocalDate endDate = LocalDate.parse(strategyDateComparison[1]);
+      String frequency = strategyDateComparison[2];
+      if (startDate.equals(endDate) && frequency.equals("0")
+          && (startDate.equals(today) || lastUpdateDate.isBefore(today))
+          && this.idIsPresent(portfolioName)) {
+        String[] strategyInvestFields = strategyDateComparison[3].trim().split(",");
+        int totalAmount = Integer.parseInt(strategyInvestFields[0]);
+        ArrayList<String> sharesList = new ArrayList<>();
+        ArrayList<Integer> weightageList = new ArrayList<>();
+        for (int i = 1; i < strategyInvestFields.length; i++) {
+          String[] tickerData = strategyInvestFields[i].split(":");
+          String ticker = tickerData[0];
+          int weightage = Integer.parseInt(tickerData[1]);
+          if (weightage != 0) {
+            double amountToInvest = (totalAmount * weightage) * 0.01;
+            double stockPrice = this.getStockPrice(ticker, startDate);
+            double numberOfShares = amountToInvest / stockPrice;
+            boolean status = this.buyStrategyShare(portfolioName, ticker, numberOfShares,
+                startDate, false);
+            sharesList.add(ticker);
+            weightageList.add(weightage);
           }
-          this.createStrategy(portfolioName, strategyInvestFields[0], today, endDate, sharesList,
-                  weightageList, -1);
-        } else if (!endDate.isBefore(startDate) && !frequency.equals("-1")
-                && !startDate.isAfter(today) && !this.idIsPresent(portfolioName)){
-          LocalDateTime startDateTime = startDate.atStartOfDay();
-          LocalDateTime todayDateTime = LocalDate.now().atStartOfDay();
-          long days = startDateTime.until(todayDateTime, ChronoUnit.DAYS );
-          if (days % Integer.parseInt(frequency) != 0) {
-            continue;
-          }
-          String[] strategyInvestFields = strategyDateComparison[3].trim().split(",");
-          int totalAmount = Integer.parseInt(strategyInvestFields[0]);
-          ArrayList<String> sharesList = new ArrayList<>();
-          ArrayList<Integer> weightageList = new ArrayList<>();
-          for (int i = 1; i < strategyInvestFields.length; i++) {
-            String[] tickerData = strategyInvestFields[i].split(":");
-            String ticker = tickerData[0];
-            int weightage = Integer.parseInt(tickerData[1]);
-            if (weightage != 0) {
-              double amountToInvest = (totalAmount * weightage) * 0.01;
-              double stockPrice = this.getStockPrice(ticker, startDate);
-              double numberOfShares = amountToInvest / stockPrice;
-              boolean status = this.buyStrategyShare(portfolioName, ticker, numberOfShares,
-                      startDate, true);
-              sharesList.add(ticker);
-              weightageList.add(weightage);
-            }
-          }
-          this.createStrategy(portfolioName, strategyInvestFields[0], today, endDate, sharesList,
-                  weightageList, Integer.parseInt(frequency));
         }
+        this.createStrategy(portfolioName, strategyInvestFields[0], today, endDate, sharesList,
+            weightageList, -1);
+      } else if (!endDate.isBefore(startDate) && !frequency.equals("-1")
+          && !startDate.isAfter(today) && !this.idIsPresent(portfolioName)) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime todayDateTime = LocalDate.now().atStartOfDay();
+        long days = startDateTime.until(todayDateTime, ChronoUnit.DAYS);
+        if (days % Integer.parseInt(frequency) != 0) {
+          continue;
+        }
+        String[] strategyInvestFields = strategyDateComparison[3].trim().split(",");
+        int totalAmount = Integer.parseInt(strategyInvestFields[0]);
+        ArrayList<String> sharesList = new ArrayList<>();
+        ArrayList<Integer> weightageList = new ArrayList<>();
+        for (int i = 1; i < strategyInvestFields.length; i++) {
+          String[] tickerData = strategyInvestFields[i].split(":");
+          String ticker = tickerData[0];
+          int weightage = Integer.parseInt(tickerData[1]);
+          if (weightage != 0) {
+            double amountToInvest = (totalAmount * weightage) * 0.01;
+            double stockPrice = this.getStockPrice(ticker, startDate);
+            double numberOfShares = amountToInvest / stockPrice;
+            boolean status = this.buyStrategyShare(portfolioName, ticker, numberOfShares,
+                startDate, true);
+            sharesList.add(ticker);
+            weightageList.add(weightage);
+          }
+        }
+        this.createStrategy(portfolioName, strategyInvestFields[0], today, endDate, sharesList,
+            weightageList, Integer.parseInt(frequency));
+      }
     }
   }
 
@@ -366,19 +374,20 @@ public class FlexibleModelImplementation extends ModelAbstract {
     }
     Map<String, Share> shares = new HashMap<>();
     shares.put(symbol, new Share(symbol, LocalDate.now(),
-            this.getStockPrice(symbol, date), numShares));
-    if(create) {
+        this.getStockPrice(symbol, date), numShares));
+    if (create) {
       Set<Share> sharesSet = new HashSet<>(shares.values());
       Portfolio portfolioObject = new Portfolio(portfolioName, sharesSet, date);
-      String formattedString = fileInterface.convertObjectListIntoString(new ArrayList<>(sharesSet));
+      String formattedString = fileInterface.convertObjectListIntoString(
+          new ArrayList<>(sharesSet));
       String shareFileName = UUID.randomUUID().toString();
       List<String> referenceList = new ArrayList<>();
       referenceList.add(shareFileName);
       if (fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
-              formattedString.getBytes())) {
+          formattedString.getBytes())) {
         fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_FILENAME,
-                (fileInterface.convertObjectIntoString(portfolioObject.toString(), referenceList)
-                        + MUTABLE).getBytes());
+            (fileInterface.convertObjectIntoString(portfolioObject.toString(), referenceList)
+                + MUTABLE).getBytes());
       }
       shares = new HashMap<>();
       portfolios.add(portfolioObject);
@@ -387,12 +396,12 @@ public class FlexibleModelImplementation extends ModelAbstract {
       double currentShareBuyingPrice = this.getStockPrice(symbol, date);
       stockFileName = getSharesFile(portfolioName);
       Share addShare = new Share(symbol, date, currentShareBuyingPrice + BROKER_FEES,
-              numShares);
+          numShares);
       if (null != stockFileName && !stockFileName.isEmpty()) {
         String formattedString = fileInterface.convertObjectIntoString(addShare.toString(),
-                null);
+            null);
         fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, stockFileName,
-                formattedString.getBytes());
+            formattedString.getBytes());
       }
     }
     return true;

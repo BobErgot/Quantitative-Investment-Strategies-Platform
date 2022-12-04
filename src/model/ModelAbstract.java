@@ -23,10 +23,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.zip.DataFormatException;
 
 /**
@@ -194,25 +192,28 @@ abstract class ModelAbstract implements ModelInterface {
     }
     LocalDate[] range = portfolioObject.getDateRangeOfStockData();
     range[0] = from.compareTo(range[0]) > 0 ? from : range[0];
-    range[1] = roundUpDate(to,group);
+    range[1] = roundUpDate(to, group);
 
     LocalDate date = range[0];
-    Map<Periodicity, Function<LocalDate,LocalDate>> updateFunction = new HashMap<>();
-    updateFunction.put(Periodicity.DAY, (currentDate)->currentDate.plusDays(1));
-    updateFunction.put(Periodicity.MONTH, (currentDate)->currentDate.plusMonths(1));
-    updateFunction.put(Periodicity.YEAR, (currentDate)->currentDate.plusYears(1));
+    Map<Periodicity, Function<LocalDate, LocalDate>> updateFunction = new HashMap<>();
+    updateFunction.put(Periodicity.DAY, (currentDate) -> currentDate.plusDays(1));
+    updateFunction.put(Periodicity.MONTH, (currentDate) -> currentDate.plusMonths(1));
+    updateFunction.put(Periodicity.YEAR, (currentDate) -> currentDate.plusYears(1));
 
-    while(date.isBefore(range[1]) || date.equals(range[1])){
-      portfolioPerformanceByPeriodicity.add(this.getValuationGivenDate(portfolioObject.getId(), date));
-      date = roundUpDate(updateFunction.get(group).apply(date),group);
+    while (date.isBefore(range[1]) || date.equals(range[1])) {
+      portfolioPerformanceByPeriodicity.add(
+          this.getValuationGivenDate(portfolioObject.getId(), date));
+      date = roundUpDate(updateFunction.get(group).apply(date), group);
     }
     return portfolioPerformanceByPeriodicity;
   }
-  private LocalDate roundUpDate(LocalDate date, Periodicity periodicity){
-    if(periodicity==Periodicity.MONTH)
+
+  private LocalDate roundUpDate(LocalDate date, Periodicity periodicity) {
+    if (periodicity == Periodicity.MONTH) {
       return date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
-    else if (periodicity==Periodicity.YEAR)
-      return LocalDate.of(date.getYear(),12,31);
+    } else if (periodicity == Periodicity.YEAR) {
+      return LocalDate.of(date.getYear(), 12, 31);
+    }
     return date;
   }
 
@@ -247,8 +248,7 @@ abstract class ModelAbstract implements ModelInterface {
       if (headerDistance > footerDistance) {
         if (header < footer - footerDistance) {
           header = (int) (footer - footerDistance);
-          headerDate = LocalDate.parse(stockData.get(header).split(",", 2)[0])
-              .atStartOfDay();
+          headerDate = LocalDate.parse(stockData.get(header).split(",", 2)[0]).atStartOfDay();
         } else {
           int mid = header + (footer - header) / 2;
           LocalDateTime midDate = LocalDate.parse(stockData.get(mid).split(",", 2)[0])
@@ -262,8 +262,7 @@ abstract class ModelAbstract implements ModelInterface {
       } else {
         if (footer > header + headerDistance) {
           footer = (int) (header + headerDistance);
-          footerDate = LocalDate.parse(stockData.get(footer).split(",",
-                  2)[0]).atStartOfDay();
+          footerDate = LocalDate.parse(stockData.get(footer).split(",", 2)[0]).atStartOfDay();
         } else {
           int mid = footer - (footer - header) / 2;
           LocalDateTime midDate = LocalDate.parse(stockData.get(mid).split(",", 2)[0])
@@ -394,8 +393,8 @@ abstract class ModelAbstract implements ModelInterface {
       String failedPortfolio = failedPortfolios.toString();
       String failedMessage = "";
       if (failedPortfolio.length() > 0) {
-        failedMessage += "The following portfolios already exist: " + failedPortfolio
-                + LINE_BREAKER;
+        failedMessage +=
+            "The following portfolios already exist: " + failedPortfolio + LINE_BREAKER;
       }
       if (failedShare.length() > 0) {
         failedMessage += "The following shares are invalid: " + failedShare;
@@ -413,14 +412,14 @@ abstract class ModelAbstract implements ModelInterface {
   }
 
   protected boolean checkValidNumStocks(String symbol, int numStocks, Set<Share> newShares,
-                                        LocalDate date) {
+      LocalDate date) {
     int companyShares = 0;
     if (!this.checkTicker(symbol)) {
       throw new NoSuchElementException("Ticker does not exist");
     }
     for (Share share : newShares) {
       if (share.getCompanyName().equals(symbol) && (share.getPurchaseDate().isBefore(date)
-              || share.getPurchaseDate().isEqual(date))) {
+          || share.getPurchaseDate().isEqual(date))) {
         companyShares += share.getNumShares();
         if (companyShares >= numStocks) {
           return true;
@@ -440,17 +439,17 @@ abstract class ModelAbstract implements ModelInterface {
 
   @Override
   public double appendPortfolio(String portfolioName, String symbol, int numShares,
-                                LocalDate date) {
+      LocalDate date) {
     throw new IllegalStateException("Cannot access this function!");
   }
 
   @Override
-  public List<String> getShareTickerInPortfolio(String portfolioName){
-    for(Portfolio portfolio: portfolios) {
-      if(portfolio.getId().equals(portfolioName)){
-        Set<Share> shares= portfolio.getListOfShares();
+  public List<String> getShareTickerInPortfolio(String portfolioName) {
+    for (Portfolio portfolio : portfolios) {
+      if (portfolio.getId().equals(portfolioName)) {
+        Set<Share> shares = portfolio.getListOfShares();
         Set<String> shareList = new HashSet<>();
-        for(Share share: shares) {
+        for (Share share : shares) {
           shareList.add(share.getCompanyName());
         }
         return new ArrayList<>(shareList);
@@ -461,15 +460,14 @@ abstract class ModelAbstract implements ModelInterface {
 
   @Override
   public boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
-                                LocalDate endDate, ArrayList<String> shares,
-                                ArrayList<Integer> weightage, int type) {
+      LocalDate endDate, ArrayList<String> shares, ArrayList<Integer> weightage, int type) {
     throw new IllegalStateException("Cannot access this function!");
   }
 
   @Override
-  public boolean createPortfolioStrategy(String portfolioName, String investmentAmount, LocalDate date,
-                                LocalDate endDate, ArrayList<String> shares,
-                                ArrayList<Integer> weightage, int type) {
+  public boolean createPortfolioStrategy(String portfolioName, String investmentAmount,
+      LocalDate date, LocalDate endDate, ArrayList<String> shares, ArrayList<Integer> weightage,
+      int type) {
     throw new IllegalStateException("Cannot access this function!");
   }
 }

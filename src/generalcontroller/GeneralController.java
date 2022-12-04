@@ -1,4 +1,4 @@
-package gui_controller;
+package generalcontroller;
 
 import static utility.Constants.FILE_SEPARATOR;
 
@@ -14,16 +14,29 @@ import model.ModelImplementation;
 import model.ModelInterface;
 import model.Periodicity;
 
+/**
+ * Generalized controller which implements the features that support the stocker application.
+ */
 public class GeneralController implements Features {
 
-  private ModelInterface model;
+  private final ModelInterface model;
   private GUIView view;
 
+  /**
+   * Parameterize constructor that initiallizes the controller.
+   *
+   * @param model Model to work with controller.
+   */
   public GeneralController(ModelInterface model) {
     this.model = model;
 
   }
 
+  /**
+   * Sets View of given interface.
+   *
+   * @param view View to set of interface.
+   */
   public void setView(GUIView view) {
     this.view = view;
     this.view.addFeatures(this);
@@ -158,18 +171,17 @@ public class GeneralController implements Features {
   }
 
   @Override
-  public boolean createStrategy (String portfolioName, String investmentAmount, LocalDate date,
-                                 LocalDate endDate, ArrayList<String> shares,
-                                 ArrayList<Integer> weightage) {
-    return  new FlexibleModelImplementation().createStrategy(portfolioName, investmentAmount,
-            date, endDate, shares, weightage, 0);
+  public boolean createStrategy(String portfolioName, String investmentAmount, LocalDate date,
+      LocalDate endDate, ArrayList<String> shares, ArrayList<Integer> weightage) {
+    return new FlexibleModelImplementation().createStrategy(portfolioName, investmentAmount, date,
+        endDate, shares, weightage, 0);
   }
 
   @Override
-  public boolean createPortfolioStrategy (String portfolioName, String investmentAmount, LocalDate date,
-                                 LocalDate endDate, ArrayList<String> shares,
-                                 ArrayList<Integer> weightage, String frequency) {
-    return  new FlexibleModelImplementation().createPortfolioStrategy(portfolioName, investmentAmount,
-            date, endDate, shares, weightage, Integer.parseInt(frequency));
+  public boolean createPortfolioStrategy(String portfolioName, String investmentAmount,
+      LocalDate date, LocalDate endDate, ArrayList<String> shares, ArrayList<Integer> weightage,
+      String frequency) {
+    return new FlexibleModelImplementation().createPortfolioStrategy(portfolioName,
+        investmentAmount, date, endDate, shares, weightage, Integer.parseInt(frequency));
   }
 }

@@ -1,0 +1,89 @@
+Code status questionnaire:
+
+Please complete this questionnaire by selecting the appropriate answer for each question. Then include this file in the code that you send to your customers.
+
+Load an inflexible portfolio from file: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Save an inflexible portfolio to file: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Load a flexible portfolio from file: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Save a flexible portfolio to file: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Add stocks to an inflexible portfolio at the time of creation: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Add stocks to a flexible portfolio at the time of creation: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Buy stocks on specific date and add to flexible portfolio after creation: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Sell stocks on specific data from flexible portfolio: Y
+Working through text UI: Y
+Working through GUI: Y
+
+
+Determine composition of inflexible portfolio: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Determine composition of a flexible portfolio at a specific date: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Determine value of an inflexible portfolio at a specific date: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Determine value of a flexible portfolio at a specific date: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Support for AlphaVantage API: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Support for all ticker symbols reported by AlphaVantage API: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Commission fees for each transaction: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Commission fees decided by user: N
+
+Plot portfolio performance over time: Y
+Working through text UI: Y
+Working through GUI: Y
+
+Support investing money in several stocks according to specified weights: Y
+Working through GUI: Y
+
+Add dollar-cost averaging strategy to an existing portfolio: Y
+Working through GUI: Y
+
+Create portfolio with dollar-cost averaging strategy: Y
+Working through GUI: Y
+
+Class diagram included with code: Y
+
+DESIGN-README included with code: Y
+
+SETUP_README included with code: Y
+
+Program:
+
+Program runs by running main? Y
