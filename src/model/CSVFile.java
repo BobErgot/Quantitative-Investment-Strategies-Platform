@@ -104,7 +104,7 @@ class CSVFile extends FileAbstract {
     } else {
       stringFormat.append(objectFields[objectFields.length - 1].split(":", 2)[1]);
     }
-    return stringFormat.toString();
+    return stringFormat.toString().trim();
   }
 
   @Override
@@ -114,7 +114,7 @@ class CSVFile extends FileAbstract {
       stringFormat.append(convertObjectIntoString(t.toString().trim(), null));
       stringFormat.append(LINE_BREAKER);
     }
-    return stringFormat.toString();
+    return stringFormat.toString().trim();
   }
 
   @Override

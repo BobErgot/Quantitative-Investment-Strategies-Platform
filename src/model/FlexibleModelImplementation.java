@@ -236,7 +236,7 @@ public class FlexibleModelImplementation extends ModelAbstract {
       strategyMap.replace(portfolioName, recordData.toString().split(",", 2)[1]);
       fileInterface.clearFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME, "csv");
       fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
-          hashMapToRecordData(strategyMap).toString().getBytes());
+          hashMapToRecordData(strategyMap).toString().trim().getBytes());
     } else {
       strategyMap.put(portfolioName, recordData.toString().split(",", 2)[1]);
       fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
@@ -266,12 +266,12 @@ public class FlexibleModelImplementation extends ModelAbstract {
           .append(weightage.get(i)).append(RECORD_FIELD_SEPERATOR);
     }
     recordData.append(shares.get(shares.size() - 1)).append(VALUE_SEPERATOR)
-        .append(weightage.get(shares.size() - 1)).append(LINE_BREAKER);
+        .append(weightage.get(shares.size() - 1));
     if (strategyMap.containsKey(portfolioName)) {
       strategyMap.replace(portfolioName, recordData.toString().split(",", 2)[1]);
       fileInterface.clearFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME, "csv");
       fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
-          hashMapToRecordData(strategyMap).toString().getBytes());
+          hashMapToRecordData(strategyMap).toString().trim().getBytes());
     } else {
       strategyMap.put(portfolioName, recordData.toString().split(",", 2)[1]);
       fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, STRATEGY_FILENAME,
@@ -285,8 +285,9 @@ public class FlexibleModelImplementation extends ModelAbstract {
     StringBuilder fileFormatData = new StringBuilder();
     for (Map.Entry<String, String> entry : strategyMap.entrySet()) {
       fileFormatData.append(entry.getKey())
-          .append(RECORD_FIELD_SEPERATOR)
-          .append(entry.getValue());
+              .append(RECORD_FIELD_SEPERATOR)
+              .append(entry.getValue())
+              .append(LINE_BREAKER);
     }
     return fileFormatData;
   }
@@ -300,7 +301,7 @@ public class FlexibleModelImplementation extends ModelAbstract {
     }
   }
 
-  private void processStrategy() {
+  private synchronized void processStrategy() {
     List<String> fileContent = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
         STRATEGY_FILENAME);
     for (String strategy : fileContent) {
@@ -361,7 +362,7 @@ public class FlexibleModelImplementation extends ModelAbstract {
             weightageList.add(weightage);
           }
         }
-        this.createStrategy(portfolioName, strategyInvestFields[0], today, endDate, sharesList,
+        this.createPortfolioStrategy(portfolioName, strategyInvestFields[0], today, endDate, sharesList,
             weightageList, Integer.parseInt(frequency));
       }
     }
@@ -375,32 +376,37 @@ public class FlexibleModelImplementation extends ModelAbstract {
     Map<String, Share> shares = new HashMap<>();
     shares.put(symbol, new Share(symbol, LocalDate.now(),
         this.getStockPrice(symbol, date), numShares));
+    String shareFileName = null;
+    shareFileName = getSharesFile(portfolioName);
     if (create) {
       Set<Share> sharesSet = new HashSet<>(shares.values());
       Portfolio portfolioObject = new Portfolio(portfolioName, sharesSet, date);
       String formattedString = fileInterface.convertObjectListIntoString(
           new ArrayList<>(sharesSet));
-      String shareFileName = UUID.randomUUID().toString();
-      List<String> referenceList = new ArrayList<>();
-      referenceList.add(shareFileName);
-      if (fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
-          formattedString.getBytes())) {
-        fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_FILENAME,
-            (fileInterface.convertObjectIntoString(portfolioObject.toString(), referenceList)
-                + MUTABLE).getBytes());
+      if (null == shareFileName) {
+        shareFileName = UUID.randomUUID().toString();
+        List<String> referenceList = new ArrayList<>();
+        referenceList.add(shareFileName);
+        if (fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
+                formattedString.getBytes())) {
+          fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, PORTFOLIO_FILENAME,
+                  (fileInterface.convertObjectIntoString(portfolioObject.toString(), referenceList)
+                          + MUTABLE).getBytes());
+        }
+      } else {
+        fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
+                formattedString.getBytes());
       }
       shares = new HashMap<>();
       portfolios.add(portfolioObject);
     } else {
-      String stockFileName = null;
       double currentShareBuyingPrice = this.getStockPrice(symbol, date);
-      stockFileName = getSharesFile(portfolioName);
       Share addShare = new Share(symbol, date, currentShareBuyingPrice + BROKER_FEES,
           numShares);
-      if (null != stockFileName && !stockFileName.isEmpty()) {
+      if (null != shareFileName && !shareFileName.isEmpty()) {
         String formattedString = fileInterface.convertObjectIntoString(addShare.toString(),
             null);
-        fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, stockFileName,
+        fileInterface.writeToFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY, shareFileName,
             formattedString.getBytes());
       }
     }
