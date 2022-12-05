@@ -12,6 +12,7 @@ import static utility.Constants.VALUE_SEPERATOR;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -309,6 +310,9 @@ public class FlexibleModelImplementation extends ModelAbstract {
       String portfolioName = strategyTodayFields[0];
       LocalDate today = LocalDate.now();
       LocalDate lastUpdateDate = LocalDate.parse(strategyTodayFields[1]);
+//      if (!isValidDate(strategyTodayFields[2])) {
+//        continue;
+//      }
       String[] strategyDateComparison = strategyTodayFields[2].trim().split(",", 4);
       LocalDate startDate = LocalDate.parse(strategyDateComparison[0]);
       LocalDate endDate = LocalDate.parse(strategyDateComparison[1]);
@@ -368,6 +372,15 @@ public class FlexibleModelImplementation extends ModelAbstract {
     }
   }
 
+//  private boolean isValidDate(String date) {
+//    try {
+//      LocalDate.parse(date);
+//      return true;
+//    } catch (DateTimeParseException e) {
+//      return false;
+//    }
+//  }
+//
   private boolean buyStrategyShare(String portfolioName, String symbol, double numShares,
       LocalDate date, boolean create) {
     if (!checkTicker(symbol) && numShares < 0) {

@@ -8,9 +8,12 @@ import static utility.Constants.PORTFOLIO_DIRECTORY;
 import static utility.Constants.PORTFOLIO_FILENAME;
 import static utility.Constants.PORTFOLIO_NOT_FOUND;
 import static utility.Constants.RELATIVE_PATH;
+import static utility.Constants.STRATEGY_FILENAME;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -414,5 +417,26 @@ public class ModelImplementationTest {
     } catch (NoSuchElementException e) {
       // accepted
     }
+  }
+
+  @Test
+  public void createStrategyTest() {
+    ModelInterface model = new FlexibleModelImplementation();
+    model.addShareToModel("IBM", LocalDate.parse("2021-11-01"), 20, 30);
+    model.addShareToModel("AAPL", LocalDate.parse("2021-10-01"), 20, 30);
+    String portfolioName = "Porttest_" + Math.random();
+    model.createPortfolio(portfolioName, LocalDate.now());
+    assertEquals(1240.0, model.getCostBasis(portfolioName, LocalDate.now()), 1);
+    FileInterface fileInterface = new CSVFile();
+    List<String> stratsOld = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
+            STRATEGY_FILENAME);
+    boolean out = model.createStrategy(portfolioName, "10000", LocalDate.now(),
+            LocalDate.of(2043, 11, 1),
+            new ArrayList<String>(Arrays.asList("IBM", "AAPL")),
+            new ArrayList<Integer>(Arrays.asList(20, 80)), -1);
+    assertTrue(out);
+    List<String> stratsNew = fileInterface.readFromFile(RELATIVE_PATH, PORTFOLIO_DIRECTORY,
+            STRATEGY_FILENAME);
+    assertEquals(stratsOld.size() + 1, stratsNew.size());
   }
 }
