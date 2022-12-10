@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import controller.StockPortfolioCommand;
 import model.FlexibleModelImplementation;
+import model.ModelImplementation;
 import model.ModelInterface;
 import view.View;
 
@@ -17,6 +18,7 @@ public class CreatePortfolio implements StockPortfolioCommand {
 
   @Override
   public void process(View view, Scanner scanner, ModelInterface model) {
+    boolean flexFlag = false;
     boolean invalidInput;
     boolean portfolioCompleted;
     invalidInput = false;
@@ -27,7 +29,8 @@ public class CreatePortfolio implements StockPortfolioCommand {
         invalidInput = true;
         break;
       } else if (choice.equals("2")) {
-        model = new FlexibleModelImplementation();
+        flexFlag = true;
+        //model = new FlexibleModelImplementation();
         invalidInput = true;
         break;
       } else {
@@ -53,7 +56,12 @@ public class CreatePortfolio implements StockPortfolioCommand {
               view.askForPortfolioName();
               String portfolioName = scanner.next().trim();
               if (portfolioName.length() > 0 && !model.idIsPresent(portfolioName)) {
-                model.createPortfolio(portfolioName, LocalDate.now());
+                if (flexFlag) {
+                  new FlexibleModelImplementation((ModelImplementation) model).createPortfolio(
+                          portfolioName, LocalDate.now());
+                } else {
+                  model.createPortfolio(portfolioName, LocalDate.now());
+                }
                 portfolioCompleted = true;
                 view.showMainMenu();
                 break;
